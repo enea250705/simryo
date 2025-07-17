@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState, useEffect, createContext, useContext } from 'react'
+import React, { useState, createContext, useContext } from 'react'
 import { signIn as nextAuthSignIn, signOut as nextAuthSignOut, useSession } from 'next-auth/react'
 import { toast } from 'sonner'
 import type { ReactNode } from 'react'
@@ -27,98 +27,24 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined)
 export function AuthProvider({ children }: { children: ReactNode }): JSX.Element {
   const { data: session, status } = useSession()
   const [error, setError] = useState<Error | null>(null)
-  const [customUser, setCustomUser] = useState<User | null>(null)
-  const [customLoading, setCustomLoading] = useState(true)
 
-  const loading = status === 'loading' || customLoading
-
-  // Check for custom auth token if no NextAuth session
-  useEffect(() => {
-    if (status !== 'loading' && !session) {
-      const checkCustomAuth = async () => {
-        try {
-          const response = await fetch('/api/auth/me')
-          const data = await response.json()
-          
-          if (data.success && data.user) {
-            setCustomUser({
-              id: data.user.id,
-              email: data.user.email,
-              name: data.user.name,
-              image: data.user.avatar
-            })
-          } else {
-            // Clear custom user if API says not authenticated
-            setCustomUser(null)
-          }
-        } catch (error) {
-          console.error('Custom auth check failed:', error)
-          setCustomUser(null)
-        } finally {
-          setCustomLoading(false)
-        }
-      }
-      
-      checkCustomAuth()
-    } else {
-      setCustomLoading(false)
-    }
-  }, [session, status])
-
-  // Re-check authentication when page becomes visible (useful after logout)
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible' && status !== 'loading' && !session) {
-        const checkCustomAuth = async () => {
-          try {
-            const response = await fetch('/api/auth/me')
-            const data = await response.json()
-            
-            if (data.success && data.user) {
-              setCustomUser({
-                id: data.user.id,
-                email: data.user.email,
-                name: data.user.name,
-                image: data.user.avatar
-              })
-            } else {
-              setCustomUser(null)
-            }
-          } catch (error) {
-            console.error('Custom auth check failed:', error)
-            setCustomUser(null)
-          }
-        }
-        
-        checkCustomAuth()
-      }
-    }
-
-    document.addEventListener('visibilitychange', handleVisibilityChange)
-    return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
-  }, [session, status])
+  const loading = status === 'loading'
 
   const signIn = async (email: string, password: string) => {
     try {
       setError(null)
       
-      // Use custom login API
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
+      const result = await nextAuthSignIn('credentials', {
+        email,
+        password,
+        redirect: false,
       })
 
-      const data = await response.json()
-
-      if (!data.success) {
-        throw new Error(data.error || 'Login failed')
+      if (result?.error) {
+        throw new Error(result.error)
       }
 
-      // The login API automatically sets the auth cookie
-      toast.success("Logged in successfully!")
-      
-      // Refresh the page to update the session
+      // Successful login - redirect to profile or stored redirect URL
       const redirectUrl = localStorage.getItem('redirectAfterAuth') || '/profile'
       localStorage.removeItem('redirectAfterAuth')
       window.location.href = redirectUrl
@@ -132,24 +58,30 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
     try {
       setError(null)
       
-      // Create user account using custom API
+      // Create user account using NextAuth-compatible endpoint
       const response = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email, password, name })
       })
 
-      const data = await response.json()
-
-      if (!data.success) {
+      if (!response.ok) {
+        const data = await response.json()
         throw new Error(data.error || 'Failed to create account')
       }
 
-      // The signup API automatically sets the auth cookie, so we just need to refresh the page
-      // to let NextAuth pick up the session
-      toast.success("Account created successfully!")
-      
-      // Refresh the page to update the session
+      // After successful signup, sign them in with NextAuth
+      const result = await nextAuthSignIn('credentials', {
+        email,
+        password,
+        redirect: false,
+      })
+
+      if (result?.error) {
+        throw new Error(result.error)
+      }
+
+      // Successful signup and login - redirect to profile or stored redirect URL
       const redirectUrl = localStorage.getItem('redirectAfterAuth') || '/profile'
       localStorage.removeItem('redirectAfterAuth')
       window.location.href = redirectUrl
@@ -184,46 +116,22 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
   const signOut = async () => {
     try {
       setError(null)
-      setCustomLoading(true)
-      
-      // Clear custom user state immediately
-      setCustomUser(null)
-      
-      // Call custom logout API
-      try {
-        await fetch('/api/auth/logout', { method: 'POST' })
-      } catch (logoutError) {
-        console.error('Custom logout API failed:', logoutError)
-      }
-      
-      // Also clear NextAuth session if exists
-      if (session) {
-        try {
-          await nextAuthSignOut({ redirect: false })
-        } catch (nextAuthError) {
-          console.error('NextAuth signOut failed:', nextAuthError)
-        }
-      }
-      
-      // Clear any localStorage items that might maintain auth state
-      localStorage.removeItem('redirectAfterAuth')
-      
-      // Force reload to ensure all state is cleared
+      await nextAuthSignOut({ redirect: false })
+      // Redirect to home page after logout
       window.location.href = '/'
     } catch (err) {
       setError(err instanceof Error ? err : new Error('An error occurred'))
-      setCustomLoading(false)
       throw err
     }
   }
 
-  // Transform session to match our User interface, prioritizing custom auth
-  const user: User | null = customUser || (session?.user ? {
+  // Transform session to match our User interface
+  const user: User | null = session?.user ? {
     id: session.user.id || '',
     email: session.user.email || '',
     name: session.user.name || '',
     image: session.user.image || ''
-  } : null)
+  } : null
 
   return (
     <AuthContext.Provider value={{ 

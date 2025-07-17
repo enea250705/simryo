@@ -1,15 +1,21 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
-import { ArrowLeft, ShoppingCart, Trash2, Plus, Minus, LogIn } from "lucide-react"
+import { 
+  ArrowLeft, 
+  ShoppingCart, 
+  Trash2, 
+  Plus, 
+  Minus, 
+  LogIn 
+} from "lucide-react"
 import Link from "next/link"
-import Image from 'next/image'
 import { toast } from "sonner"
-import { useRouter } from "next/navigation"
-import { useAuth } from "@/lib/auth"
+import { useSession } from 'next-auth/react'
 
 interface CartItem {
   countryId: number
@@ -29,58 +35,48 @@ interface CartItem {
 }
 
 export default function CartPage() {
-  const [cartItems, setCartItems] = useState<CartItem[]>([])
-  const [loading, setLoading] = useState(true)
-  const [isClient, setIsClient] = useState(false)
   const router = useRouter()
-  const { user } = useAuth()
+  const { data: session } = useSession()
+  const [isClient, setIsClient] = useState(false)
+  const [cartItems, setCartItems] = useState<CartItem[]>([])
 
-  // Load cart from localStorage on component mount
   useEffect(() => {
     setIsClient(true)
-    try {
-      const items = localStorage.getItem('cart')
-      if (items) {
-        const parsedItems: CartItem[] = JSON.parse(items)
-        setCartItems(parsedItems)
+    const savedCart = localStorage.getItem('cart')
+    if (savedCart) {
+      try {
+        setCartItems(JSON.parse(savedCart))
+      } catch (error) {
+        console.error('Failed to parse cart:', error)
+        setCartItems([])
       }
-    } catch (error) {
-      console.error('Error loading cart from localStorage:', error)
-    } finally {
-      setLoading(false)
     }
   }, [])
 
-  // Save cart to localStorage whenever cartItems changes
   useEffect(() => {
-    if (!loading) {
-      try {
-        localStorage.setItem('cart', JSON.stringify(cartItems))
-        window.dispatchEvent(new CustomEvent('cart-updated'))
-      } catch (error) {
-        console.error('Error saving cart to localStorage:', error)
-      }
+    if (isClient) {
+      localStorage.setItem('cart', JSON.stringify(cartItems))
+      window.dispatchEvent(new Event('cart-updated'))
     }
-  }, [cartItems, loading])
+  }, [cartItems, isClient])
 
   const updateQuantity = (planIndex: number, countryId: number, newQuantity: number) => {
-    const newCart = cartItems.map(item => {
-      if (item.planIndex === planIndex && item.countryId === countryId) {
-        return { ...item, quantity: newQuantity >= 1 ? newQuantity : 1 }
-      }
-      return item
-    })
-    setCartItems(newCart)
-    localStorage.setItem('cart', JSON.stringify(newCart))
-    window.dispatchEvent(new CustomEvent('cart-updated'))
+    if (newQuantity < 1) {
+      removeItem(planIndex, countryId)
+      return
+    }
+    
+    setCartItems(prev => prev.map(item => 
+      item.planIndex === planIndex && item.countryId === countryId 
+        ? { ...item, quantity: newQuantity }
+        : item
+    ))
   }
 
   const removeItem = (planIndex: number, countryId: number) => {
-    const newCart = cartItems.filter(item => item.planIndex !== planIndex || item.countryId !== countryId)
-    setCartItems(newCart)
-    localStorage.setItem('cart', JSON.stringify(newCart))
-    window.dispatchEvent(new CustomEvent('cart-updated'))
-    toast.error('Item removed from cart.')
+    setCartItems(prev => prev.filter(item => 
+      !(item.planIndex === planIndex && item.countryId === countryId)
+    ))
   }
 
   const clearCart = () => {
@@ -98,7 +94,7 @@ export default function CartPage() {
   }
 
   const handleCheckout = () => {
-    if (!user) {
+    if (!session) {
       // Store current cart data and redirect URL in localStorage
       localStorage.setItem('pendingCheckout', 'true')
       localStorage.setItem('redirectAfterAuth', '/checkout')
@@ -259,7 +255,7 @@ export default function CartPage() {
                     className="w-full bg-emerald-600 hover:bg-emerald-700 mt-4"
                     onClick={handleCheckout}
                   >
-                    {user ? (
+                    {session ? (
                       <>
                         <ShoppingCart className="h-4 w-4 mr-2" />
                         Proceed to Checkout

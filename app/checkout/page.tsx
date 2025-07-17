@@ -3,16 +3,15 @@
 import { useState, useEffect, Suspense } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import { ArrowLeft, ShoppingCart, Loader2, AlertTriangle, Globe, User, UserPlus } from "lucide-react"
+import { ArrowLeft, ShoppingCart, Loader2, AlertTriangle } from "lucide-react"
 import Link from "next/link"
 import { toast } from 'sonner'
+import { useSession } from 'next-auth/react'
 
 import { loadStripe, StripeElementsOptions } from '@stripe/stripe-js'
 import { Elements } from '@stripe/react-stripe-js'
 import { CheckoutForm } from '@/components/checkout-form'
-import { useAuth } from '@/lib/auth'
 
 const stripePublishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 
@@ -31,33 +30,21 @@ interface OrderItem {
 function CheckoutFlow() {
   const searchParams = useSearchParams()
   const router = useRouter()
-  const { user: authUser, loading: authLoading } = useAuth()
+  const { data: session, status } = useSession()
   const [orderItems, setOrderItems] = useState<OrderItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [clientSecret, setClientSecret] = useState('')
 
-  const isAuthenticated = !!authUser
-
   useEffect(() => {
-    if (!authLoading) {
-      loadCheckoutData()
+    // Check authentication using NextAuth session
+    if (status === 'loading') return // Still loading
+    
+    if (!session) {
+      localStorage.setItem('pendingCheckout', 'true')
+      localStorage.setItem('redirectAfterAuth', '/checkout')
+      router.push('/signup')
+      return
     }
-  }, [authLoading])
-
-  // Re-check authentication when the page becomes visible (after returning from auth)
-  useEffect(() => {
-    const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
-        // The auth context will automatically update when the page becomes visible
-        // No need to manually check
-      }
-    }
-
-    document.addEventListener('visibilitychange', handleVisibilityChange)
-    return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
-  }, [])
-
-  const loadCheckoutData = () => {
 
     // Logic to parse order items from URL or cart
     const items: OrderItem[] = []
@@ -80,29 +67,20 @@ function CheckoutFlow() {
         toast.error("Failed to load cart items. Please try again.")
       }
     } else {
-      // Try to load from pending checkout cart first (after auth)
+      // Fallback: Try to load from localStorage if no URL params
       try {
-        const pendingCart = localStorage.getItem('pendingCheckoutCart')
-        if (pendingCart) {
-          const cartItems = JSON.parse(pendingCart)
-          items.push(...cartItems)
-          // Clear the pending cart after loading
-          localStorage.removeItem('pendingCheckoutCart')
-        } else {
-          // Fallback: Try to load from regular cart
-          const localCart = localStorage.getItem('cart')
-          if (localCart) {
-            const cartItems = JSON.parse(localCart)
-            const loadedOrderItems = cartItems.map((item: any) => {
-              return {
-                countryName: item.countryName,
-                flag: item.flag || '🌍',
-                plan: item.planData,
-                quantity: item.quantity,
-              }
-            })
-            items.push(...loadedOrderItems)
-          }
+        const localCart = localStorage.getItem('cart')
+        if (localCart) {
+          const cartItems = JSON.parse(localCart)
+          const loadedOrderItems = cartItems.map((item: any) => {
+            return {
+              countryName: item.countryName,
+              flag: item.flag || '🌍',
+              plan: item.planData,
+              quantity: item.quantity,
+            }
+          })
+          items.push(...loadedOrderItems)
         }
       } catch (error) {
         console.error("Failed to load cart from localStorage:", error)
@@ -110,15 +88,11 @@ function CheckoutFlow() {
       }
     }
     setOrderItems(items)
-  }
+  }, [searchParams, session, status, router])
 
   useEffect(() => {
-    if (orderItems.length > 0 && isAuthenticated) {
+    if (orderItems.length > 0) {
       const total = orderItems.reduce((acc, item) => acc + item.plan.price * item.quantity, 0)
-      
-      console.log("Creating payment intent for:", { orderItems, total, isAuthenticated })
-      
-      // Create payment intent using the simple create-payment-intent API
       fetch('/api/create-payment-intent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -126,13 +100,10 @@ function CheckoutFlow() {
       })
       .then((res) => res.json())
       .then((data) => {
-        console.log("Payment intent response:", data)
         if (data.clientSecret) {
           setClientSecret(data.clientSecret)
-          console.log("Client secret set:", data.clientSecret)
         } else {
-          console.error("Payment intent creation failed:", data.error)
-          toast.error(data.error || "Failed to initialize payment. Please try again.")
+          toast.error("Failed to initialize payment. Please try again.")
         }
         setIsLoading(false)
       })
@@ -142,34 +113,13 @@ function CheckoutFlow() {
         setIsLoading(false)
       })
     } else {
-      console.log("Not creating payment intent:", { orderItemsLength: orderItems.length, isAuthenticated })
       setIsLoading(false)
-    }
-  }, [orderItems, isAuthenticated])
+  }
+  }, [orderItems])
 
   const handleSuccessfulPurchase = (completedOrder: any) => {
     localStorage.setItem('completedOrder', JSON.stringify(completedOrder))
     router.push('/checkout/confirmation')
-  }
-
-  const handleAuthRedirect = (authPath: string) => {
-    // Save current cart data to localStorage
-    if (orderItems.length > 0) {
-      localStorage.setItem('pendingCheckoutCart', JSON.stringify(orderItems))
-    }
-    
-    // Create callback URL with current cart parameters
-    const currentUrl = new URL(window.location.href)
-    const callbackUrl = encodeURIComponent(currentUrl.pathname + currentUrl.search)
-    
-    // Redirect to auth page with callback
-    router.push(`${authPath}?callbackUrl=${callbackUrl}`)
-  }
-
-  const refreshAuth = () => {
-    setIsLoading(true)
-    // Just reload the page to refresh auth state
-    window.location.reload()
   }
 
   const total = orderItems.reduce((acc, item) => acc + item.plan.price * item.quantity, 0)
@@ -199,7 +149,7 @@ function CheckoutFlow() {
     )
   }
 
-  if (isLoading || authLoading) {
+  if (isLoading || status === 'loading') {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px]">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
@@ -212,12 +162,12 @@ function CheckoutFlow() {
     return (
       <div className="container mx-auto max-w-4xl px-4 py-12">
         <div className="text-center">
-          <div className="text-6xl mb-6">🌍</div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">Ready to travel?</h1>
-          <p className="text-gray-600 mb-6">Choose your destination and get connected instantly. No roaming fees, no hassle.</p>
+          <div className="text-6xl mb-6">🛒</div>
+          <h1 className="text-3xl font-bold text-gray-900 mb-4">No items to checkout</h1>
+          <p className="text-gray-600 mb-6">Your cart appears to be empty. Please add some items before checking out.</p>
           <Link href="/plans">
-            <button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white px-8 py-4 rounded-xl font-semibold shadow-lg">
-              Find My Travel Data
+            <button className="bg-emerald-600 hover:bg-emerald-700 text-white px-6 py-3 rounded-lg">
+              Browse Plans
             </button>
           </Link>
                     </div>
@@ -234,8 +184,8 @@ function CheckoutFlow() {
             <Card className="bg-slate-50/80 dark:bg-slate-900/50">
                 <CardHeader>
                 <CardTitle className="flex items-center text-xl">
-                  <Globe className="h-6 w-6 mr-3" />
-                  Your Travel Data
+                  <ShoppingCart className="h-6 w-6 mr-3" />
+                  Order Summary
                   </CardTitle>
                 </CardHeader>
               <CardContent>
@@ -253,95 +203,48 @@ function CheckoutFlow() {
                           <p className="text-xs text-gray-400">Qty: {item.quantity}</p>
                         )}
                       </div>
-                      </div>
-                    ))}
+                    </div>
+                  ))}
                 </div>
-                <Separator className="my-6" />
-                <div className="space-y-2">
-                  <div className="flex justify-between font-semibold">
-                    <span>Subtotal</span>
-                    <span>${total.toFixed(2)}</span>
-                  </div>
-                   <div className="flex justify-between text-sm text-gray-500">
-                    <span>Taxes & Fees</span>
-                    <span>Calculated at payment</span>
-                  </div>
-                </div>
-                 <Separator className="my-6" />
-                 <div className="flex justify-between font-bold text-2xl">
-                    <span>Total</span>
-                    <span>${total.toFixed(2)}</span>
+                <Separator className="my-4" />
+                <div className="flex justify-between items-center text-lg font-semibold">
+                  <span>Total</span>
+                  <span>${total.toFixed(2)}</span>
                 </div>
               </CardContent>
             </Card>
-             <div className="text-center mt-4">
-              <Link href="/cart" className="text-sm text-primary hover:underline flex items-center justify-center">
-                <ArrowLeft className="h-4 w-4 mr-1" />
-                Back to Cart
-              </Link>
-            </div>
           </div>
         </div>
 
-        {/* Payment Details - Now appears SECOND on mobile */}
+        {/* Checkout Form */}
         <div className="md:order-1">
-          <div className="mb-6">
-            <h1 className="text-2xl md:text-3xl font-bold mb-2">Complete Your Purchase</h1>
-            <p className="text-gray-600">🎉 You're one step away from staying connected while traveling!</p>
+          <div className="flex items-center mb-6">
+            <Link href="/cart" className="flex items-center text-gray-600 hover:text-gray-900">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Cart
+            </Link>
           </div>
           
-          {!isAuthenticated ? (
-            <Card className="bg-blue-50/50 border-blue-200">
-              <CardHeader className="text-center">
-                <CardTitle className="flex items-center justify-center text-blue-700">
-                  <User className="h-6 w-6 mr-2" />
-                  Sign In Required
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="text-center space-y-4">
-                <p className="text-gray-700">
-                  Please sign in or create an account to complete your purchase.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                  <Button 
-                    onClick={() => handleAuthRedirect('/login')}
-                    className="bg-blue-600 hover:bg-blue-700"
-                  >
-                    <User className="h-4 w-4 mr-2" />
-                    Sign In
-                  </Button>
-                  <Button 
-                    onClick={() => handleAuthRedirect('/signup')}
-                    variant="outline" 
-                    className="border-blue-300 text-blue-700 hover:bg-blue-50"
-                  >
-                    <UserPlus className="h-4 w-4 mr-2" />
-                    Create Account
-                  </Button>
+          <Card>
+            <CardHeader>
+              <CardTitle>Payment Information</CardTitle>
+            </CardHeader>
+            <CardContent>
+              {clientSecret ? (
+                <Elements stripe={stripePromise} options={options}>
+                  <CheckoutForm 
+                    orderItems={orderItems}
+                    onSuccessfulPurchase={handleSuccessfulPurchase}
+                  />
+                </Elements>
+              ) : (
+                <div className="text-center py-8">
+                  <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+                  <p>Setting up payment...</p>
                 </div>
-                <p className="text-sm text-gray-600">
-                  Your cart will be saved and you'll be redirected back here after signing in.
-                </p>
-                <Button variant="ghost" onClick={refreshAuth} className="mt-2">
-                  Already signed in? Try again
-                </Button>
-              </CardContent>
-            </Card>
-          ) : !clientSecret ? (
-            <Card className="bg-yellow-50/50 border-yellow-200">
-              <CardContent className="text-center py-8">
-                <Loader2 className="h-8 w-8 animate-spin text-yellow-600 mx-auto mb-4" />
-                <p className="text-yellow-700">Setting up payment...</p>
-                <p className="text-sm text-yellow-600 mt-2">
-                  If this takes more than a few seconds, please refresh the page.
-                </p>
-              </CardContent>
-            </Card>
-          ) : (
-            <Elements options={options} stripe={stripePromise}>
-              <CheckoutForm orderItems={orderItems} onSuccessfulPurchase={handleSuccessfulPurchase} />
-            </Elements>
-          )}
+              )}
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
@@ -350,14 +253,13 @@ function CheckoutFlow() {
 
 export default function CheckoutPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 pt-20">
-      <Suspense fallback={
-        <div className="flex items-center justify-center min-h-[400px]">
-          <Loader2 className="h-8 w-8 animate-spin text-emerald-600" />
-        </div>
-      }>
-        <CheckoutFlow />
-      </Suspense>
-    </div>
+    <Suspense fallback={
+      <div className="flex flex-col items-center justify-center min-h-[400px]">
+        <Loader2 className="h-12 w-12 animate-spin text-primary" />
+        <p className="mt-4 text-lg text-muted-foreground">Loading checkout...</p>
+      </div>
+    }>
+      <CheckoutFlow />
+    </Suspense>
   )
 }
