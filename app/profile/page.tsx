@@ -36,6 +36,7 @@ import {
 } from "lucide-react"
 import { toast } from "sonner"
 import { ESIMQRModal } from "@/components/esim-qr-modal"
+import { useAuth } from "@/lib/auth"
 
 interface UserProfile {
   id: string
@@ -74,6 +75,7 @@ interface EsimData {
 function ProfileContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { user: authUser, loading: authLoading } = useAuth()
   const [user, setUser] = useState<UserProfile | null>(null)
   const [esims, setEsims] = useState<EsimData[]>([])
   const [loading, setLoading] = useState(true)
@@ -91,23 +93,27 @@ function ProfileContent() {
       setActiveTab(tab)
     }
 
-    // Load user data and eSIMs (this will check auth)
-    loadUserData()
-  }, [router, searchParams])
+    // Load user data once auth is ready
+    if (!authLoading) {
+      if (authUser) {
+        loadUserData()
+      } else {
+        // User not authenticated, redirect to login
+        router.push('/login')
+      }
+    }
+  }, [router, searchParams, authUser, authLoading])
 
   const loadUserData = async () => {
     try {
-      // Check authentication and get user data
-      const response = await fetch('/api/auth/me')
-      const data = await response.json()
-      
-      if (data.success && data.user) {
+      // Use the authenticated user from the auth context
+      if (authUser) {
         const profile: UserProfile = {
-          id: data.user.id,
-          name: data.user.name,
-          email: data.user.email,
-          avatar: data.user.avatar,
-          joinDate: data.user.createdAt || new Date().toISOString().split('T')[0],
+          id: authUser.id,
+          name: authUser.name || '',
+          email: authUser.email,
+          avatar: authUser.image,
+          joinDate: new Date().toISOString().split('T')[0], // Default to today
           totalEsims: 0,
           totalSpent: 0
         }
@@ -117,9 +123,6 @@ function ProfileContent() {
         
         // After user is loaded, load their eSIMs
         loadUserEsims()
-      } else {
-        // User not authenticated, redirect to login
-        router.push('/login')
       }
     } catch (error) {
       console.error('Failed to load user data:', error)
@@ -197,11 +200,12 @@ function ProfileContent() {
     }
   }
 
+  const { signOut } = useAuth()
+
   const handleLogout = async () => {
     try {
-      await fetch('/api/auth/logout', { method: 'POST' })
-      toast.success('Logged out successfully')
-      router.push('/login')
+      await signOut()
+      // signOut handles the redirect
     } catch (error) {
       console.error('Logout error:', error)
       toast.error('Logout failed')
@@ -286,10 +290,10 @@ function ProfileContent() {
               <CardContent>
                 <p className="mb-4">Get connected worldwide with our eSIM plans. No roaming fees, instant activation!</p>
                 <Button asChild className="bg-white text-blue-600 hover:bg-gray-100">
-                  <Link href="/plans">
+                  <a href="/plans">
                     <Smartphone className="h-4 w-4 mr-2" />
                     Browse eSIM Plans
-                  </Link>
+                  </a>
                 </Button>
               </CardContent>
             </Card>
@@ -393,10 +397,10 @@ function ProfileContent() {
                     <h3 className="text-xl font-semibold mb-2">No eSIMs Yet</h3>
                     <p className="text-gray-600 mb-6">Start exploring the world with our global eSIM plans!</p>
                     <Button asChild className="bg-blue-600 hover:bg-blue-700">
-                      <Link href="/plans">
+                      <a href="/plans">
                         <Smartphone className="h-4 w-4 mr-2" />
                         Buy Your First eSIM
-                      </Link>
+                      </a>
                     </Button>
                   </div>
                 ) : (

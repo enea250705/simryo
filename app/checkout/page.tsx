@@ -12,6 +12,7 @@ import { toast } from 'sonner'
 import { loadStripe, StripeElementsOptions } from '@stripe/stripe-js'
 import { Elements } from '@stripe/react-stripe-js'
 import { CheckoutForm } from '@/components/checkout-form'
+import { useAuth } from '@/lib/auth'
 
 const stripePublishableKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
 
@@ -30,42 +31,25 @@ interface OrderItem {
 function CheckoutFlow() {
   const searchParams = useSearchParams()
   const router = useRouter()
+  const { user: authUser, loading: authLoading } = useAuth()
   const [orderItems, setOrderItems] = useState<OrderItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [clientSecret, setClientSecret] = useState('')
-  const [isAuthenticated, setIsAuthenticated] = useState(false)
 
-  const checkAuth = async () => {
-    try {
-      const response = await fetch('/api/auth/me')
-      const data = await response.json()
-      
-      if (!data.success) {
-        // User not authenticated, show authentication options
-        setIsAuthenticated(false)
-        loadCheckoutData() // Load items anyway for preview
-        setIsLoading(false)
-        return
-      }
-      
-      // User is authenticated, continue with checkout
-      setIsAuthenticated(true)
-      loadCheckoutData()
-    } catch (error) {
-      console.error('Auth check failed:', error)
-      setIsLoading(false)
-    }
-  }
+  const isAuthenticated = !!authUser
 
   useEffect(() => {
-    checkAuth()
-  }, [router, searchParams])
+    if (!authLoading) {
+      loadCheckoutData()
+    }
+  }, [authLoading])
 
   // Re-check authentication when the page becomes visible (after returning from auth)
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible') {
-        checkAuth()
+        // The auth context will automatically update when the page becomes visible
+        // No need to manually check
       }
     }
 
@@ -132,6 +116,8 @@ function CheckoutFlow() {
     if (orderItems.length > 0 && isAuthenticated) {
       const total = orderItems.reduce((acc, item) => acc + item.plan.price * item.quantity, 0)
       
+      console.log("Creating payment intent for:", { orderItems, total, isAuthenticated })
+      
       // Create payment intent using the simple create-payment-intent API
       fetch('/api/create-payment-intent', {
         method: 'POST',
@@ -140,8 +126,10 @@ function CheckoutFlow() {
       })
       .then((res) => res.json())
       .then((data) => {
+        console.log("Payment intent response:", data)
         if (data.clientSecret) {
           setClientSecret(data.clientSecret)
+          console.log("Client secret set:", data.clientSecret)
         } else {
           console.error("Payment intent creation failed:", data.error)
           toast.error(data.error || "Failed to initialize payment. Please try again.")
@@ -154,6 +142,7 @@ function CheckoutFlow() {
         setIsLoading(false)
       })
     } else {
+      console.log("Not creating payment intent:", { orderItemsLength: orderItems.length, isAuthenticated })
       setIsLoading(false)
     }
   }, [orderItems, isAuthenticated])
@@ -179,7 +168,8 @@ function CheckoutFlow() {
 
   const refreshAuth = () => {
     setIsLoading(true)
-    checkAuth()
+    // Just reload the page to refresh auth state
+    window.location.reload()
   }
 
   const total = orderItems.reduce((acc, item) => acc + item.plan.price * item.quantity, 0)
@@ -209,7 +199,7 @@ function CheckoutFlow() {
     )
   }
 
-  if (isLoading) {
+  if (isLoading || authLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px]">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
