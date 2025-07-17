@@ -30,7 +30,11 @@
       "Bash(grep:*)",
       "Bash(git init:*)",
       "Bash(git remote add:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(pnpm install:*)",
+      "Bash(pnpm prisma generate:*)"
     ],
     "deny": []
   }
