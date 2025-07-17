@@ -150,13 +150,13 @@ export async function middleware(request: NextRequest) {
   }
   
   // Authentication checks for protected routes
-  const protectedPaths = ['/profile', '/admin', '/dashboard', '/checkout']
+  const protectedPaths = ['/profile', '/admin', '/dashboard']
   const isProtectedPath = protectedPaths.some(path => pathname.startsWith(path))
   
   if (isProtectedPath) {
     try {
-      // Check JWT token from cookie
-      const token = request.cookies.get('auth-token')?.value
+      // Use NextAuth's getToken to check authentication
+      const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET })
       
       if (!token) {
         // Redirect to login with return URL
@@ -164,23 +164,6 @@ export async function middleware(request: NextRequest) {
         loginUrl.searchParams.set('callbackUrl', request.url)
         return NextResponse.redirect(loginUrl)
       }
-      
-      // Verify JWT token
-      const { jwtVerify } = await import('jose')
-      const secret = new TextEncoder().encode(process.env.JWT_SECRET || 'fallback-secret')
-      
-      try {
-        await jwtVerify(token, secret)
-      } catch (jwtError) {
-        console.error('JWT verification failed:', jwtError)
-        // Invalid token, redirect to login
-        const loginUrl = new URL('/login', request.url)
-        loginUrl.searchParams.set('callbackUrl', request.url)
-        return NextResponse.redirect(loginUrl)
-      }
-      
-      // Note: Admin role checking would need to be implemented 
-      // by verifying the user's role from the JWT payload if needed
       
     } catch (error) {
       console.error('Auth middleware error:', error)
