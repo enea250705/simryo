@@ -35,32 +35,43 @@ function CheckoutFlow() {
   const [clientSecret, setClientSecret] = useState('')
   const [isAuthenticated, setIsAuthenticated] = useState(false)
 
-  useEffect(() => {
-    // Check authentication using JWT
-    const checkAuth = async () => {
-      try {
-        const response = await fetch('/api/auth/me')
-        const data = await response.json()
-        
-        if (!data.success) {
-          // User not authenticated, show authentication options
-          setIsAuthenticated(false)
-          loadCheckoutData() // Load items anyway for preview
-          setIsLoading(false)
-          return
-        }
-        
-        // User is authenticated, continue with checkout
-        setIsAuthenticated(true)
-        loadCheckoutData()
-      } catch (error) {
-        console.error('Auth check failed:', error)
+  const checkAuth = async () => {
+    try {
+      const response = await fetch('/api/auth/me')
+      const data = await response.json()
+      
+      if (!data.success) {
+        // User not authenticated, show authentication options
+        setIsAuthenticated(false)
+        loadCheckoutData() // Load items anyway for preview
         setIsLoading(false)
+        return
       }
+      
+      // User is authenticated, continue with checkout
+      setIsAuthenticated(true)
+      loadCheckoutData()
+    } catch (error) {
+      console.error('Auth check failed:', error)
+      setIsLoading(false)
     }
-    
+  }
+
+  useEffect(() => {
     checkAuth()
   }, [router, searchParams])
+
+  // Re-check authentication when the page becomes visible (after returning from auth)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        checkAuth()
+      }
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
+  }, [])
 
   const loadCheckoutData = () => {
 
@@ -120,6 +131,8 @@ function CheckoutFlow() {
   useEffect(() => {
     if (orderItems.length > 0 && isAuthenticated) {
       const total = orderItems.reduce((acc, item) => acc + item.plan.price * item.quantity, 0)
+      
+      // Create payment intent using the simple create-payment-intent API
       fetch('/api/create-payment-intent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -130,7 +143,8 @@ function CheckoutFlow() {
         if (data.clientSecret) {
           setClientSecret(data.clientSecret)
         } else {
-          toast.error("Failed to initialize payment. Please try again.")
+          console.error("Payment intent creation failed:", data.error)
+          toast.error(data.error || "Failed to initialize payment. Please try again.")
         }
         setIsLoading(false)
       })
@@ -141,7 +155,7 @@ function CheckoutFlow() {
       })
     } else {
       setIsLoading(false)
-  }
+    }
   }, [orderItems, isAuthenticated])
 
   const handleSuccessfulPurchase = (completedOrder: any) => {
@@ -161,6 +175,11 @@ function CheckoutFlow() {
     
     // Redirect to auth page with callback
     router.push(`${authPath}?callbackUrl=${callbackUrl}`)
+  }
+
+  const refreshAuth = () => {
+    setIsLoading(true)
+    checkAuth()
   }
 
   const total = orderItems.reduce((acc, item) => acc + item.plan.price * item.quantity, 0)
@@ -313,6 +332,9 @@ function CheckoutFlow() {
                 <p className="text-sm text-gray-600">
                   Your cart will be saved and you'll be redirected back here after signing in.
                 </p>
+                <Button variant="ghost" onClick={refreshAuth} className="mt-2">
+                  Already signed in? Try again
+                </Button>
               </CardContent>
             </Card>
           ) : (
