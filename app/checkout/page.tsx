@@ -85,20 +85,29 @@ function CheckoutFlow() {
         toast.error("Failed to load cart items. Please try again.")
       }
     } else {
-      // Fallback: Try to load from localStorage if no URL params
+      // Try to load from pending checkout cart first (after auth)
       try {
-        const localCart = localStorage.getItem('cart')
-        if (localCart) {
-          const cartItems = JSON.parse(localCart)
-          const loadedOrderItems = cartItems.map((item: any) => {
-            return {
-              countryName: item.countryName,
-              flag: item.flag || '🌍',
-              plan: item.planData,
-              quantity: item.quantity,
-            }
-          })
-          items.push(...loadedOrderItems)
+        const pendingCart = localStorage.getItem('pendingCheckoutCart')
+        if (pendingCart) {
+          const cartItems = JSON.parse(pendingCart)
+          items.push(...cartItems)
+          // Clear the pending cart after loading
+          localStorage.removeItem('pendingCheckoutCart')
+        } else {
+          // Fallback: Try to load from regular cart
+          const localCart = localStorage.getItem('cart')
+          if (localCart) {
+            const cartItems = JSON.parse(localCart)
+            const loadedOrderItems = cartItems.map((item: any) => {
+              return {
+                countryName: item.countryName,
+                flag: item.flag || '🌍',
+                plan: item.planData,
+                quantity: item.quantity,
+              }
+            })
+            items.push(...loadedOrderItems)
+          }
         }
       } catch (error) {
         console.error("Failed to load cart from localStorage:", error)
@@ -138,6 +147,20 @@ function CheckoutFlow() {
   const handleSuccessfulPurchase = (completedOrder: any) => {
     localStorage.setItem('completedOrder', JSON.stringify(completedOrder))
     router.push('/checkout/confirmation')
+  }
+
+  const handleAuthRedirect = (authPath: string) => {
+    // Save current cart data to localStorage
+    if (orderItems.length > 0) {
+      localStorage.setItem('pendingCheckoutCart', JSON.stringify(orderItems))
+    }
+    
+    // Create callback URL with current cart parameters
+    const currentUrl = new URL(window.location.href)
+    const callbackUrl = encodeURIComponent(currentUrl.pathname + currentUrl.search)
+    
+    // Redirect to auth page with callback
+    router.push(`${authPath}?callbackUrl=${callbackUrl}`)
   }
 
   const total = orderItems.reduce((acc, item) => acc + item.plan.price * item.quantity, 0)
@@ -271,17 +294,20 @@ function CheckoutFlow() {
                   Please sign in or create an account to complete your purchase.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                  <Button asChild className="bg-blue-600 hover:bg-blue-700">
-                    <Link href="/login">
-                      <User className="h-4 w-4 mr-2" />
-                      Sign In
-                    </Link>
+                  <Button 
+                    onClick={() => handleAuthRedirect('/login')}
+                    className="bg-blue-600 hover:bg-blue-700"
+                  >
+                    <User className="h-4 w-4 mr-2" />
+                    Sign In
                   </Button>
-                  <Button asChild variant="outline" className="border-blue-300 text-blue-700 hover:bg-blue-50">
-                    <Link href="/signup">
-                      <UserPlus className="h-4 w-4 mr-2" />
-                      Create Account
-                    </Link>
+                  <Button 
+                    onClick={() => handleAuthRedirect('/signup')}
+                    variant="outline" 
+                    className="border-blue-300 text-blue-700 hover:bg-blue-50"
+                  >
+                    <UserPlus className="h-4 w-4 mr-2" />
+                    Create Account
                   </Button>
                 </div>
                 <p className="text-sm text-gray-600">

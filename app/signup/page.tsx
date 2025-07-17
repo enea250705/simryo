@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { useRouter } from "next/navigation"
+import { useRouter, useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -12,6 +12,7 @@ import { toast } from "sonner"
 
 export default function SignupPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -69,13 +70,19 @@ export default function SignupPage() {
       if (data.success) {
         toast.success("Account created successfully!")
         
-        // Check if user was trying to checkout
-        const pendingCheckout = localStorage.getItem('pendingCheckout')
-        if (pendingCheckout) {
-          localStorage.removeItem('pendingCheckout')
-          router.push('/checkout')
+        // Check for callback URL from search params
+        const callbackUrl = searchParams.get('callbackUrl')
+        if (callbackUrl) {
+          router.push(decodeURIComponent(callbackUrl))
         } else {
-          router.push('/profile')
+          // Check if user was trying to checkout (legacy support)
+          const pendingCheckout = localStorage.getItem('pendingCheckout')
+          if (pendingCheckout) {
+            localStorage.removeItem('pendingCheckout')
+            router.push('/checkout')
+          } else {
+            router.push('/profile')
+          }
         }
       } else {
         toast.error(data.error || "Signup failed")
