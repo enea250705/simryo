@@ -4,6 +4,13 @@ import { prisma } from '@/lib/db'
 import bcrypt from 'bcryptjs'
 import type { NextAuthOptions } from 'next-auth'
 
+// Debug environment variables
+console.log('NextAuth config:', {
+  NEXTAUTH_URL: process.env.NEXTAUTH_URL,
+  NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET ? '***SET***' : 'NOT SET',
+  NODE_ENV: process.env.NODE_ENV
+})
+
 export const authOptions: NextAuthOptions = {
   providers: [
     CredentialsProvider({
@@ -58,15 +65,18 @@ export const authOptions: NextAuthOptions = {
     strategy: 'jwt',
     maxAge: 30 * 24 * 60 * 60 // 30 days
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET || 'fallback-secret-key-for-development',
+  url: process.env.NEXTAUTH_URL || (process.env.NODE_ENV === 'production' ? 'https://simryo.vercel.app' : 'http://localhost:3000'),
   callbacks: {
     async jwt({ token, user }) {
+      console.log('JWT callback - user:', user, 'token:', token)
       if (user) {
         token.id = user.id
       }
       return token
     },
     async session({ session, token }) {
+      console.log('Session callback - session:', session, 'token:', token)
       if (token && session.user) {
         session.user.id = token.id as string
       }
