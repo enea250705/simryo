@@ -1,0 +1,37 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx prisma db push:*)",
+      "Bash(rg:*)",
+      "Bash(npx prisma migrate:*)",
+      "Bash(node:*)",
+      "Bash(npx prisma studio:*)",
+      "mcp__ide__getDiagnostics",
+      "Bash(npm run lint)",
+      "Bash(npm run build:*)",
+      "Bash(copy env.example .env.local)",
+      "Bash(cp:*)",
+      "Bash(npm install:*)",
+      "Bash(npx prisma generate:*)",
+      "Bash(npm run dev:*)",
+      "Bash(timeout 15 npm run dev)",
+      "Bash(powershell:*)",
+      "Bash(rmdir:*)",
+      "Bash(rm:*)",
+      "Bash(ls:*)",
+      "Bash(where docker)",
+      "Bash(rd:*)",
+      "Bash(npm run:*)",
+      "Bash(del test-db.js)",
+      "Bash(mkdir:*)",
+      "Bash(move \"[...nextauth].ts\" \"[...nextauth]\\route.ts\")",
+      "Bash(mv:*)",
+      "Bash(find:*)",
+      "Bash(grep:*)",
+      "Bash(git init:*)",
+      "Bash(git remote add:*)",
+      "Bash(git add:*)"
+    ],
+    "deny": []
+  }
+}

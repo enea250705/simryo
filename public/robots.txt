@@ -1,0 +1,105 @@
+# SIMRYO - Global eSIM Marketplace
+# Robots.txt for optimal search engine indexing
+
+User-agent: *
+Allow: /
+
+# Allow all important pages
+Allow: /plans
+Allow: /plans/*
+Allow: /benefits
+Allow: /support
+Allow: /setup
+Allow: /contact
+Allow: /faq
+Allow: /blog
+Allow: /blog/*
+Allow: /about
+Allow: /privacy
+Allow: /terms
+Allow: /coverage
+Allow: /pricing
+Allow: /how-it-works
+
+# Disallow admin and private areas
+Disallow: /admin
+Disallow: /admin/*
+Disallow: /api/
+Disallow: /profile
+Disallow: /profile/*
+Disallow: /checkout
+Disallow: /checkout/*
+Disallow: /cart
+Disallow: /login
+Disallow: /signup
+Disallow: /auth/*
+
+# Disallow development and testing paths
+Disallow: /test
+Disallow: /test/*
+Disallow: /dev
+Disallow: /dev/*
+Disallow: /_next/
+Disallow: /.*
+
+# Allow specific API endpoints for SEO
+Allow: /api/plans/popular
+Allow: /api/plans/*/route
+
+# Disallow search result pages with query parameters
+Disallow: /*?q=*
+Disallow: /*?search=*
+Disallow: /*?filter=*
+Disallow: /*?sort=*
+
+# Disallow session and tracking parameters
+Disallow: /*?utm_*
+Disallow: /*?fbclid=*
+Disallow: /*?gclid=*
+Disallow: /*?ref=*
+Disallow: /*?source=*
+
+# Google-specific directives
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+# Bing-specific directives  
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+# Yandex-specific directives
+User-agent: YandexBot
+Allow: /
+Crawl-delay: 2
+
+# Baidu-specific directives
+User-agent: Baiduspider
+Allow: /
+Crawl-delay: 2
+
+# Block aggressive crawlers
+User-agent: AhrefsBot
+Disallow: /
+
+User-agent: SemrushBot
+Disallow: /
+
+User-agent: MJ12bot
+Disallow: /
+
+User-agent: DotBot
+Disallow: /
+
+# Sitemap location
+Sitemap: https://simryo.com/sitemap.xml
+Sitemap: https://simryo.com/sitemap-pages.xml
+Sitemap: https://simryo.com/sitemap-plans.xml
+Sitemap: https://simryo.com/sitemap-blog.xml
+
+# Additional sitemap formats
+Sitemap: https://simryo.com/rss.xml 
+ 
+ 
+ 
