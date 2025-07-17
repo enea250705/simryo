@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
+import { useSession, signOut } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { 
@@ -46,13 +47,11 @@ import {
   Gift
 } from "lucide-react"
 import { toast } from "sonner"
-import { useSession, signOut } from "next-auth/react"
 import { cn } from "@/lib/utils"
 
 interface CartItem {
   quantity: number
 }
-
 
 const navigationItems = [
   {
@@ -92,20 +91,8 @@ const supportItems = [
   {
     title: "Contact Us",
     href: "/contact",
-    description: "Step-by-step eSIM installation",
-    icon: Smartphone,
-  },
-  {
-    title: "Contact Us",
-    href: "/contact",
     description: "24/7 customer support",
     icon: MessageCircle,
-  },
-  {
-    title: "FAQ",
-    href: "/faq",
-    description: "Frequently asked questions",
-    icon: Phone,
   },
 ]
 
@@ -140,7 +127,6 @@ export function Navbar() {
   const router = useRouter()
   const { data: session, status } = useSession()
   const isHomePage = pathname === "/"
-  const user = session?.user
 
   // Handle scroll effect
   useEffect(() => {
@@ -343,14 +329,14 @@ export function Navbar() {
             </Link>
 
             {/* User Menu or Sign In */}
-            {user ? (
+            {session?.user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-9 w-9 rounded-full">
                     <Avatar className="h-9 w-9">
-                      <AvatarImage src={user?.image || ''} alt={user?.name || ''} />
+                      <AvatarImage src={session.user.image || ''} alt={session.user.name || ''} />
                       <AvatarFallback className="bg-blue-100 text-blue-600">
-                        {user?.name?.split(' ').map(n => n[0]).join('') || 'U'}
+                        {session.user.name?.split(' ').map(n => n[0]).join('') || 'U'}
                       </AvatarFallback>
                     </Avatar>
                   </Button>
@@ -358,9 +344,9 @@ export function Navbar() {
                 <DropdownMenuContent className="w-56" align="end" forceMount>
                   <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium leading-none">{user?.name}</p>
+                      <p className="text-sm font-medium leading-none">{session.user.name}</p>
                       <p className="text-xs leading-none text-muted-foreground">
-                        {user?.email}
+                        {session.user.email}
                       </p>
                     </div>
                   </DropdownMenuLabel>
@@ -445,14 +431,14 @@ export function Navbar() {
                 )}
               </Link>
 
-              {user ? (
+              {session?.user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                       <Avatar className="h-8 w-8">
-                        <AvatarImage src={user?.image || ''} alt={user?.name || ''} />
+                        <AvatarImage src={session.user.image || ''} alt={session.user.name || ''} />
                         <AvatarFallback className="bg-blue-100 text-blue-600">
-                          {user?.name?.split(' ').map(n => n[0]).join('') || 'U'}
+                          {session.user.name?.split(' ').map(n => n[0]).join('') || 'U'}
                         </AvatarFallback>
                       </Avatar>
                     </Button>
@@ -460,9 +446,9 @@ export function Navbar() {
                   <DropdownMenuContent className="w-56" align="end">
                     <DropdownMenuLabel className="font-normal">
                       <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">{user?.name}</p>
+                        <p className="text-sm font-medium leading-none">{session.user.name}</p>
                         <p className="text-xs leading-none text-muted-foreground">
-                          {user?.email}
+                          {session.user.email}
                         </p>
                       </div>
                     </DropdownMenuLabel>
@@ -538,7 +524,7 @@ export function Navbar() {
                   </div>
                 </div>
 
-                {!user && (
+                {!session?.user && (
                   <>
                     <Separator />
                     <div className="space-y-3">

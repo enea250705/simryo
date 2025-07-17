@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
+import { signIn, getSession } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -9,7 +10,6 @@ import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { Loader2 } from "lucide-react"
 import { toast } from "sonner"
-import { signIn } from "next-auth/react"
 
 function SignupForm() {
   const router = useRouter()
@@ -20,23 +20,6 @@ function SignupForm() {
     password: ""
   })
   const [isLoading, setIsLoading] = useState(false)
-  const [mounted, setMounted] = useState(false)
-
-  // Ensure component is mounted before rendering
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  if (!mounted) {
-    return (
-      <div className="min-h-[calc(100vh-4rem)] bg-gradient-to-br from-blue-50 via-white to-blue-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
-          <p className="mt-2 text-gray-600">Loading...</p>
-        </div>
-      </div>
-    )
-  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -54,27 +37,26 @@ function SignupForm() {
     setIsLoading(true)
 
     try {
-      // Get callback URL for redirect after successful signup
-      const callbackUrl = searchParams.get('callbackUrl')
-      const redirectUrl = callbackUrl ? decodeURIComponent(callbackUrl) : '/checkout'
-
-      // Create user account using NextAuth-compatible endpoint
-      const response = await fetch('/api/auth/signup', {
+      // Create account
+      const signupResponse = await fetch('/api/auth/signup', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ 
-          email: formData.email, 
-          password: formData.password, 
-          name: formData.name 
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password
         })
       })
 
-      if (!response.ok) {
-        const data = await response.json()
-        throw new Error(data.error || 'Failed to create account')
+      const signupData = await signupResponse.json()
+
+      if (!signupResponse.ok) {
+        toast.error(signupData.error || 'Failed to create account')
+        setIsLoading(false)
+        return
       }
 
-      // After successful signup, sign them in with NextAuth
+      // Sign in after successful signup
       const result = await signIn('credentials', {
         email: formData.email,
         password: formData.password,
@@ -82,17 +64,30 @@ function SignupForm() {
       })
 
       if (result?.error) {
-        throw new Error(result.error)
+        toast.error("Account created but login failed. Please try signing in.")
+        setIsLoading(false)
+        return
       }
 
-      // Successful signup and login - redirect to the desired page
-      toast.success("Account created successfully!")
-      window.location.href = redirectUrl
+      // Check if session was created
+      const session = await getSession()
+      if (session) {
+        toast.success("Account created and logged in successfully!")
+        
+        // Get redirect URL
+        const callbackUrl = searchParams.get('callbackUrl')
+        const redirectUrl = callbackUrl ? decodeURIComponent(callbackUrl) : '/checkout'
+        
+        // Redirect
+        window.location.href = redirectUrl
+      } else {
+        toast.error("Account created but login failed. Please try signing in.")
+        setIsLoading(false)
+      }
       
     } catch (error) {
       console.error('Signup error:', error)
-      toast.error(error instanceof Error ? error.message : "Signup failed")
-    } finally {
+      toast.error("Signup failed")
       setIsLoading(false)
     }
   }
@@ -241,4 +236,4 @@ export default function SignupPage() {
       <SignupForm />
     </Suspense>
   )
-} 
+}

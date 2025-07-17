@@ -9,21 +9,21 @@ export async function POST(request: NextRequest) {
     // Validation
     if (!name?.trim()) {
       return NextResponse.json(
-        { success: false, error: 'Name is required' },
+        { error: 'Name is required' },
         { status: 400 }
       )
     }
 
     if (!email?.includes('@')) {
       return NextResponse.json(
-        { success: false, error: 'Invalid email address' },
+        { error: 'Invalid email address' },
         { status: 400 }
       )
     }
 
     if (!password || password.length < 6) {
       return NextResponse.json(
-        { success: false, error: 'Password must be at least 6 characters' },
+        { error: 'Password must be at least 6 characters' },
         { status: 400 }
       )
     }
@@ -35,12 +35,12 @@ export async function POST(request: NextRequest) {
 
     if (existingUser) {
       return NextResponse.json(
-        { success: false, error: 'Email already registered' },
+        { error: 'Email already registered' },
         { status: 400 }
       )
     }
 
-    // Hash password and create user
+    // Create user
     const hashedPassword = await bcrypt.hash(password, 10)
     const user = await prisma.user.create({
       data: {
@@ -50,27 +50,16 @@ export async function POST(request: NextRequest) {
       }
     })
 
-    // Just return success - NextAuth will handle the session after signup
     return NextResponse.json({
       success: true,
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email
-      }
+      message: 'Account created successfully'
     })
 
   } catch (error) {
     console.error('Signup error:', error)
     return NextResponse.json(
-      { success: false, error: 'Failed to create account' },
+      { error: 'Failed to create account' },
       { status: 500 }
     )
   }
-} 
- 
- 
- 
- 
- 
- 
+}

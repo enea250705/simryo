@@ -2,6 +2,7 @@
 
 import { useState, useEffect, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
+import { signIn, getSession } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -9,7 +10,6 @@ import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { Loader2 } from "lucide-react"
 import { toast } from "sonner"
-import { signIn } from "next-auth/react"
 
 function LoginForm() {
   const router = useRouter()
@@ -19,23 +19,6 @@ function LoginForm() {
     password: ""
   })
   const [isLoading, setIsLoading] = useState(false)
-  const [mounted, setMounted] = useState(false)
-
-  // Ensure component is mounted before rendering
-  useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  if (!mounted) {
-    return (
-      <div className="min-h-[calc(100vh-4rem)] bg-gradient-to-br from-blue-50 via-white to-blue-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
-          <p className="mt-2 text-gray-600">Loading...</p>
-        </div>
-      </div>
-    )
-  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -48,11 +31,6 @@ function LoginForm() {
     setIsLoading(true)
 
     try {
-      // Get callback URL for redirect after successful login
-      const callbackUrl = searchParams.get('callbackUrl')
-      const redirectUrl = callbackUrl ? decodeURIComponent(callbackUrl) : '/checkout'
-
-      // Use NextAuth signIn method
       const result = await signIn('credentials', {
         email: formData.email,
         password: formData.password,
@@ -60,17 +38,30 @@ function LoginForm() {
       })
 
       if (result?.error) {
-        throw new Error(result.error)
+        toast.error("Invalid email or password")
+        setIsLoading(false)
+        return
       }
 
-      // Successful login - redirect to the desired page
-      toast.success("Logged in successfully!")
-      window.location.href = redirectUrl
+      // Check if session was created
+      const session = await getSession()
+      if (session) {
+        toast.success("Logged in successfully!")
+        
+        // Get redirect URL
+        const callbackUrl = searchParams.get('callbackUrl')
+        const redirectUrl = callbackUrl ? decodeURIComponent(callbackUrl) : '/checkout'
+        
+        // Redirect
+        window.location.href = redirectUrl
+      } else {
+        toast.error("Login failed")
+        setIsLoading(false)
+      }
       
     } catch (error) {
       console.error('Login error:', error)
-      toast.error(error instanceof Error ? error.message : "Login failed")
-    } finally {
+      toast.error("Login failed")
       setIsLoading(false)
     }
   }
@@ -208,4 +199,3 @@ export default function LoginPage() {
     </Suspense>
   )
 }
- 
