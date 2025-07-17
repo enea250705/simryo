@@ -9,10 +9,12 @@ import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { Loader2 } from "lucide-react"
 import { toast } from "sonner"
+import { useAuth } from "@/lib/auth"
 
 function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { signIn } = useAuth()
   const [formData, setFormData] = useState({
     email: "",
     password: ""
@@ -47,42 +49,20 @@ function LoginForm() {
     setIsLoading(true)
 
     try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password
-        })
-      })
-
-      const data = await response.json()
-
-      if (data.success) {
-        toast.success("Logged in successfully!")
-        
-        // Check for callback URL from search params
-        const callbackUrl = searchParams.get('callbackUrl')
-        if (callbackUrl) {
-          router.push(decodeURIComponent(callbackUrl))
-        } else {
-          // Check if user was trying to checkout (legacy support)
-          const pendingCheckout = localStorage.getItem('pendingCheckout')
-          if (pendingCheckout) {
-            localStorage.removeItem('pendingCheckout')
-            router.push('/checkout')
-          } else {
-            router.push('/profile')
-          }
-        }
-      } else {
-        toast.error(data.error || "Login failed")
+      // Store callback URL for after successful login
+      const callbackUrl = searchParams.get('callbackUrl')
+      if (callbackUrl) {
+        localStorage.setItem('redirectAfterAuth', decodeURIComponent(callbackUrl))
       }
+
+      // Use the auth context signIn method
+      await signIn(formData.email, formData.password)
+      
+      // The signIn method handles the redirect automatically
+      
     } catch (error) {
       console.error('Login error:', error)
-      toast.error("Network error. Please try again.")
+      toast.error(error instanceof Error ? error.message : "Login failed")
     } finally {
       setIsLoading(false)
     }

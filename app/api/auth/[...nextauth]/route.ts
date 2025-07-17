@@ -57,13 +57,20 @@ export const authOptions: NextAuthOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async jwt({ token, user, account }) {
+    async jwt({ token, user, account, trigger }) {
       if (user) {
         token.id = user.id
       }
+      
+      // Check for custom auth token if no NextAuth session
+      if (!user && trigger === 'signIn') {
+        // This will be triggered when we need to check the custom auth
+        return token
+      }
+      
       return token
     },
-    async session({ session, token }) {
+    async session({ session, token, trigger }) {
       if (token && session.user) {
         session.user.id = token.id as string
       }
