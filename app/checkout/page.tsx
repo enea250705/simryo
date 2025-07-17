@@ -3,8 +3,9 @@
 import { useState, useEffect, Suspense } from "react"
 import { useSearchParams, useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
-import { ArrowLeft, ShoppingCart, Loader2, AlertTriangle } from "lucide-react"
+import { ArrowLeft, ShoppingCart, Loader2, AlertTriangle, Globe, User, UserPlus } from "lucide-react"
 import Link from "next/link"
 import { toast } from 'sonner'
 
@@ -32,6 +33,7 @@ function CheckoutFlow() {
   const [orderItems, setOrderItems] = useState<OrderItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [clientSecret, setClientSecret] = useState('')
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
 
   useEffect(() => {
     // Check authentication using JWT
@@ -41,18 +43,19 @@ function CheckoutFlow() {
         const data = await response.json()
         
         if (!data.success) {
-          // User not authenticated, redirect to login
-          localStorage.setItem('pendingCheckout', 'true')
-          router.push('/login')
+          // User not authenticated, show authentication options
+          setIsAuthenticated(false)
+          loadCheckoutData() // Load items anyway for preview
+          setIsLoading(false)
           return
         }
         
         // User is authenticated, continue with checkout
+        setIsAuthenticated(true)
         loadCheckoutData()
       } catch (error) {
         console.error('Auth check failed:', error)
-        localStorage.setItem('pendingCheckout', 'true')
-        router.push('/login')
+        setIsLoading(false)
       }
     }
     
@@ -106,7 +109,7 @@ function CheckoutFlow() {
   }
 
   useEffect(() => {
-    if (orderItems.length > 0) {
+    if (orderItems.length > 0 && isAuthenticated) {
       const total = orderItems.reduce((acc, item) => acc + item.plan.price * item.quantity, 0)
       fetch('/api/create-payment-intent', {
         method: 'POST',
@@ -130,7 +133,7 @@ function CheckoutFlow() {
     } else {
       setIsLoading(false)
   }
-  }, [orderItems])
+  }, [orderItems, isAuthenticated])
 
   const handleSuccessfulPurchase = (completedOrder: any) => {
     localStorage.setItem('completedOrder', JSON.stringify(completedOrder))
@@ -254,10 +257,44 @@ function CheckoutFlow() {
             <h1 className="text-2xl md:text-3xl font-bold mb-2">Complete Your Purchase</h1>
             <p className="text-gray-600">🎉 You're one step away from staying connected while traveling!</p>
           </div>
-          {clientSecret && (
-            <Elements options={options} stripe={stripePromise}>
-              <CheckoutForm orderItems={orderItems} onSuccessfulPurchase={handleSuccessfulPurchase} />
-            </Elements>
+          
+          {!isAuthenticated ? (
+            <Card className="bg-blue-50/50 border-blue-200">
+              <CardHeader className="text-center">
+                <CardTitle className="flex items-center justify-center text-blue-700">
+                  <User className="h-6 w-6 mr-2" />
+                  Sign In Required
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="text-center space-y-4">
+                <p className="text-gray-700">
+                  Please sign in or create an account to complete your purchase.
+                </p>
+                <div className="flex flex-col sm:flex-row gap-3 justify-center">
+                  <Button asChild className="bg-blue-600 hover:bg-blue-700">
+                    <Link href="/login">
+                      <User className="h-4 w-4 mr-2" />
+                      Sign In
+                    </Link>
+                  </Button>
+                  <Button asChild variant="outline" className="border-blue-300 text-blue-700 hover:bg-blue-50">
+                    <Link href="/signup">
+                      <UserPlus className="h-4 w-4 mr-2" />
+                      Create Account
+                    </Link>
+                  </Button>
+                </div>
+                <p className="text-sm text-gray-600">
+                  Your cart will be saved and you'll be redirected back here after signing in.
+                </p>
+              </CardContent>
+            </Card>
+          ) : (
+            clientSecret && (
+              <Elements options={options} stripe={stripePromise}>
+                <CheckoutForm orderItems={orderItems} onSuccessfulPurchase={handleSuccessfulPurchase} />
+              </Elements>
+            )
           )}
         </div>
       </div>

@@ -273,6 +273,27 @@ function ProfileContent() {
           </TabsList>
 
           <TabsContent value="overview" className="space-y-6">
+            {/* Quick Actions */}
+            <Card className="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
+              <CardHeader>
+                <CardTitle className="flex items-center justify-between">
+                  <div className="flex items-center">
+                    <Globe className="h-5 w-5 mr-2" />
+                    Ready for Your Next Trip?
+                  </div>
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="mb-4">Get connected worldwide with our eSIM plans. No roaming fees, instant activation!</p>
+                <Button asChild className="bg-white text-blue-600 hover:bg-gray-100">
+                  <Link href="/plans">
+                    <Smartphone className="h-4 w-4 mr-2" />
+                    Browse eSIM Plans
+                  </Link>
+                </Button>
+              </CardContent>
+            </Card>
+            
             {/* Profile Summary */}
             <Card>
               <CardHeader>
@@ -366,8 +387,21 @@ function ProfileContent() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                  {esims.map((esim) => (
+                {esims.length === 0 ? (
+                  <div className="text-center py-12">
+                    <div className="text-6xl mb-4">🌍</div>
+                    <h3 className="text-xl font-semibold mb-2">No eSIMs Yet</h3>
+                    <p className="text-gray-600 mb-6">Start exploring the world with our global eSIM plans!</p>
+                    <Button asChild className="bg-blue-600 hover:bg-blue-700">
+                      <Link href="/plans">
+                        <Smartphone className="h-4 w-4 mr-2" />
+                        Buy Your First eSIM
+                      </Link>
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {esims.map((esim) => (
                     <Card key={esim.id} className="border-2">
                       <CardHeader className="pb-3">
                         <div className="flex items-center justify-between">
@@ -465,7 +499,8 @@ function ProfileContent() {
                       </CardContent>
                     </Card>
                   ))}
-                </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
           </TabsContent>
