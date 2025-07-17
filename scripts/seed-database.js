@@ -1,4 +1,4 @@
-const { PrismaClient } = require('../lib/generated/prisma')
+const { PrismaClient } = require('@prisma/client')
 
 const prisma = new PrismaClient()
 
@@ -199,6 +199,9 @@ async function main() {
     const testOrder = await prisma.order.create({
       data: {
         userId: testUser.id,
+        planId: testPlan.id,
+        providerId: createdProvider.id,
+        quantity: 1,
         status: 'PAID',
         amount: testPlan.price,
         currency: testPlan.currency,
@@ -211,37 +214,32 @@ async function main() {
         orderId: testOrder.id,
         userId: testUser.id,
         planId: testPlan.id,
-        providerId: testPlan.providerId,
+        providerId: createdProvider.id,
         iccid: '89001012345678901234',
         qrCodeUrl: 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=test-qr-code',
-        activationCode: 'TEST-ACTIVATION-CODE-123',
+        activationCode: 'TEST123456',
         status: 'ACTIVE',
         dataLimit: testPlan.dataAmount,
-        dataUsed: 256, // 256MB used
+        dataUsed: 0,
         expiresAt: new Date(Date.now() + testPlan.days * 24 * 60 * 60 * 1000),
         autoRenew: false,
         isRoaming: false
       }
     })
+
     console.log(`✅ Created test order: ${testOrder.id}`)
-    console.log(`✅ Created test eSIM: ${testEsim.id}`)
+    console.log(`✅ Created test eSIM: ${testEsim.iccid}`)
   }
 
   console.log('🎉 Database seeding completed successfully!')
-  console.log('\n📊 Summary:')
-  console.log(`- 1 provider created (eSIM Access only)`)
-  console.log(`- ${plans.length} plans created`)
-  console.log('- 1 test user created')
-  console.log('- 1 test order and eSIM created')
-  console.log('\n🔗 Test user credentials:')
+  console.log('\n📋 Test Credentials:')
   console.log('Email: john@example.com')
   console.log('Password: password123')
-  console.log('\n🌐 Platform now uses eSIM Access as the sole provider')
 }
 
 main()
   .catch((e) => {
-    console.error('❌ Error during seeding:', e)
+    console.error('❌ Error seeding database:', e)
     process.exit(1)
   })
   .finally(async () => {

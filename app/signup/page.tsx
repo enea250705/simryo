@@ -2,7 +2,7 @@
 
 import { useState, useEffect, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { signIn, getSession } from "next-auth/react"
+import { useAuth } from "@/lib/simple-auth"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -14,6 +14,7 @@ import { toast } from "sonner"
 function SignupForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { signIn } = useAuth()
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -56,15 +57,29 @@ function SignupForm() {
         return
       }
 
-      // Account created successfully, now redirect to login
-      toast.success("Account created successfully! Please sign in.")
-      
-      // Get redirect URL for login page
-      const callbackUrl = searchParams.get('callbackUrl')
-      const loginUrl = callbackUrl ? `/login?callbackUrl=${encodeURIComponent(callbackUrl)}` : '/login'
-      
-      // Redirect to login page
-      window.location.href = loginUrl
+      // Account created successfully, now sign in automatically
+      try {
+        await signIn(formData.email, formData.password)
+        
+        toast.success("Account created and logged in successfully!")
+        
+        // Get redirect URL
+        const callbackUrl = searchParams.get('callbackUrl')
+        const redirectUrl = callbackUrl ? decodeURIComponent(callbackUrl) : '/checkout'
+        
+        // Redirect
+        window.location.href = redirectUrl
+      } catch (loginError) {
+        console.error('Auto-login failed:', loginError)
+        toast.success("Account created! Please sign in.")
+        
+        // Get redirect URL for login page
+        const callbackUrl = searchParams.get('callbackUrl')
+        const loginUrl = callbackUrl ? `/login?callbackUrl=${encodeURIComponent(callbackUrl)}` : '/login'
+        
+        // Redirect to login page
+        window.location.href = loginUrl
+      }
       
     } catch (error) {
       console.error('Signup error:', error)

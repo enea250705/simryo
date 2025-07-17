@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { useSession, signOut } from "next-auth/react"
+import { useAuth } from "@/lib/simple-auth"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { 
@@ -125,7 +125,7 @@ export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const pathname = usePathname()
   const router = useRouter()
-  const { data: session, status } = useSession()
+  const { user, signOut } = useAuth()
   const isHomePage = pathname === "/"
 
   // Handle scroll effect
@@ -154,8 +154,7 @@ export function Navbar() {
 
   const handleLogout = async () => {
     try {
-      await signOut({ redirect: false })
-      toast.success('Logged out successfully')
+      await signOut()
       router.push('/')
     } catch (error) {
       toast.error('Failed to log out')
@@ -329,14 +328,14 @@ export function Navbar() {
             </Link>
 
             {/* User Menu or Sign In */}
-            {session?.user ? (
+            {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-9 w-9 rounded-full">
                     <Avatar className="h-9 w-9">
-                      <AvatarImage src={session.user.image || ''} alt={session.user.name || ''} />
+                      <AvatarImage src={user.image || ''} alt={user.name || ''} />
                       <AvatarFallback className="bg-blue-100 text-blue-600">
-                        {session.user.name?.split(' ').map(n => n[0]).join('') || 'U'}
+                        {user.name?.split(' ').map(n => n[0]).join('') || 'U'}
                       </AvatarFallback>
                     </Avatar>
                   </Button>
@@ -344,9 +343,9 @@ export function Navbar() {
                 <DropdownMenuContent className="w-56" align="end" forceMount>
                   <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium leading-none">{session.user.name}</p>
+                      <p className="text-sm font-medium leading-none">{user.name}</p>
                       <p className="text-xs leading-none text-muted-foreground">
-                        {session.user.email}
+                        {user.email}
                       </p>
                     </div>
                   </DropdownMenuLabel>
@@ -431,14 +430,14 @@ export function Navbar() {
                 )}
               </Link>
 
-              {session?.user ? (
+              {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                       <Avatar className="h-8 w-8">
-                        <AvatarImage src={session.user.image || ''} alt={session.user.name || ''} />
+                        <AvatarImage src={user.image || ''} alt={user.name || ''} />
                         <AvatarFallback className="bg-blue-100 text-blue-600">
-                          {session.user.name?.split(' ').map(n => n[0]).join('') || 'U'}
+                          {user.name?.split(' ').map(n => n[0]).join('') || 'U'}
                         </AvatarFallback>
                       </Avatar>
                     </Button>
@@ -524,7 +523,7 @@ export function Navbar() {
                   </div>
                 </div>
 
-                {!session?.user && (
+                {!user && (
                   <>
                     <Separator />
                     <div className="space-y-3">

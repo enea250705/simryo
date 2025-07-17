@@ -1,8 +1,7 @@
 "use client"
 
-import { useState, useEffect, Suspense } from "react"
+import { useState, Suspense } from "react"
 import { useRouter, useSearchParams } from "next/navigation"
-import { signIn, getSession } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -10,10 +9,12 @@ import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { Loader2 } from "lucide-react"
 import { toast } from "sonner"
+import { useAuth } from "@/lib/simple-auth"
 
 function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { signIn } = useAuth()
   const [formData, setFormData] = useState({
     email: "",
     password: ""
@@ -31,50 +32,19 @@ function LoginForm() {
     setIsLoading(true)
 
     try {
-      const result = await signIn('credentials', {
-        email: formData.email,
-        password: formData.password,
-        redirect: false,
-      })
-
-      console.log('SignIn result:', result)
-
-      if (result?.error) {
-        console.log('SignIn error:', result.error)
-        toast.error("Invalid email or password")
-        setIsLoading(false)
-        return
-      }
-
-      if (result?.ok) {
-        // Small delay to ensure session is established
-        await new Promise(resolve => setTimeout(resolve, 100))
-        
-        // Check if session was created
-        const session = await getSession()
-        console.log('Session after login:', session)
-        
-        if (session) {
-          toast.success("Logged in successfully!")
-          
-          // Get redirect URL
-          const callbackUrl = searchParams.get('callbackUrl')
-          const redirectUrl = callbackUrl ? decodeURIComponent(callbackUrl) : '/checkout'
-          
-          // Redirect
-          window.location.href = redirectUrl
-        } else {
-          toast.error("Login failed - no session created")
-          setIsLoading(false)
-        }
-      } else {
-        toast.error("Login failed")
-        setIsLoading(false)
-      }
+      await signIn(formData.email, formData.password)
+      
+      // Get redirect URL
+      const callbackUrl = searchParams.get('callbackUrl')
+      const redirectUrl = callbackUrl ? decodeURIComponent(callbackUrl) : '/checkout'
+      
+      // Redirect
+      window.location.href = redirectUrl
       
     } catch (error) {
       console.error('Login error:', error)
-      toast.error("Login failed")
+      toast.error(error instanceof Error ? error.message : "Login failed")
+    } finally {
       setIsLoading(false)
     }
   }
