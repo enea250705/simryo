@@ -47,9 +47,13 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
               name: data.user.name,
               image: data.user.avatar
             })
+          } else {
+            // Clear custom user if API says not authenticated
+            setCustomUser(null)
           }
         } catch (error) {
           console.error('Custom auth check failed:', error)
+          setCustomUser(null)
         } finally {
           setCustomLoading(false)
         }
@@ -59,6 +63,39 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
     } else {
       setCustomLoading(false)
     }
+  }, [session, status])
+
+  // Re-check authentication when page becomes visible (useful after logout)
+  useEffect(() => {
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && status !== 'loading' && !session) {
+        const checkCustomAuth = async () => {
+          try {
+            const response = await fetch('/api/auth/me')
+            const data = await response.json()
+            
+            if (data.success && data.user) {
+              setCustomUser({
+                id: data.user.id,
+                email: data.user.email,
+                name: data.user.name,
+                image: data.user.avatar
+              })
+            } else {
+              setCustomUser(null)
+            }
+          } catch (error) {
+            console.error('Custom auth check failed:', error)
+            setCustomUser(null)
+          }
+        }
+        
+        checkCustomAuth()
+      }
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => document.removeEventListener('visibilitychange', handleVisibilityChange)
   }, [session, status])
 
   const signIn = async (email: string, password: string) => {
@@ -147,22 +184,35 @@ export function AuthProvider({ children }: { children: ReactNode }): JSX.Element
   const signOut = async () => {
     try {
       setError(null)
+      setCustomLoading(true)
       
-      // Clear custom user state
+      // Clear custom user state immediately
       setCustomUser(null)
       
       // Call custom logout API
-      await fetch('/api/auth/logout', { method: 'POST' })
+      try {
+        await fetch('/api/auth/logout', { method: 'POST' })
+      } catch (logoutError) {
+        console.error('Custom logout API failed:', logoutError)
+      }
       
       // Also clear NextAuth session if exists
       if (session) {
-        await nextAuthSignOut({ redirect: false })
+        try {
+          await nextAuthSignOut({ redirect: false })
+        } catch (nextAuthError) {
+          console.error('NextAuth signOut failed:', nextAuthError)
+        }
       }
       
-      // Redirect to home page after logout
+      // Clear any localStorage items that might maintain auth state
+      localStorage.removeItem('redirectAfterAuth')
+      
+      // Force reload to ensure all state is cleared
       window.location.href = '/'
     } catch (err) {
       setError(err instanceof Error ? err : new Error('An error occurred'))
+      setCustomLoading(false)
       throw err
     }
   }

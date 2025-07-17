@@ -175,7 +175,7 @@ export function Navbar() {
     try {
       await signOut()
       toast.success('Logged out successfully')
-      router.push('/')
+      // signOut handles the redirect, no need to call router.push
     } catch (error) {
       toast.error('Failed to log out')
     }
