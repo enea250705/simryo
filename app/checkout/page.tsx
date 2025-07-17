@@ -337,12 +337,20 @@ function CheckoutFlow() {
                 </Button>
               </CardContent>
             </Card>
+          ) : !clientSecret ? (
+            <Card className="bg-yellow-50/50 border-yellow-200">
+              <CardContent className="text-center py-8">
+                <Loader2 className="h-8 w-8 animate-spin text-yellow-600 mx-auto mb-4" />
+                <p className="text-yellow-700">Setting up payment...</p>
+                <p className="text-sm text-yellow-600 mt-2">
+                  If this takes more than a few seconds, please refresh the page.
+                </p>
+              </CardContent>
+            </Card>
           ) : (
-            clientSecret && (
-              <Elements options={options} stripe={stripePromise}>
-                <CheckoutForm orderItems={orderItems} onSuccessfulPurchase={handleSuccessfulPurchase} />
-              </Elements>
-            )
+            <Elements options={options} stripe={stripePromise}>
+              <CheckoutForm orderItems={orderItems} onSuccessfulPurchase={handleSuccessfulPurchase} />
+            </Elements>
           )}
         </div>
       </div>
