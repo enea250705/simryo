@@ -1,13 +1,10 @@
 import NextAuth from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
-import GoogleProvider from 'next-auth/providers/google'
-import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import { prisma } from '@/lib/db'
 import bcrypt from 'bcryptjs'
 import type { NextAuthOptions } from 'next-auth'
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
       name: 'credentials',
@@ -17,7 +14,10 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         try {
+          console.log('NextAuth authorize called with:', credentials?.email)
+          
           if (!credentials?.email || !credentials?.password) {
+            console.log('Missing credentials')
             return null
           }
 
@@ -26,14 +26,17 @@ export const authOptions: NextAuthOptions = {
           })
 
           if (!user) {
+            console.log('User not found:', credentials.email)
             return null
           }
 
           const isValid = await bcrypt.compare(credentials.password, user.password)
           if (!isValid) {
+            console.log('Invalid password for user:', credentials.email)
             return null
           }
 
+          console.log('User authenticated successfully:', user.email)
           return {
             id: user.id,
             name: user.name,
@@ -42,7 +45,7 @@ export const authOptions: NextAuthOptions = {
           }
         } catch (error) {
           console.error('Auth error:', error)
-          throw new Error('Authentication failed')
+          return null
         }
       }
     }),
@@ -57,20 +60,13 @@ export const authOptions: NextAuthOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async jwt({ token, user, account, trigger }) {
+    async jwt({ token, user }) {
       if (user) {
         token.id = user.id
       }
-      
-      // Check for custom auth token if no NextAuth session
-      if (!user && trigger === 'signIn') {
-        // This will be triggered when we need to check the custom auth
-        return token
-      }
-      
       return token
     },
-    async session({ session, token, trigger }) {
+    async session({ session, token }) {
       if (token && session.user) {
         session.user.id = token.id as string
       }
