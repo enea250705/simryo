@@ -9,7 +9,7 @@ import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { Loader2 } from "lucide-react"
 import { toast } from "sonner"
-import { useAuth } from "@/lib/simple-auth"
+import { useAuth } from "@/lib/serverless-auth"
 
 function LoginForm() {
   const router = useRouter()

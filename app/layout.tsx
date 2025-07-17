@@ -5,7 +5,6 @@ import "./globals.css"
 import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { PageAnimation } from "@/components/page-animation"
-import { AuthProvider } from "@/components/auth-provider"
 import { ErrorBoundary } from "@/components/error-boundary"
 import { Toaster } from "sonner"
 import { ThemeProvider } from "@/components/theme-provider"
@@ -438,17 +437,15 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <ErrorBoundary>
-            <AuthProvider>
-              <div className="relative min-h-screen bg-background">
-                <Navbar />
-                <main className="relative">
-                  <PageAnimation>{children}</PageAnimation>
-                </main>
-                <Footer />
-                <Toaster />
-                <WebVitals />
-              </div>
-            </AuthProvider>
+            <div className="relative min-h-screen bg-background">
+              <Navbar />
+              <main className="relative">
+                <PageAnimation>{children}</PageAnimation>
+              </main>
+              <Footer />
+              <Toaster />
+              <WebVitals />
+            </div>
           </ErrorBoundary>
         </ThemeProvider>
         

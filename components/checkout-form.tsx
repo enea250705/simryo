@@ -7,6 +7,8 @@ import {
   useElements,
 } from '@stripe/react-stripe-js'
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Label } from '@/components/ui/label'
 import { Loader2, Lock } from 'lucide-react'
 import { toast } from 'sonner'
 
@@ -21,12 +23,23 @@ export function CheckoutForm({ orderItems, onSuccessfulPurchase }: CheckoutFormP
 
   const [isProcessing, setIsProcessing] = useState(false)
   const [message, setMessage] = useState<string | null>(null)
+  const [customerInfo, setCustomerInfo] = useState({
+    email: '',
+    name: '',
+    phone: ''
+  })
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
 
     if (!stripe || !elements) {
       // Stripe.js has not yet loaded.
+      return
+    }
+
+    // Validate customer info
+    if (!customerInfo.email || !customerInfo.name) {
+      setMessage('Please fill in your email and name.')
       return
     }
 
@@ -38,7 +51,7 @@ export function CheckoutForm({ orderItems, onSuccessfulPurchase }: CheckoutFormP
       elements,
       confirmParams: {
         // We will handle the redirection manually after provisioning the eSIMs
-        return_url: `${window.location.origin}/checkout/confirmation`,
+        return_url: `https://simryo.com/checkout/confirmation`,
       },
       redirect: 'if_required', // Prevent automatic redirection
     })
@@ -57,7 +70,7 @@ export function CheckoutForm({ orderItems, onSuccessfulPurchase }: CheckoutFormP
         const response = await fetch('/api/purchase', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(orderItems),
+          body: JSON.stringify({ orderItems, customerInfo }),
         })
 
         if (!response.ok) {
@@ -66,61 +79,7 @@ export function CheckoutForm({ orderItems, onSuccessfulPurchase }: CheckoutFormP
 
         const completedOrder = await response.json()
         
-        // Save purchases to user account
-        try {
-          // Get current user from JWT auth
-          const userResponse = await fetch('/api/auth/me')
-          const userData = await userResponse.json()
-          
-          if (userData.success && userData.user) {
-            const user = userData.user
-            
-            // Save each successful purchase to user's account
-            if (completedOrder.success && completedOrder.data) {
-              const successfulPurchases = completedOrder.data.filter((item: any) => item.success)
-              
-              for (const purchase of successfulPurchases) {
-                const purchaseData = {
-                  orderId: purchase.orderId,
-                  country: purchase.countryName || 'Unknown',
-                  flag: purchase.flag || '🌍',
-                  provider: purchase.providerName || 'Maya.net',
-                  planName: `${purchase.plan?.data || 'Unknown'} - ${purchase.plan?.days || 'Unknown'} days`,
-                  dataAmount: purchase.plan?.data || 'Unknown',
-                  dataUsed: '0GB',
-                  dataRemaining: purchase.plan?.data || 'Unknown',
-                  usagePercentage: 0,
-                  status: 'pending',
-                  activationDate: '',
-                  expiryDate: new Date(Date.now() + (purchase.plan?.days || 30) * 24 * 60 * 60 * 1000).toISOString(),
-                  qrCodeUrl: purchase.qrCodeUrl || '',
-                  activationCode: purchase.activationCode || '',
-                  price: purchase.plan?.price || 0,
-                  currency: 'USD',
-                  autoRenew: false,
-                  isRoaming: false,
-                  lastUsed: '',
-                  instructions: purchase.instructions || []
-                }
-                
-                // Save to user purchases API
-                await fetch('/api/user/purchases', {
-                  method: 'POST',
-                  headers: { 'Content-Type': 'application/json' },
-                  body: JSON.stringify({
-                    userId: user.id,
-                    orderData: purchaseData
-                  })
-                })
-              }
-            }
-          } else {
-            console.warn('User not authenticated, skipping purchase save')
-          }
-        } catch (error) {
-          console.error('Failed to save purchases to user account:', error)
-          // Don't fail the whole process if this fails
-        }
+        // Guest checkout - no user account needed
 
         onSuccessfulPurchase(completedOrder)
 
@@ -138,7 +97,55 @@ export function CheckoutForm({ orderItems, onSuccessfulPurchase }: CheckoutFormP
 
   return (
     <form id="payment-form" onSubmit={handleSubmit}>
-      <PaymentElement id="payment-element" options={{ layout: "tabs" }} />
+      {/* Customer Information */}
+      <div className="space-y-4 mb-6">
+        <h3 className="text-lg font-semibold">Customer Information</h3>
+        
+        <div>
+          <Label htmlFor="email">Email Address *</Label>
+          <Input
+            id="email"
+            type="email"
+            placeholder="your@email.com"
+            value={customerInfo.email}
+            onChange={(e) => setCustomerInfo(prev => ({ ...prev, email: e.target.value }))}
+            required
+            className="mt-1"
+          />
+        </div>
+        
+        <div>
+          <Label htmlFor="name">Full Name *</Label>
+          <Input
+            id="name"
+            type="text"
+            placeholder="John Doe"
+            value={customerInfo.name}
+            onChange={(e) => setCustomerInfo(prev => ({ ...prev, name: e.target.value }))}
+            required
+            className="mt-1"
+          />
+        </div>
+        
+        <div>
+          <Label htmlFor="phone">Phone Number (optional)</Label>
+          <Input
+            id="phone"
+            type="tel"
+            placeholder="+1 (555) 123-4567"
+            value={customerInfo.phone}
+            onChange={(e) => setCustomerInfo(prev => ({ ...prev, phone: e.target.value }))}
+            className="mt-1"
+          />
+        </div>
+      </div>
+      
+      {/* Payment Information */}
+      <div className="space-y-4 mb-6">
+        <h3 className="text-lg font-semibold">Payment Information</h3>
+        <PaymentElement id="payment-element" options={{ layout: "tabs" }} />
+      </div>
+      
       <Button
         disabled={isProcessing || !stripe || !elements}
         id="submit"
@@ -153,7 +160,7 @@ export function CheckoutForm({ orderItems, onSuccessfulPurchase }: CheckoutFormP
         ) : (
           <>
             <Lock className="mr-2 h-5 w-5" />
-            Pay Now
+            Complete Purchase
           </>
         )}
       </Button>

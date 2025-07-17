@@ -7,7 +7,6 @@ import { Separator } from "@/components/ui/separator"
 import { ArrowLeft, ShoppingCart, Loader2, AlertTriangle } from "lucide-react"
 import Link from "next/link"
 import { toast } from 'sonner'
-import { useSession } from 'next-auth/react'
 
 import { loadStripe, StripeElementsOptions } from '@stripe/stripe-js'
 import { Elements } from '@stripe/react-stripe-js'
@@ -30,21 +29,12 @@ interface OrderItem {
 function CheckoutFlow() {
   const searchParams = useSearchParams()
   const router = useRouter()
-  const { data: session, status } = useSession()
   const [orderItems, setOrderItems] = useState<OrderItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [clientSecret, setClientSecret] = useState('')
 
   useEffect(() => {
-    // Check authentication using NextAuth session
-    if (status === 'loading') return // Still loading
-    
-    if (!session) {
-      localStorage.setItem('pendingCheckout', 'true')
-      localStorage.setItem('redirectAfterAuth', '/checkout')
-      router.push('/signup')
-      return
-    }
+    // No authentication required for guest checkout
 
     // Logic to parse order items from URL or cart
     const items: OrderItem[] = []
@@ -88,7 +78,7 @@ function CheckoutFlow() {
       }
     }
     setOrderItems(items)
-  }, [searchParams, session, status, router])
+  }, [searchParams, router])
 
   useEffect(() => {
     if (orderItems.length > 0) {
@@ -149,7 +139,7 @@ function CheckoutFlow() {
     )
   }
 
-  if (isLoading || status === 'loading') {
+  if (isLoading) {
     return (
       <div className="flex flex-col items-center justify-center min-h-[400px]">
         <Loader2 className="h-12 w-12 animate-spin text-primary" />
@@ -227,7 +217,7 @@ function CheckoutFlow() {
           
           <Card>
             <CardHeader>
-              <CardTitle>Payment Information</CardTitle>
+              <CardTitle>Checkout</CardTitle>
             </CardHeader>
             <CardContent>
               {clientSecret ? (

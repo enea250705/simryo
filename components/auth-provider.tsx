@@ -1,13 +1,13 @@
 'use client'
 
-import { AuthProvider as SimpleAuthProvider } from '@/lib/simple-auth'
+import { AuthProvider as ServerlessAuthProvider } from '@/lib/serverless-auth'
 import type { ReactNode } from 'react'
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   return (
-    <SimpleAuthProvider>
+    <ServerlessAuthProvider>
       {children}
-    </SimpleAuthProvider>
+    </ServerlessAuthProvider>
   )
 } 
  

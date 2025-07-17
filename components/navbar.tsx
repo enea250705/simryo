@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { useAuth } from "@/lib/simple-auth"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { 
@@ -125,7 +124,6 @@ export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const pathname = usePathname()
   const router = useRouter()
-  const { user, signOut } = useAuth()
   const isHomePage = pathname === "/"
 
   // Handle scroll effect
@@ -152,14 +150,6 @@ export function Navbar() {
     }
   }, [])
 
-  const handleLogout = async () => {
-    try {
-      await signOut()
-      router.push('/')
-    } catch (error) {
-      toast.error('Failed to log out')
-    }
-  }
 
   const navbarClasses = cn(
     "fixed w-full z-50 transition-all duration-300 top-0",
@@ -327,74 +317,12 @@ export function Navbar() {
               </Button>
             </Link>
 
-            {/* User Menu or Sign In */}
-            {user ? (
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" className="relative h-9 w-9 rounded-full">
-                    <Avatar className="h-9 w-9">
-                      <AvatarImage src={user.image || ''} alt={user.name || ''} />
-                      <AvatarFallback className="bg-blue-100 text-blue-600">
-                        {user.name?.split(' ').map(n => n[0]).join('') || 'U'}
-                      </AvatarFallback>
-                    </Avatar>
-                  </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-56" align="end" forceMount>
-                  <DropdownMenuLabel className="font-normal">
-                    <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium leading-none">{user.name}</p>
-                      <p className="text-xs leading-none text-muted-foreground">
-                        {user.email}
-                      </p>
-                    </div>
-                  </DropdownMenuLabel>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem asChild>
-                    <Link href="/profile" className="cursor-pointer">
-                      <UserCircle className="mr-2 h-4 w-4" />
-                      <span>Profile</span>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/profile?tab=esims" className="cursor-pointer">
-                      <Smartphone className="mr-2 h-4 w-4" />
-                      <span>My eSIMs</span>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/profile?tab=orders" className="cursor-pointer">
-                      <CreditCard className="mr-2 h-4 w-4" />
-                      <span>Orders</span>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem asChild>
-                    <Link href="/profile?tab=rewards" className="cursor-pointer">
-                      <Gift className="mr-2 h-4 w-4" />
-                      <span>Rewards</span>
-                    </Link>
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                  <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-red-600">
-                    <LogOut className="mr-2 h-4 w-4" />
-                    <span>Log out</span>
-                  </DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
-            ) : (
-              <div className="flex items-center space-x-3">
-                <Link href="/login">
-                  <Button variant="ghost" className="text-gray-700 hover:text-blue-600">
-                    Sign In
-                  </Button>
-                </Link>
-                <Link href="/signup">
-                  <Button className="bg-blue-600 hover:bg-blue-700 text-white">
-                    Get Started
-                  </Button>
-                </Link>
-              </div>
-            )}
+            {/* Buy Now Button */}
+            <Link href="/plans">
+              <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+                Buy eSIM Now
+              </Button>
+            </Link>
           </div>
         </div>
 
@@ -430,54 +358,11 @@ export function Navbar() {
                 )}
               </Link>
 
-              {user ? (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                      <Avatar className="h-8 w-8">
-                        <AvatarImage src={user.image || ''} alt={user.name || ''} />
-                        <AvatarFallback className="bg-blue-100 text-blue-600">
-                          {user.name?.split(' ').map(n => n[0]).join('') || 'U'}
-                        </AvatarFallback>
-                      </Avatar>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-56" align="end">
-                    <DropdownMenuLabel className="font-normal">
-                      <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">{session.user.name}</p>
-                        <p className="text-xs leading-none text-muted-foreground">
-                          {session.user.email}
-                        </p>
-                      </div>
-                    </DropdownMenuLabel>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem asChild>
-                      <Link href="/profile" className="cursor-pointer">
-                        <UserCircle className="mr-2 h-4 w-4" />
-                        <span>Profile</span>
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem asChild>
-                      <Link href="/profile?tab=esims" className="cursor-pointer">
-                        <Smartphone className="mr-2 h-4 w-4" />
-                        <span>My eSIMs</span>
-                      </Link>
-                    </DropdownMenuItem>
-                    <DropdownMenuSeparator />
-                    <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-red-600">
-                      <LogOut className="mr-2 h-4 w-4" />
-                      <span>Log out</span>
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              ) : (
-                <Link href="/login">
-                  <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white">
-                    Sign In
-                  </Button>
-                </Link>
-              )}
+              <Link href="/plans">
+                <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white">
+                  Buy eSIM
+                </Button>
+              </Link>
             </div>
           </div>
 
@@ -523,23 +408,14 @@ export function Navbar() {
                   </div>
                 </div>
 
-                {!user && (
-                  <>
-                    <Separator />
-                    <div className="space-y-3">
-                      <Link href="/login" onClick={() => setIsOpen(false)}>
-                        <Button variant="outline" className="w-full">
-                          Sign In
-                        </Button>
-                      </Link>
-                      <Link href="/signup" onClick={() => setIsOpen(false)}>
-                        <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-                          Get Started
-                        </Button>
-                      </Link>
-                    </div>
-                  </>
-                )}
+                <Separator />
+                <div className="space-y-3">
+                  <Link href="/plans" onClick={() => setIsOpen(false)}>
+                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
+                      Buy eSIM Now
+                    </Button>
+                  </Link>
+                </div>
               </div>
             </div>
           )}

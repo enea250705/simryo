@@ -9,7 +9,6 @@ import {
   HelpCircle, 
   BookOpen, 
   Mail, 
-  Phone, 
   Clock,
   ChevronRight,
   CheckCircle
@@ -149,8 +148,8 @@ export default function SupportPage() {
                   <span>Response time: Usually within 24 hours</span>
                 </div>
                 <div className="flex items-center space-x-3 text-sm">
-                  <Phone className="h-4 w-4 text-accent-500" />
-                  <span>Emergency support: +1 (555) 123-4567</span>
+                  <Mail className="h-4 w-4 text-accent-500" />
+                  <span>Contact us: info@simryo.com</span>
                 </div>
               </div>
             </CardContent>
