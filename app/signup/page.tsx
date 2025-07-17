@@ -9,12 +9,11 @@ import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { Loader2 } from "lucide-react"
 import { toast } from "sonner"
-import { useAuth } from "@/lib/auth"
+import { signIn } from "next-auth/react"
 
 function SignupForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { signUp } = useAuth()
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -55,16 +54,40 @@ function SignupForm() {
     setIsLoading(true)
 
     try {
-      // Store callback URL for after successful signup
+      // Get callback URL for redirect after successful signup
       const callbackUrl = searchParams.get('callbackUrl')
-      if (callbackUrl) {
-        localStorage.setItem('redirectAfterAuth', decodeURIComponent(callbackUrl))
+      const redirectUrl = callbackUrl ? decodeURIComponent(callbackUrl) : '/profile'
+
+      // Create user account using NextAuth-compatible endpoint
+      const response = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          email: formData.email, 
+          password: formData.password, 
+          name: formData.name 
+        })
+      })
+
+      if (!response.ok) {
+        const data = await response.json()
+        throw new Error(data.error || 'Failed to create account')
       }
 
-      // Use the auth context signUp method
-      await signUp(formData.email, formData.password, formData.name)
-      
-      // The signUp method handles the redirect automatically
+      // After successful signup, sign them in with NextAuth
+      const result = await signIn('credentials', {
+        email: formData.email,
+        password: formData.password,
+        redirect: false,
+      })
+
+      if (result?.error) {
+        throw new Error(result.error)
+      }
+
+      // Successful signup and login - redirect to the desired page
+      toast.success("Account created successfully!")
+      window.location.href = redirectUrl
       
     } catch (error) {
       console.error('Signup error:', error)

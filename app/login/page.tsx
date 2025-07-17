@@ -9,12 +9,11 @@ import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { Loader2 } from "lucide-react"
 import { toast } from "sonner"
-import { useAuth } from "@/lib/auth"
+import { signIn } from "next-auth/react"
 
 function LoginForm() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { signIn } = useAuth()
   const [formData, setFormData] = useState({
     email: "",
     password: ""
@@ -49,16 +48,24 @@ function LoginForm() {
     setIsLoading(true)
 
     try {
-      // Store callback URL for after successful login
+      // Get callback URL for redirect after successful login
       const callbackUrl = searchParams.get('callbackUrl')
-      if (callbackUrl) {
-        localStorage.setItem('redirectAfterAuth', decodeURIComponent(callbackUrl))
+      const redirectUrl = callbackUrl ? decodeURIComponent(callbackUrl) : '/profile'
+
+      // Use NextAuth signIn method
+      const result = await signIn('credentials', {
+        email: formData.email,
+        password: formData.password,
+        redirect: false,
+      })
+
+      if (result?.error) {
+        throw new Error(result.error)
       }
 
-      // Use the auth context signIn method
-      await signIn(formData.email, formData.password)
-      
-      // The signIn method handles the redirect automatically
+      // Successful login - redirect to the desired page
+      toast.success("Logged in successfully!")
+      window.location.href = redirectUrl
       
     } catch (error) {
       console.error('Login error:', error)
