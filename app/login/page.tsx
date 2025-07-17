@@ -37,23 +37,36 @@ function LoginForm() {
         redirect: false,
       })
 
+      console.log('SignIn result:', result)
+
       if (result?.error) {
+        console.log('SignIn error:', result.error)
         toast.error("Invalid email or password")
         setIsLoading(false)
         return
       }
 
-      // Check if session was created
-      const session = await getSession()
-      if (session) {
-        toast.success("Logged in successfully!")
+      if (result?.ok) {
+        // Small delay to ensure session is established
+        await new Promise(resolve => setTimeout(resolve, 100))
         
-        // Get redirect URL
-        const callbackUrl = searchParams.get('callbackUrl')
-        const redirectUrl = callbackUrl ? decodeURIComponent(callbackUrl) : '/checkout'
+        // Check if session was created
+        const session = await getSession()
+        console.log('Session after login:', session)
         
-        // Redirect
-        window.location.href = redirectUrl
+        if (session) {
+          toast.success("Logged in successfully!")
+          
+          // Get redirect URL
+          const callbackUrl = searchParams.get('callbackUrl')
+          const redirectUrl = callbackUrl ? decodeURIComponent(callbackUrl) : '/checkout'
+          
+          // Redirect
+          window.location.href = redirectUrl
+        } else {
+          toast.error("Login failed - no session created")
+          setIsLoading(false)
+        }
       } else {
         toast.error("Login failed")
         setIsLoading(false)

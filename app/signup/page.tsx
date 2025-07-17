@@ -56,34 +56,15 @@ function SignupForm() {
         return
       }
 
-      // Sign in after successful signup
-      const result = await signIn('credentials', {
-        email: formData.email,
-        password: formData.password,
-        redirect: false,
-      })
-
-      if (result?.error) {
-        toast.error("Account created but login failed. Please try signing in.")
-        setIsLoading(false)
-        return
-      }
-
-      // Check if session was created
-      const session = await getSession()
-      if (session) {
-        toast.success("Account created and logged in successfully!")
-        
-        // Get redirect URL
-        const callbackUrl = searchParams.get('callbackUrl')
-        const redirectUrl = callbackUrl ? decodeURIComponent(callbackUrl) : '/checkout'
-        
-        // Redirect
-        window.location.href = redirectUrl
-      } else {
-        toast.error("Account created but login failed. Please try signing in.")
-        setIsLoading(false)
-      }
+      // Account created successfully, now redirect to login
+      toast.success("Account created successfully! Please sign in.")
+      
+      // Get redirect URL for login page
+      const callbackUrl = searchParams.get('callbackUrl')
+      const loginUrl = callbackUrl ? `/login?callbackUrl=${encodeURIComponent(callbackUrl)}` : '/login'
+      
+      // Redirect to login page
+      window.location.href = loginUrl
       
     } catch (error) {
       console.error('Signup error:', error)
