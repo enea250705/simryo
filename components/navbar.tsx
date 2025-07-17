@@ -46,19 +46,13 @@ import {
   Gift
 } from "lucide-react"
 import { toast } from "sonner"
-import { useAuth } from "@/lib/auth"
+import { useSession, signOut } from "next-auth/react"
 import { cn } from "@/lib/utils"
 
 interface CartItem {
   quantity: number
 }
 
-// Extend the User type from auth.ts
-interface AuthUser {
-  name?: string
-  email?: string
-  avatar?: string
-}
 
 const navigationItems = [
   {
@@ -144,8 +138,9 @@ export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false)
   const pathname = usePathname()
   const router = useRouter()
-  const { user, signOut } = useAuth()
+  const { data: session, status } = useSession()
   const isHomePage = pathname === "/"
+  const user = session?.user
 
   // Handle scroll effect
   useEffect(() => {
@@ -173,9 +168,9 @@ export function Navbar() {
 
   const handleLogout = async () => {
     try {
-      await signOut()
+      await signOut({ redirect: false })
       toast.success('Logged out successfully')
-      // signOut handles the redirect, no need to call router.push
+      router.push('/')
     } catch (error) {
       toast.error('Failed to log out')
     }
@@ -353,9 +348,9 @@ export function Navbar() {
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" className="relative h-9 w-9 rounded-full">
                     <Avatar className="h-9 w-9">
-                      <AvatarImage src={(user as AuthUser).avatar} alt={(user as AuthUser).name || ''} />
+                      <AvatarImage src={user?.image || ''} alt={user?.name || ''} />
                       <AvatarFallback className="bg-blue-100 text-blue-600">
-                        {(user as AuthUser).name?.split(' ').map(n => n[0]).join('') || 'U'}
+                        {user?.name?.split(' ').map(n => n[0]).join('') || 'U'}
                       </AvatarFallback>
                     </Avatar>
                   </Button>
@@ -363,9 +358,9 @@ export function Navbar() {
                 <DropdownMenuContent className="w-56" align="end" forceMount>
                   <DropdownMenuLabel className="font-normal">
                     <div className="flex flex-col space-y-1">
-                      <p className="text-sm font-medium leading-none">{(user as AuthUser).name}</p>
+                      <p className="text-sm font-medium leading-none">{user?.name}</p>
                       <p className="text-xs leading-none text-muted-foreground">
-                        {(user as AuthUser).email}
+                        {user?.email}
                       </p>
                     </div>
                   </DropdownMenuLabel>
@@ -455,9 +450,9 @@ export function Navbar() {
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" className="relative h-8 w-8 rounded-full">
                       <Avatar className="h-8 w-8">
-                        <AvatarImage src={(user as AuthUser).avatar} alt={(user as AuthUser).name || ''} />
+                        <AvatarImage src={user?.image || ''} alt={user?.name || ''} />
                         <AvatarFallback className="bg-blue-100 text-blue-600">
-                          {(user as AuthUser).name?.split(' ').map(n => n[0]).join('') || 'U'}
+                          {user?.name?.split(' ').map(n => n[0]).join('') || 'U'}
                         </AvatarFallback>
                       </Avatar>
                     </Button>
@@ -465,9 +460,9 @@ export function Navbar() {
                   <DropdownMenuContent className="w-56" align="end">
                     <DropdownMenuLabel className="font-normal">
                       <div className="flex flex-col space-y-1">
-                        <p className="text-sm font-medium leading-none">{(user as AuthUser).name}</p>
+                        <p className="text-sm font-medium leading-none">{user?.name}</p>
                         <p className="text-xs leading-none text-muted-foreground">
-                          {(user as AuthUser).email}
+                          {user?.email}
                         </p>
                       </div>
                     </DropdownMenuLabel>

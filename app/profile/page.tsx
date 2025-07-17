@@ -36,7 +36,7 @@ import {
 } from "lucide-react"
 import { toast } from "sonner"
 import { ESIMQRModal } from "@/components/esim-qr-modal"
-import { useAuth } from "@/lib/auth"
+import { useSession, signOut } from "next-auth/react"
 
 interface UserProfile {
   id: string
@@ -75,7 +75,7 @@ interface EsimData {
 function ProfileContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { user: authUser, loading: authLoading } = useAuth()
+  const { data: session, status } = useSession()
   const [user, setUser] = useState<UserProfile | null>(null)
   const [esims, setEsims] = useState<EsimData[]>([])
   const [loading, setLoading] = useState(true)
@@ -94,25 +94,27 @@ function ProfileContent() {
     }
 
     // Load user data once auth is ready
-    if (!authLoading) {
-      if (authUser) {
-        loadUserData()
-      } else {
-        // User not authenticated, redirect to login
-        router.push('/login')
-      }
+    if (status === 'loading') return // Still loading
+    
+    if (!session) {
+      // User not authenticated, redirect to login
+      router.push('/login')
+      return
     }
-  }, [router, searchParams, authUser, authLoading])
+
+    // User is authenticated, load their data
+    loadUserData()
+  }, [router, searchParams, session, status])
 
   const loadUserData = async () => {
     try {
-      // Use the authenticated user from the auth context
-      if (authUser) {
+      // Use the authenticated user from the session
+      if (session?.user) {
         const profile: UserProfile = {
-          id: authUser.id,
-          name: authUser.name || '',
-          email: authUser.email,
-          avatar: authUser.image,
+          id: session.user.id || '',
+          name: session.user.name || '',
+          email: session.user.email || '',
+          avatar: session.user.image,
           joinDate: new Date().toISOString().split('T')[0], // Default to today
           totalEsims: 0,
           totalSpent: 0
@@ -200,12 +202,11 @@ function ProfileContent() {
     }
   }
 
-  const { signOut } = useAuth()
-
   const handleLogout = async () => {
     try {
-      await signOut()
-      // signOut handles the redirect
+      await signOut({ redirect: false })
+      toast.success('Logged out successfully')
+      router.push('/')
     } catch (error) {
       console.error('Logout error:', error)
       toast.error('Logout failed')
@@ -244,7 +245,7 @@ function ProfileContent() {
     }
   }
 
-  if (loading) {
+  if (loading || status === 'loading') {
     return (
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 pt-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
