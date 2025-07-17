@@ -56,7 +56,7 @@ function SignupForm() {
     try {
       // Get callback URL for redirect after successful signup
       const callbackUrl = searchParams.get('callbackUrl')
-      const redirectUrl = callbackUrl ? decodeURIComponent(callbackUrl) : '/profile'
+      const redirectUrl = callbackUrl ? decodeURIComponent(callbackUrl) : '/checkout'
 
       // Create user account using NextAuth-compatible endpoint
       const response = await fetch('/api/auth/signup', {

@@ -50,7 +50,7 @@ function LoginForm() {
     try {
       // Get callback URL for redirect after successful login
       const callbackUrl = searchParams.get('callbackUrl')
-      const redirectUrl = callbackUrl ? decodeURIComponent(callbackUrl) : '/profile'
+      const redirectUrl = callbackUrl ? decodeURIComponent(callbackUrl) : '/checkout'
 
       // Use NextAuth signIn method
       const result = await signIn('credentials', {
