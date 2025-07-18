@@ -9,6 +9,7 @@ import { ErrorBoundary } from "@/components/error-boundary"
 import { Toaster } from "sonner"
 import { ThemeProvider } from "@/components/theme-provider"
 import { WebVitals } from "@/components/web-vitals"
+import { GoogleAnalytics, GoogleAnalyticsPageView } from "@/components/analytics/google-analytics"
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -367,6 +368,9 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         
+        {/* Google Analytics */}
+        <GoogleAnalytics />
+        
         {/* Security Headers */}
         <meta httpEquiv="X-Content-Type-Options" content="nosniff" />
         <meta httpEquiv="X-XSS-Protection" content="1; mode=block" />
@@ -439,33 +443,11 @@ export default function RootLayout({
         <Footer />
               <Toaster />
               <WebVitals />
+              <GoogleAnalyticsPageView />
             </div>
           </ErrorBoundary>
         </ThemeProvider>
         
-        {/* Analytics Scripts - Deferred for better performance */}
-        <script
-          async
-          src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"
-        />
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              window.addEventListener('load', function() {
-                setTimeout(function() {
-                  window.dataLayer = window.dataLayer || [];
-                  function gtag(){dataLayer.push(arguments);}
-                  gtag('js', new Date());
-                  gtag('config', 'GA_MEASUREMENT_ID', {
-                    page_title: document.title,
-                    page_location: window.location.href,
-                    send_page_view: true
-                  });
-                }, 3000);
-              });
-            `,
-          }}
-        />
         
         {/* Microsoft Clarity */}
         {process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID && (

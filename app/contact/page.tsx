@@ -15,6 +15,7 @@ import {
   Loader2
 } from "lucide-react"
 import { toast } from "sonner"
+import { analytics } from "@/lib/analytics"
 
 const contactMethods = [
   {
@@ -77,6 +78,9 @@ export default function ContactPage() {
           message: ''
         })
         toast.success(result.message || 'Message sent successfully!')
+        
+        // Track successful contact form submission
+        analytics.contactForm(formData.subject)
       } else {
         toast.error(result.error || 'Failed to send message. Please try again.')
       }

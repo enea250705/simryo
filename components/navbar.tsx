@@ -47,6 +47,7 @@ import {
 } from "lucide-react"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
+import { analytics } from "@/lib/analytics"
 
 interface CartItem {
   quantity: number
@@ -328,7 +329,10 @@ export function Navbar() {
 
             {/* Buy Now Button */}
             <Link href="/plans">
-              <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+              <Button 
+                className="bg-blue-600 hover:bg-blue-700 text-white"
+                onClick={() => analytics.clickCTA('Buy eSIM Now', 'navbar')}
+              >
                 Buy eSIM Now
               </Button>
             </Link>
@@ -378,7 +382,11 @@ export function Navbar() {
               </Link>
 
               <Link href="/plans">
-                <Button size="sm" className="bg-blue-600 hover:bg-blue-700 text-white">
+                <Button 
+                  size="sm" 
+                  className="bg-blue-600 hover:bg-blue-700 text-white"
+                  onClick={() => analytics.clickCTA('Buy eSIM', 'mobile-navbar')}
+                >
                   Buy eSIM
                 </Button>
               </Link>

@@ -11,6 +11,7 @@ import { Search, MapPin, Clock, Globe, ArrowRight, Loader2, Wifi, Shield, Zap, R
 import Link from "next/link"
 import { toast } from 'sonner'
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { analytics } from "@/lib/analytics"
 
 // Enhanced Plan interface matching the API response
 export interface EnhancedPlan {
@@ -190,11 +191,17 @@ export default function PlansPage() {
         country.country.toLowerCase().includes(searchTerm.toLowerCase()) ||
         country.region.toLowerCase().includes(searchTerm.toLowerCase())
       )
+      
+      // Track search events
+      analytics.searchPlans(searchTerm)
     }
 
     // Filter by region
     if (selectedRegion !== "all") {
       filtered = filtered.filter(country => country.region === selectedRegion)
+      
+      // Track region selection
+      analytics.selectCountry(selectedRegion)
     }
 
     setFilteredCountries(filtered)
@@ -238,54 +245,66 @@ export default function PlansPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 pt-20">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 pt-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {/* Header */}
         <div className="text-center mb-8 sm:mb-12">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-emerald-600 rounded-2xl shadow-lg mb-6">
-            <Globe className="h-8 w-8 text-white" />
+          <div className="inline-flex items-center justify-center w-20 h-20 bg-gradient-to-br from-blue-600 to-purple-600 rounded-3xl shadow-xl mb-6">
+            <Globe className="h-10 w-10 text-white" />
           </div>
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900 sm:text-4xl mb-4">
-            eSIM Plans Worldwide
+          <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl mb-4">
+            Find Your Perfect 
+            <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+              eSIM Plan
+            </span>
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-            Compare premium eSIM plans from trusted providers. 
-            <span className="text-emerald-600 font-medium">Featured plans with instant checkout!</span>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+            Connect instantly worldwide with premium eSIM plans from trusted providers.
+            <br />
+            <span className="text-blue-600 font-semibold">✨ Featured plans with instant checkout available!</span>
           </p>
         </div>
 
         {/* Promo Banner */}
-        <div className="mb-8 max-w-4xl mx-auto">
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-            <div className="flex items-center justify-center gap-3 mb-2">
-              <div className="text-2xl">🎉</div>
-              <h3 className="text-lg font-semibold text-gray-900">Welcome Offer</h3>
-              <Badge className="bg-emerald-100 text-emerald-800 px-2 py-1">
-                WELCOME15
-              </Badge>
+        <div className="mb-10 max-w-4xl mx-auto">
+          <div className="bg-gradient-to-r from-emerald-500 to-teal-500 rounded-3xl shadow-2xl p-8 text-white relative overflow-hidden">
+            <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
+            <div className="relative z-10">
+              <div className="flex items-center justify-center gap-4 mb-3">
+                <div className="text-4xl">🎉</div>
+                <h3 className="text-2xl font-bold">Welcome Offer</h3>
+                <Badge className="bg-white/20 text-white border-white/30 px-4 py-2 text-lg font-bold">
+                  WELCOME15
+                </Badge>
+              </div>
+              <p className="text-center text-emerald-50 text-lg">
+                Get <strong className="text-white">15% off</strong> your first eSIM purchase! 
+                Discount applied automatically at checkout.
+              </p>
             </div>
-            <p className="text-gray-600 text-center">
-              Get <strong>15% off</strong> your first eSIM purchase. Discount applied automatically at checkout.
-            </p>
           </div>
         </div>
 
         {/* Search and Filter */}
-        <div className="mb-8">
-          <div className="bg-white rounded-2xl shadow-sm border border-gray-200 p-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="mb-10">
+          <div className="bg-white/80 backdrop-blur-lg rounded-3xl shadow-xl border border-white/20 p-8">
+            <div className="text-center mb-6">
+              <h2 className="text-2xl font-bold text-gray-900 mb-2">Find Your Destination</h2>
+              <p className="text-gray-600">Search by country, region, or let us help you find the perfect plan</p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
               <div className="relative lg:col-span-2">
-                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
                 <Input
                   type="search"
                   placeholder="Search by country or region..."
-                  className="w-full pl-10 h-12 border-gray-200 focus:border-emerald-500 focus:ring-emerald-500"
+                  className="w-full pl-12 h-14 border-2 border-gray-200 focus:border-blue-500 focus:ring-blue-500 rounded-xl text-lg"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
               <Select value={selectedRegion} onValueChange={setSelectedRegion}>
-                <SelectTrigger className="w-full h-12 border-gray-200">
+                <SelectTrigger className="w-full h-14 border-2 border-gray-200 rounded-xl text-lg">
                   <SelectValue placeholder="Filter by region" />
                 </SelectTrigger>
                 <SelectContent>
@@ -301,114 +320,124 @@ export default function PlansPage() {
         </div>
 
         {/* Countries and Plans */}
-        <div className="space-y-8">
+        <div className="space-y-10">
           {filteredCountries.length > 0 ? (
             filteredCountries.map(country => {
               const countrySlug = country.country.toLowerCase().replace(/\s+/g, '-')
               return (
-                <div key={country.id} className="bg-white rounded-2xl shadow-sm border border-gray-200">
-                  <div className="bg-gray-900 text-white p-6 rounded-t-2xl">
+                <div key={country.id} className="bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl border border-white/20 overflow-hidden">
+                  <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-8">
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                      <div className="flex items-center gap-4 mb-4 sm:mb-0">
+                      <div className="flex items-center gap-6 mb-6 sm:mb-0">
                         <div className="relative">
-                          <div className="w-14 h-14 bg-white/10 rounded-xl flex items-center justify-center">
-                            <span className="text-2xl">{country.flag}</span>
+                          <div className="w-20 h-20 bg-white/20 backdrop-blur-sm rounded-2xl flex items-center justify-center shadow-lg">
+                            <span className="text-4xl">{country.flag}</span>
                           </div>
-                          <div className="absolute -top-2 -right-2 w-6 h-6 bg-emerald-500 rounded-full flex items-center justify-center">
-                            <span className="text-white text-xs font-bold">{country.plans.length}</span>
+                          <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center shadow-lg">
+                            <span className="text-white text-sm font-bold">{country.plans.length}</span>
                           </div>
                         </div>
                         <div>
-                          <h2 className="text-2xl font-bold mb-1">{country.country}</h2>
-                          <div className="flex items-center gap-3 text-gray-300">
-                            <div className="flex items-center gap-1">
-                              <MapPin className="h-4 w-4" />
-                              <span className="text-sm">{country.region}</span>
+                          <h2 className="text-3xl font-bold mb-2">{country.country}</h2>
+                          <div className="flex items-center gap-4 text-blue-100">
+                            <div className="flex items-center gap-2">
+                              <MapPin className="h-5 w-5" />
+                              <span className="text-lg">{country.region}</span>
                             </div>
-                            <div className="w-1 h-1 bg-gray-400 rounded-full"></div>
-                            <span className="text-sm">{country.allPlans.length} plans available</span>
+                            <div className="w-2 h-2 bg-blue-200 rounded-full"></div>
+                            <span className="text-lg">{country.allPlans.length} plans available</span>
                           </div>
                         </div>
                       </div>
                       <Link href={`/plans/${countrySlug}`}>
-                        <Button variant="outline" className="w-full sm:w-auto border-white/20 text-white hover:bg-white/10">
-                          View All Plans <ArrowRight className="ml-2 h-4 w-4" />
+                        <Button variant="outline" className="w-full sm:w-auto border-white/30 text-white hover:bg-white/20 backdrop-blur-sm px-6 py-3 text-lg">
+                          View All Plans <ArrowRight className="ml-2 h-5 w-5" />
                         </Button>
                       </Link>
                     </div>
                   </div>
                   
-                  <div className="p-6">
+                  <div className="p-8">
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                       {country.plans.map((plan, index) => (
-                        <Card key={plan.id} className={`group relative transition-all duration-300 hover:shadow-lg hover:-translate-y-1 ${
-                          plan.featured ? 'ring-2 ring-emerald-500 bg-emerald-50/30' : ''
-                        } ${index === 0 ? 'border-2 border-blue-500 bg-blue-50/30' : 'border border-gray-200'}`}>
+                        <Card key={plan.id} className={`group relative transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 ${
+                          plan.featured 
+                            ? 'ring-2 ring-emerald-400 bg-gradient-to-br from-emerald-50 to-teal-50 shadow-lg' 
+                            : index === 0 
+                              ? 'ring-2 ring-blue-400 bg-gradient-to-br from-blue-50 to-indigo-50 shadow-lg'
+                              : 'border border-gray-200 bg-white hover:border-gray-300'
+                        } overflow-hidden rounded-2xl`}>
                           {/* Badges */}
                           {plan.featured && (
-                            <div className="absolute top-3 right-3 bg-emerald-500 text-white px-2 py-1 rounded-md text-xs font-medium">
-                              ⭐ Featured
+                            <div className="absolute top-4 right-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
+                              ✨ Featured
                             </div>
                           )}
                           
                           {index === 0 && (
-                            <div className="absolute top-3 left-3 bg-blue-500 text-white px-2 py-1 rounded-md text-xs font-medium">
+                            <div className="absolute top-4 left-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
                               🏆 Best Value
                             </div>
                           )}
 
                           <CardHeader className="pb-4">
-                            <div className="flex items-center justify-between mb-3">
-                              <div className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
-                                  <Globe className="h-5 w-5 text-gray-600" />
+                            <div className="flex items-center justify-between mb-4">
+                              <div className="flex items-center gap-4">
+                                <div className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-md ${
+                                  plan.featured 
+                                    ? 'bg-gradient-to-br from-emerald-400 to-teal-500'
+                                    : index === 0
+                                      ? 'bg-gradient-to-br from-blue-400 to-purple-500'
+                                      : 'bg-gradient-to-br from-gray-400 to-gray-500'
+                                }`}>
+                                  <Globe className="h-6 w-6 text-white" />
                                 </div>
                                 <div>
-                                  <CardTitle className="text-lg font-bold text-gray-900">{plan.data}</CardTitle>
-                                  <CardDescription className="text-sm text-gray-500">{plan.providerDisplayName}</CardDescription>
+                                  <CardTitle className="text-xl font-bold text-gray-900">{plan.data}</CardTitle>
+                                  <CardDescription className="text-sm text-gray-600">{plan.providerDisplayName}</CardDescription>
                                 </div>
                               </div>
                             </div>
                             
-                            <div className="flex items-center gap-4 text-sm text-gray-600">
-                              <div className="flex items-center gap-1">
-                                <Clock className="h-4 w-4" />
-                                <span>{plan.days} days</span>
+                            <div className="flex items-center gap-6 text-sm text-gray-600">
+                              <div className="flex items-center gap-2">
+                                <Clock className="h-4 w-4 text-blue-500" />
+                                <span className="font-medium">{plan.days} days</span>
                               </div>
-                              <div className="flex items-center gap-1">
-                                <Wifi className="h-4 w-4" />
-                                <span>{plan.network.type}</span>
+                              <div className="flex items-center gap-2">
+                                <Wifi className="h-4 w-4 text-green-500" />
+                                <span className="font-medium">{plan.network.type}</span>
                               </div>
                             </div>
                           </CardHeader>
 
                           <CardContent className="pt-0">
                             {/* Features */}
-                            <div className="space-y-2 mb-4">
-                              <div className="flex items-center gap-2 text-sm text-gray-600">
+                            <div className="space-y-3 mb-6">
+                              <div className="flex items-center gap-3 text-sm text-gray-700">
                                 <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
-                                <span>Instant Activation</span>
+                                <span className="font-medium">Instant Activation</span>
                               </div>
-                              <div className="flex items-center gap-2 text-sm text-gray-600">
+                              <div className="flex items-center gap-3 text-sm text-gray-700">
                                 <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
-                                <span>No Contracts</span>
+                                <span className="font-medium">No Contracts</span>
                               </div>
-                              <div className="flex items-center gap-2 text-sm text-gray-600">
+                              <div className="flex items-center gap-3 text-sm text-gray-700">
                                 <div className="w-2 h-2 bg-emerald-500 rounded-full"></div>
-                                <span>24/7 Support</span>
+                                <span className="font-medium">24/7 Support</span>
                               </div>
                             </div>
 
                             {/* Pricing */}
-                            <div className="mb-4">
-                              <div className="text-center mb-3">
-                                <div className="flex items-baseline justify-center gap-1">
-                                  <span className="text-2xl font-bold text-gray-900">${plan.price.toFixed(2)}</span>
-                                  <span className="text-sm text-gray-500">{plan.currency}</span>
+                            <div className="mb-6">
+                              <div className="text-center mb-4">
+                                <div className="flex items-baseline justify-center gap-2">
+                                  <span className="text-4xl font-bold text-gray-900">${plan.price.toFixed(2)}</span>
+                                  <span className="text-lg text-gray-500">{plan.currency}</span>
                                 </div>
                                 {plan.promoApplied && (
-                                  <div className="flex items-center justify-center gap-2 mt-1">
+                                  <div className="flex items-center justify-center gap-2 mt-2">
                                     <span className="text-sm text-red-500 line-through">
                                       ${plan.promoApplied.originalPrice.toFixed(2)}
                                     </span>
@@ -417,27 +446,27 @@ export default function PlansPage() {
                                     </Badge>
                                   </div>
                                 )}
-                                <div className="text-xs text-gray-500 mt-1">
+                                <div className="text-sm text-gray-500 mt-2">
                                   ~${(plan.price / plan.days).toFixed(2)} per day
                                 </div>
                               </div>
 
                               <Link href={`/plans/${countrySlug}/${plan.id}`} className="w-full">
-                                <Button className={`w-full ${
+                                <Button className={`w-full h-12 text-lg font-semibold transition-all duration-300 ${
                                   plan.featured 
-                                    ? 'bg-emerald-600 hover:bg-emerald-700' 
+                                    ? 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 shadow-lg hover:shadow-xl' 
                                     : index === 0 
-                                      ? 'bg-blue-600 hover:bg-blue-700'
-                                      : 'bg-gray-900 hover:bg-gray-800'
+                                      ? 'bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg hover:shadow-xl'
+                                      : 'bg-gradient-to-r from-gray-800 to-gray-900 hover:from-gray-900 hover:to-black shadow-lg hover:shadow-xl'
                                 }`}>
                                   {plan.featured ? (
                                     <>
-                                      <Zap className="h-4 w-4 mr-2" />
+                                      <Zap className="h-5 w-5 mr-2" />
                                       Quick Buy
                                     </>
                                   ) : (
                                     <>
-                                      <ArrowRight className="h-4 w-4 mr-2" />
+                                      <ArrowRight className="h-5 w-5 mr-2" />
                                       View Details
                                     </>
                                   )}
