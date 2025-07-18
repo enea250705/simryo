@@ -15,7 +15,6 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { toast } from "sonner"
-import { useSession } from 'next-auth/react'
 
 interface CartItem {
   countryId: number
@@ -36,9 +35,13 @@ interface CartItem {
 
 export default function CartPage() {
   const router = useRouter()
-  const { data: session } = useSession()
   const [isClient, setIsClient] = useState(false)
   const [cartItems, setCartItems] = useState<CartItem[]>([])
+
+  // Prevent hydration mismatch during SSR
+  if (!isClient) {
+    return null
+  }
 
   useEffect(() => {
     setIsClient(true)

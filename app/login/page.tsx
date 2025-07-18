@@ -10,15 +10,15 @@ import Link from "next/link"
 import { Globe, Loader2 } from "lucide-react"
 import { GoogleIcon } from "@/components/icons/google-icon"
 import { toast } from "sonner"
-import { useAuth } from "@/lib/auth"
+import { signIn } from "next-auth/react"
 
 export default function LoginPage() {
   const router = useRouter()
-  const { signIn, signInWithGoogle, loading: authLoading } = useAuth()
   const [formData, setFormData] = useState({
     email: "",
     password: ""
   })
+  const [isLoading, setIsLoading] = useState(false)
   const [isGoogleLoading, setIsGoogleLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -29,13 +29,26 @@ export default function LoginPage() {
       return
     }
 
+    setIsLoading(true)
+    
     try {
-      await signIn(formData.email, formData.password)
-      toast.success("Logged in successfully!")
-      // Redirect is handled by auth context
+      const result = await signIn('credentials', {
+        email: formData.email,
+        password: formData.password,
+        redirect: false
+      })
+      
+      if (result?.error) {
+        toast.error("Invalid email or password. Please try again.")
+      } else {
+        toast.success("Logged in successfully!")
+        router.push('/checkout')
+      }
     } catch (error) {
       console.error('Login error:', error)
       toast.error("Invalid email or password. Please try again.")
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -43,9 +56,16 @@ export default function LoginPage() {
     setIsGoogleLoading(true)
     
     try {
-      await signInWithGoogle()
+      const result = await signIn('google', {
+        redirect: false
+      })
+      
+      if (result?.error) {
+        toast.error("Google login failed. Please try again.")
+      } else {
         toast.success("Logged in with Google successfully!")
-      // Redirect is handled by auth context
+        router.push('/checkout')
+      }
     } catch (error) {
       console.error('Google login error:', error)
       toast.error("An error occurred with Google login. Please try again.")
@@ -84,7 +104,7 @@ export default function LoginPage() {
                   required 
                   value={formData.email}
                   onChange={handleChange}
-                  disabled={authLoading}
+                  disabled={isLoading}
                 />
               </div>
               <div className="space-y-2">
@@ -100,15 +120,15 @@ export default function LoginPage() {
                   required 
                   value={formData.password}
                   onChange={handleChange}
-                  disabled={authLoading}
+                  disabled={isLoading}
                 />
               </div>
               <Button 
                 type="submit" 
                 className="w-full" 
-                disabled={authLoading}
+                disabled={isLoading}
               >
-                {authLoading ? (
+                {isLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Signing in...
@@ -132,7 +152,7 @@ export default function LoginPage() {
                 variant="outline"
                 className="w-full"
                 onClick={handleGoogleLogin}
-                disabled={isGoogleLoading || authLoading}
+                disabled={isGoogleLoading || isLoading}
               >
                 {isGoogleLoading ? (
                   <>
