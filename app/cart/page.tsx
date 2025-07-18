@@ -42,6 +42,9 @@ export default function CartPage() {
   useEffect(() => {
     const initializeCart = async () => {
       try {
+        // Ensure we're on the client side
+        if (typeof window === 'undefined') return
+        
         setIsClient(true)
         
         // Add a small delay to ensure DOM is ready
@@ -49,19 +52,27 @@ export default function CartPage() {
         
         const savedCart = localStorage.getItem('cart')
         if (savedCart) {
-          const parsedCart = JSON.parse(savedCart)
-          console.log('Parsed cart:', parsedCart)
-          setCartItems(Array.isArray(parsedCart) ? parsedCart : [])
+          try {
+            const parsedCart = JSON.parse(savedCart)
+            console.log('Parsed cart:', parsedCart)
+            setCartItems(Array.isArray(parsedCart) ? parsedCart : [])
+          } catch (parseError) {
+            console.error('Failed to parse cart JSON:', parseError)
+            setCartItems([])
+            localStorage.removeItem('cart')
+          }
         } else {
           console.log('No cart found in localStorage')
           setCartItems([])
         }
       } catch (error) {
-        console.error('Failed to parse cart:', error)
+        console.error('Failed to initialize cart:', error)
         setCartItems([])
         // Clear corrupted cart data
         try {
-          localStorage.removeItem('cart')
+          if (typeof window !== 'undefined') {
+            localStorage.removeItem('cart')
+          }
         } catch (e) {
           console.error('Failed to clear cart:', e)
         }
@@ -137,7 +148,17 @@ export default function CartPage() {
   }
 
   const getTotalItems = () => {
-    return cartItems.reduce((total, item) => total + item.quantity, 0)
+    try {
+      return cartItems.reduce((total, item) => {
+        if (typeof item.quantity === 'number' && item.quantity > 0) {
+          return total + item.quantity
+        }
+        return total
+      }, 0)
+    } catch (error) {
+      console.error('Error calculating total items:', error)
+      return 0
+    }
   }
 
   const handleCheckout = () => {

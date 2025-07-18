@@ -20,52 +20,22 @@
   ],
   "icons": [
     {
-      "src": "/icon-72x72.png",
-      "sizes": "72x72",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "/icon-96x96.png",
-      "sizes": "96x96",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "/icon-128x128.png",
-      "sizes": "128x128",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "/icon-144x144.png",
-      "sizes": "144x144",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "/icon-152x152.png",
-      "sizes": "152x152",
-      "type": "image/png",
-      "purpose": "maskable any"
-    },
-    {
-      "src": "/icon-192x192.png",
+      "src": "/simryologo.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
-      "src": "/icon-384x384.png",
-      "sizes": "384x384",
+      "src": "/simryologo.png",
+      "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable any"
     },
     {
-      "src": "/icon-512x512.png",
-      "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "maskable any"
+      "src": "/favicon.ico",
+      "sizes": "32x32",
+      "type": "image/x-icon",
+      "purpose": "any"
     }
   ],
   "shortcuts": [
@@ -73,76 +43,25 @@
       "name": "Browse Plans",
       "short_name": "Plans",
       "description": "Browse eSIM data plans for all destinations",
-      "url": "/plans",
-      "icons": [
-        {
-          "src": "/shortcut-plans.png",
-          "sizes": "96x96",
-          "type": "image/png"
-        }
-      ]
+      "url": "/plans"
     },
     {
       "name": "My eSIMs",
       "short_name": "My eSIMs",
       "description": "View and manage your active eSIMs",
-      "url": "/profile?tab=esims",
-      "icons": [
-        {
-          "src": "/shortcut-esims.png",
-          "sizes": "96x96",
-          "type": "image/png"
-        }
-      ]
+      "url": "/profile?tab=esims"
     },
     {
       "name": "Support",
       "short_name": "Support",
       "description": "Get help and customer support",
-      "url": "/support",
-      "icons": [
-        {
-          "src": "/shortcut-support.png",
-          "sizes": "96x96",
-          "type": "image/png"
-        }
-      ]
+      "url": "/support"
     },
     {
       "name": "Setup Guide",
       "short_name": "Setup",
       "description": "Learn how to install your eSIM",
-      "url": "/setup",
-      "icons": [
-        {
-          "src": "/shortcut-setup.png",
-          "sizes": "96x96",
-          "type": "image/png"
-        }
-      ]
-    }
-  ],
-  "screenshots": [
-    {
-      "src": "/screenshot-mobile-1.png",
-      "sizes": "390x844",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Browse global eSIM plans"
-    },
-    {
-      "src": "/screenshot-mobile-2.png",
-      "sizes": "390x844",
-      "type": "image/png",
-      "form_factor": "narrow",
-      "label": "Instant eSIM activation"
-    },
-    {
-      "src": "/screenshot-desktop-1.png",
-      "sizes": "1280x720",
-      "type": "image/png",
-      "form_factor": "wide",
-      "label": "SIMRYO desktop experience"
+      "url": "/setup"
     }
   ],
   "related_applications": [
