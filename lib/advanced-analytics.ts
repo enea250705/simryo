@@ -228,8 +228,8 @@ export class AdvancedAnalytics {
 
   private async sendToHeatmapService(event: AnalyticsEvent) {
     // Integration with heatmap services like Hotjar, Crazy Egg, etc.
-    if (typeof hj !== 'undefined') {
-      hj('event', event.event)
+    if (typeof window !== 'undefined' && (window as any).hj) {
+      (window as any).hj('event', event.event)
     }
   }
 
@@ -376,7 +376,7 @@ export class AdvancedAnalytics {
       request: navigation.responseStart - navigation.requestStart,
       response: navigation.responseEnd - navigation.responseStart,
       domProcessing: navigation.domContentLoadedEventEnd - navigation.responseEnd,
-      totalLoad: navigation.loadEventEnd - navigation.navigationStart
+      totalLoad: navigation.loadEventEnd - navigation.fetchStart
     })
   }
 

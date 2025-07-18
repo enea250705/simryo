@@ -1,5 +1,6 @@
 import { headers } from 'next/headers'
 import { NextResponse } from 'next/server'
+import Stripe from 'stripe'
 import { stripe } from '@/lib/services/stripe'
 import { prisma } from '@/lib/db'
 
@@ -29,18 +30,22 @@ export async function POST(req: Request) {
 
       try {
         // Find the order in your database using the paymentIntent.id
-        const order = await prisma.order.update({
-          where: { paymentIntentId: paymentIntent.id },
-          data: {
-            status: 'PAID',
-          },
-          include: { esims: true }, // Include eSIMs to update their status
+        const order = await prisma.order.findFirst({
+          where: { id: paymentIntent.id },
+          include: { esims: true }
         });
+        
+        if (order) {
+          await prisma.order.update({
+            where: { id: order.id },
+            data: { status: 'PAID' }
+          });
+        }
 
         if (order) {
           console.log(`Order ${order.id} marked as PAID.`)          // Update status of associated eSIMs
           for (const esim of order.esims) {
-            await prisma.eSIM.update({
+            await prisma.esim.update({
               where: { id: esim.id },
               data: { status: 'ACTIVE' }, // Set to ACTIVE or trigger real provisioning service
             });
@@ -60,10 +65,16 @@ export async function POST(req: Request) {
       console.log(`PaymentIntent failed: ${failedPaymentIntent.id}`)
       // Handle failed payment intent
       try {
-        await prisma.order.update({
-          where: { paymentIntentId: failedPaymentIntent.id },
-          data: { status: 'FAILED' },
+        const failedOrder = await prisma.order.findFirst({
+          where: { id: failedPaymentIntent.id }
         });
+        
+        if (failedOrder) {
+          await prisma.order.update({
+            where: { id: failedOrder.id },
+            data: { status: 'FAILED' }
+          });
+        }
         console.log(`Order with Payment Intent ID ${failedPaymentIntent.id} marked as FAILED.`);
       } catch (dbError) {
         console.error('Error updating order status to FAILED in database:', dbError);
