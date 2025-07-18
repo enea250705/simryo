@@ -39,13 +39,6 @@ const nextConfig = {
   // Compression and caching
   compress: true,
   
-  // PWA configuration
-  pwa: {
-    dest: 'public',
-    register: true,
-    skipWaiting: true,
-  },
-  
   // Output configuration
   output: 'standalone',
   
