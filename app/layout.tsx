@@ -10,12 +10,7 @@ import dynamic from "next/dynamic"
 import { ThemeProvider } from "@/components/theme-provider"
 import { WebVitals } from "@/components/web-vitals"
 import { GoogleAnalytics, GoogleAnalyticsPageView } from "@/components/analytics/google-analytics"
-
-// Dynamic imports for client-side components - move to client component
-// const Toaster = dynamic(() => import("sonner").then(mod => ({ default: mod.Toaster })), {
-//   ssr: false,
-//   loading: () => null
-// })
+import { ClientToaster } from "@/components/client-toast"
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -458,7 +453,7 @@ export default function RootLayout({
                 <PageAnimation>{children}</PageAnimation>
               </main>
         <Footer />
-              {/* <Toaster /> */}
+              <ClientToaster />
               <WebVitals />
               <GoogleAnalyticsPageView />
             </div>
