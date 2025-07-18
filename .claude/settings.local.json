@@ -39,7 +39,8 @@
       "Bash(touch:*)",
       "WebFetch(domain:unsplash.com)",
       "WebFetch(domain:images.unsplash.com)",
-      "Bash(timeout 60 npm run build)"
+      "Bash(timeout 60 npm run build)",
+      "Bash(pkill:*)"
     ],
     "deny": []
   }

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState, useEffect, Suspense } from "react"
 import { useSearchParams } from 'next/navigation'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -115,7 +115,7 @@ const apiService = {
   }
 }
 
-export default function PlansPage() {
+function PlansPageContent() {
   const searchParams = useSearchParams()
   const [plans, setPlans] = useState<EnhancedPlan[]>([])
   const [countries, setCountries] = useState<Country[]>([])
@@ -451,7 +451,7 @@ export default function PlansPage() {
                                 </div>
                               </div>
 
-                              <Link href={`/plans/${countrySlug}/${plan.id}`} className="w-full">
+                              <Link href={`/plans/${countrySlug}`} className="w-full">
                                 <Button className={`w-full h-12 text-lg font-semibold transition-all duration-300 ${
                                   plan.featured 
                                     ? 'bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 shadow-lg hover:shadow-xl' 
@@ -507,6 +507,25 @@ export default function PlansPage() {
         </div>
       </div>
     </div>
+  )
+}
+
+// Default export with Suspense boundary
+export default function PlansPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 pt-20">
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+          <div className="text-center">
+            <Loader2 className="h-12 w-12 animate-spin mx-auto text-blue-600 mb-4" />
+            <h2 className="text-xl font-semibold text-gray-900 mb-2">Loading Plans</h2>
+            <p className="text-gray-600">Fetching the latest eSIM plans...</p>
+          </div>
+        </div>
+      </div>
+    }>
+      <PlansPageContent />
+    </Suspense>
   )
 }
 

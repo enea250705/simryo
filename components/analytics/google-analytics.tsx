@@ -2,7 +2,7 @@
 
 import Script from 'next/script'
 import { usePathname, useSearchParams } from 'next/navigation'
-import { useEffect } from 'react'
+import { useEffect, Suspense } from 'react'
 
 const GA_TRACKING_ID = 'G-XTN13B7FTE'
 
@@ -31,8 +31,8 @@ export const event = ({ action, category, label, value }: {
   }
 }
 
-// Component to track page views
-export function GoogleAnalyticsPageView() {
+// Component to track page views - internal component that uses useSearchParams
+function GoogleAnalyticsPageViewInternal() {
   const pathname = usePathname()
   const searchParams = useSearchParams()
 
@@ -44,6 +44,15 @@ export function GoogleAnalyticsPageView() {
   }, [pathname, searchParams])
 
   return null
+}
+
+// Component to track page views - exported with Suspense boundary
+export function GoogleAnalyticsPageView() {
+  return (
+    <Suspense fallback={null}>
+      <GoogleAnalyticsPageViewInternal />
+    </Suspense>
+  )
 }
 
 // Main GoogleAnalytics component

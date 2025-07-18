@@ -99,8 +99,19 @@ export default function PlanDetailPage() {
       setLoading(true)
       setError(null)
 
-      // First get plans for the country
-      const response = await fetch(`/api/plans/${countrySlug.toUpperCase()}`)
+      // First get plans for the country - try different formats
+      let response = await fetch(`/api/plans/${countrySlug}`)
+      
+      // If that fails, try with the country name format
+      if (!response.ok) {
+        const countryParam = countryName.toLowerCase().replace(/\\s+/g, '-')
+        response = await fetch(`/api/plans/${countryParam}`)
+      }
+      
+      // If still fails, try with uppercase
+      if (!response.ok) {
+        response = await fetch(`/api/plans/${countrySlug.toUpperCase()}`)
+      }
       
       if (!response.ok) {
         throw new Error('Failed to fetch plan details')
@@ -112,14 +123,25 @@ export default function PlanDetailPage() {
         throw new Error(data.error || 'Failed to load plan')
       }
 
-      // Find the specific plan by slug
+      // Find the specific plan by slug/id
       const foundPlan = data.data.find((p: PlanDetails) => {
+        // Try multiple matching strategies
         const planId = `${p.data.toLowerCase()}-${p.days}d-${p.providerId}`
-        return planId === planSlug || p.id === planSlug
+        const altPlanId = `${p.data.toLowerCase().replace(/[^a-z0-9]/g, '-')}-${p.days}d`
+        
+        return (
+          planId === planSlug || 
+          p.id === planSlug || 
+          altPlanId === planSlug ||
+          p.id.replace(/[^a-z0-9]/g, '-') === planSlug ||
+          p.id.toLowerCase() === planSlug.toLowerCase()
+        )
       })
 
       if (!foundPlan) {
-        throw new Error('Plan not found')
+        console.error('Plan not found. Available plans:', data.data.map((p: PlanDetails) => ({ id: p.id, data: p.data })))
+        console.error('Looking for planSlug:', planSlug)
+        throw new Error(`Plan not found: ${planSlug}`)
       }
 
       setPlan(foundPlan)
