@@ -14,6 +14,7 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { toast } from "sonner"
+import { CartErrorBoundary } from "@/components/cart-error-boundary"
 
 interface CartItem {
   countryId: number
@@ -32,31 +33,45 @@ interface CartItem {
   }
 }
 
-export default function CartPage() {
+function CartContent() {
   const router = useRouter()
   const [cartItems, setCartItems] = useState<CartItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [isClient, setIsClient] = useState(false)
 
   // Load cart data on mount
   useEffect(() => {
-    try {
-      const savedCart = localStorage.getItem('cart')
-      if (savedCart) {
-        const parsedCart = JSON.parse(savedCart)
-        setCartItems(Array.isArray(parsedCart) ? parsedCart : [])
+    const initializeCart = async () => {
+      try {
+        setIsClient(true)
+        
+        // Small delay to ensure DOM is ready
+        await new Promise(resolve => setTimeout(resolve, 100))
+        
+        const savedCart = localStorage.getItem('cart')
+        if (savedCart) {
+          const parsedCart = JSON.parse(savedCart)
+          setCartItems(Array.isArray(parsedCart) ? parsedCart : [])
+        }
+      } catch (error) {
+        console.error('Failed to load cart:', error)
+        setCartItems([])
+        try {
+          localStorage.removeItem('cart')
+        } catch (e) {
+          console.error('Failed to clear cart:', e)
+        }
+      } finally {
+        setIsLoading(false)
       }
-    } catch (error) {
-      console.error('Failed to load cart:', error)
-      setCartItems([])
-      localStorage.removeItem('cart')
-    } finally {
-      setIsLoading(false)
     }
+    
+    initializeCart()
   }, [])
 
   // Save cart to localStorage when it changes
   useEffect(() => {
-    if (!isLoading) {
+    if (isClient && !isLoading) {
       try {
         localStorage.setItem('cart', JSON.stringify(cartItems))
         window.dispatchEvent(new Event('cart-updated'))
@@ -65,7 +80,7 @@ export default function CartPage() {
         toast.error('Failed to save cart changes')
       }
     }
-  }, [cartItems, isLoading])
+  }, [cartItems, isLoading, isClient])
 
   const updateQuantity = (planIndex: number, countryId: number, newQuantity: number) => {
     if (newQuantity < 1) {
@@ -131,8 +146,8 @@ export default function CartPage() {
     router.push(`/checkout?cart=${cartDataParam}`)
   }
 
-  // Show loading state
-  if (isLoading) {
+  // Show loading state - keep hooks order consistent
+  if (!isClient || isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 pt-20">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12">
@@ -283,5 +298,13 @@ export default function CartPage() {
         )}
       </div>
     </div>
+  )
+}
+
+export default function CartPage() {
+  return (
+    <CartErrorBoundary>
+      <CartContent />
+    </CartErrorBoundary>
   )
 }
