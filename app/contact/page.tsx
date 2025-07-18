@@ -1,3 +1,6 @@
+"use client"
+
+import { useState } from "react"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -7,15 +10,11 @@ import {
   Mail, 
   Clock,
   MessageCircle,
-  Send
+  Send,
+  CheckCircle,
+  Loader2
 } from "lucide-react"
-import type { Metadata } from "next"
-
-export const metadata: Metadata = {
-  title: "Contact Us - SIMRYO | Get in Touch",
-  description: "Contact SIMRYO for support, partnerships, or inquiries about our global eSIM services. Multiple ways to reach us.",
-  keywords: "contact, support, customer service, business inquiries",
-}
+import { toast } from "sonner"
 
 const contactMethods = [
   {
@@ -36,6 +35,59 @@ const contactMethods = [
 
 
 export default function ContactPage() {
+  const [formData, setFormData] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    company: '',
+    subject: '',
+    message: ''
+  })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
+  }
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsSubmitting(true)
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(formData),
+      })
+
+      const result = await response.json()
+
+      if (result.success) {
+        setIsSubmitted(true)
+        setFormData({
+          firstName: '',
+          lastName: '',
+          email: '',
+          company: '',
+          subject: '',
+          message: ''
+        })
+        toast.success(result.message || 'Message sent successfully!')
+      } else {
+        toast.error(result.error || 'Failed to send message. Please try again.')
+      }
+    } catch (error) {
+      console.error('Contact form error:', error)
+      toast.error('Failed to send message. Please check your connection and try again.')
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-background pt-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
@@ -74,45 +126,115 @@ export default function ContactPage() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <form className="space-y-6">
+              <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="firstName">First Name</Label>
-                    <Input id="firstName" placeholder="John" />
+                    <Label htmlFor="firstName">First Name *</Label>
+                    <Input 
+                      id="firstName" 
+                      name="firstName"
+                      placeholder="John" 
+                      value={formData.firstName}
+                      onChange={handleInputChange}
+                      required
+                    />
                   </div>
                   <div>
-                    <Label htmlFor="lastName">Last Name</Label>
-                    <Input id="lastName" placeholder="Doe" />
+                    <Label htmlFor="lastName">Last Name *</Label>
+                    <Input 
+                      id="lastName" 
+                      name="lastName"
+                      placeholder="Doe" 
+                      value={formData.lastName}
+                      onChange={handleInputChange}
+                      required
+                    />
                   </div>
                 </div>
                 
                 <div>
-                  <Label htmlFor="email">Email</Label>
-                  <Input id="email" type="email" placeholder="john@example.com" />
+                  <Label htmlFor="email">Email *</Label>
+                  <Input 
+                    id="email" 
+                    name="email"
+                    type="email" 
+                    placeholder="john@example.com" 
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    required
+                  />
                 </div>
 
                 <div>
                   <Label htmlFor="company">Company (Optional)</Label>
-                  <Input id="company" placeholder="Your Company" />
-                </div>
-
-                <div>
-                  <Label htmlFor="subject">Subject</Label>
-                  <Input id="subject" placeholder="How can we help?" />
-                </div>
-
-                <div>
-                  <Label htmlFor="message">Message</Label>
-                  <Textarea 
-                    id="message" 
-                    placeholder="Tell us more about your inquiry..."
-                    className="min-h-[120px]"
+                  <Input 
+                    id="company" 
+                    name="company"
+                    placeholder="Your Company" 
+                    value={formData.company}
+                    onChange={handleInputChange}
                   />
                 </div>
 
-                <Button className="w-full bg-primary-950 hover:bg-primary-900 text-white">
-                  Send Message
+                <div>
+                  <Label htmlFor="subject">Subject *</Label>
+                  <Input 
+                    id="subject" 
+                    name="subject"
+                    placeholder="How can we help?" 
+                    value={formData.subject}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+
+                <div>
+                  <Label htmlFor="message">Message *</Label>
+                  <Textarea 
+                    id="message" 
+                    name="message"
+                    placeholder="Tell us more about your inquiry..."
+                    className="min-h-[120px]"
+                    value={formData.message}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+
+                <Button 
+                  type="submit" 
+                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting ? (
+                    <>
+                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      Sending...
+                    </>
+                  ) : isSubmitted ? (
+                    <>
+                      <CheckCircle className="h-4 w-4 mr-2" />
+                      Message Sent!
+                    </>
+                  ) : (
+                    <>
+                      <Send className="h-4 w-4 mr-2" />
+                      Send Message
+                    </>
+                  )}
                 </Button>
+                
+                {isSubmitted && (
+                  <div className="text-center p-4 bg-green-50 border border-green-200 rounded-lg">
+                    <CheckCircle className="h-6 w-6 text-green-600 mx-auto mb-2" />
+                    <p className="text-green-800 font-medium">Thank you for your message!</p>
+                    <p className="text-green-600 text-sm mt-1">We'll get back to you within 24 hours.</p>
+                  </div>
+                )}
+                
+                <p className="text-sm text-gray-500 text-center">
+                  * Required fields
+                </p>
               </form>
             </CardContent>
           </Card>
@@ -126,11 +248,11 @@ export default function ContactPage() {
               Check out our FAQ section for instant answers to common questions about eSIM setup, plans, and troubleshooting.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button variant="secondary" size="lg" className="bg-white text-primary-950 hover:bg-gray-100">
-                Browse FAQ
+              <Button variant="secondary" size="lg" className="bg-white text-primary-950 hover:bg-gray-100" asChild>
+                <a href="/faq">Browse FAQ</a>
               </Button>
-              <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-primary-950 bg-transparent">
-                Setup Guide
+              <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-primary-950 bg-transparent" asChild>
+                <a href="/setup">Setup Guide</a>
               </Button>
             </div>
           </CardContent>

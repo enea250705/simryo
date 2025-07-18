@@ -186,6 +186,15 @@ export function Navbar() {
           {/* Main Navigation */}
           <NavigationMenu className="hidden lg:flex">
             <NavigationMenuList className="space-x-1">
+              {/* Home Link */}
+              <NavigationMenuItem>
+                <Link href="/" legacyBehavior passHref>
+                  <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), "text-gray-700 hover:text-blue-600 font-medium")}>
+                    Home
+                  </NavigationMenuLink>
+                </Link>
+              </NavigationMenuItem>
+
               {/* Plans Menu */}
               <NavigationMenuItem>
                 <NavigationMenuTrigger className="text-gray-700 hover:text-blue-600 font-medium">
@@ -316,13 +325,6 @@ export function Navbar() {
               )}
             </Link>
 
-            {/* Admin Link */}
-            <Link href="/admin">
-              <Button variant="ghost" size="sm" className="text-gray-700 hover:text-blue-600">
-                <Settings className="h-4 w-4 mr-2" />
-                Admin
-              </Button>
-            </Link>
 
             {/* Buy Now Button */}
             <Link href="/plans">
@@ -387,6 +389,20 @@ export function Navbar() {
           {isOpen && (
             <div className="absolute top-16 left-0 right-0 bg-white border-b border-gray-200 shadow-lg max-h-[calc(100vh-4rem)] overflow-y-auto">
               <div className="px-4 py-6 space-y-6">
+                {/* Home Link */}
+                <div>
+                  <Link
+                    href="/"
+                    className="flex items-center space-x-3 p-2 rounded-md hover:bg-gray-50 text-gray-700 hover:text-blue-600"
+                    onClick={() => setIsOpen(false)}
+                  >
+                    <Globe className="h-5 w-5" />
+                    <span className="text-sm font-medium">Home</span>
+                  </Link>
+                </div>
+
+                <Separator />
+
                 {/* Plans Section */}
                 <div>
                   <h3 className="text-sm font-semibold text-gray-900 mb-3">Plans</h3>
