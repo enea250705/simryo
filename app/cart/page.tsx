@@ -10,8 +10,7 @@ import {
   ShoppingCart, 
   Trash2, 
   Plus, 
-  Minus, 
-  LogIn 
+  Minus
 } from "lucide-react"
 import Link from "next/link"
 import { toast } from "sonner"
@@ -97,22 +96,7 @@ export default function CartPage() {
   }
 
   const handleCheckout = () => {
-    if (!session) {
-      // Store current cart data and redirect URL in localStorage
-      localStorage.setItem('pendingCheckout', 'true')
-      localStorage.setItem('redirectAfterAuth', '/checkout')
-      
-      toast.info('Please sign up or log in to continue with your purchase', {
-        action: {
-          label: 'Sign Up',
-          onClick: () => router.push('/signup')
-        }
-      })
-      
-      return
-    }
-
-    // If authenticated, proceed to checkout with cart data
+    // Guest checkout - proceed directly to checkout with cart data
     const cartDataParam = encodeURIComponent(JSON.stringify(cartItems))
     router.push(`/checkout?cart=${cartDataParam}`)
   }
@@ -258,17 +242,8 @@ export default function CartPage() {
                     className="w-full bg-emerald-600 hover:bg-emerald-700 mt-4"
                     onClick={handleCheckout}
                   >
-                    {session ? (
-                      <>
-                        <ShoppingCart className="h-4 w-4 mr-2" />
-                        Proceed to Checkout
-                      </>
-                    ) : (
-                      <>
-                        <LogIn className="h-4 w-4 mr-2" />
-                        Sign Up to Continue
-                      </>
-                    )}
+                    <ShoppingCart className="h-4 w-4 mr-2" />
+                    Proceed to Checkout
                   </Button>
                 </CardContent>
               </Card>
