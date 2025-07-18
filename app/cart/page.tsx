@@ -37,23 +37,31 @@ export default function CartPage() {
   const [isClient, setIsClient] = useState(false)
   const [cartItems, setCartItems] = useState<CartItem[]>([])
 
-  // Prevent hydration mismatch during SSR
-  if (!isClient) {
-    return null
-  }
-
   useEffect(() => {
     setIsClient(true)
     const savedCart = localStorage.getItem('cart')
     if (savedCart) {
       try {
         setCartItems(JSON.parse(savedCart))
-    } catch (error) {
+      } catch (error) {
         console.error('Failed to parse cart:', error)
         setCartItems([])
       }
     }
   }, [])
+
+  // Prevent hydration mismatch during SSR
+  if (!isClient) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 pt-20">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12">
+          <div className="text-center">
+            <div className="text-2xl font-semibold text-gray-600">Loading cart...</div>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   useEffect(() => {
     if (isClient) {
@@ -99,18 +107,6 @@ export default function CartPage() {
     // Guest checkout - proceed directly to checkout with cart data
     const cartDataParam = encodeURIComponent(JSON.stringify(cartItems))
     router.push(`/checkout?cart=${cartDataParam}`)
-  }
-
-  if (!isClient) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 pt-20">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12">
-          <div className="text-center">
-            <div className="text-2xl font-semibold text-gray-600">Loading cart...</div>
-          </div>
-        </div>
-      </div>
-    )
   }
 
   return (

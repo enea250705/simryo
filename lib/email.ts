@@ -123,7 +123,7 @@ export async function sendESIMEmail(data: ESIMEmailData) {
         
         <div class="footer">
           <p>Thank you for choosing SIMRYO!</p>
-          <p>Questions? Contact us at <a href="mailto:support@simryo.com">support@simryo.com</a></p>
+          <p>Questions? Contact us at <a href="mailto:info@simryo.com">info@simryo.com</a></p>
           <p>© 2024 SIMRYO. All rights reserved.</p>
         </div>
       </div>
@@ -159,7 +159,7 @@ How to Activate:
 
 View your eSIM in your dashboard: https://simryo.com/profile
 
-Need help? Contact us at support@simryo.com
+Need help? Contact us at info@simryo.com
 
 Thank you for choosing SIMRYO!
   `
@@ -226,7 +226,7 @@ export async function sendOrderConfirmationEmail(userEmail: string, userName: st
         
         <div class="footer">
           <p>Thank you for choosing SIMRYO!</p>
-          <p>Questions? Contact us at <a href="mailto:support@simryo.com">support@simryo.com</a></p>
+          <p>Questions? Contact us at <a href="mailto:info@simryo.com">info@simryo.com</a></p>
           <p>© 2024 SIMRYO. All rights reserved.</p>
         </div>
       </div>
@@ -318,7 +318,7 @@ export async function sendPasswordResetEmail(data: PasswordResetEmailData) {
         
         <div class="footer">
           <p>Stay secure with SIMRYO!</p>
-          <p>Questions? Contact us at <a href="mailto:support@simryo.com">support@simryo.com</a></p>
+          <p>Questions? Contact us at <a href="mailto:info@simryo.com">info@simryo.com</a></p>
           <p>© 2024 SIMRYO. All rights reserved.</p>
         </div>
       </div>

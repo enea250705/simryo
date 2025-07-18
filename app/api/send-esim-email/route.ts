@@ -71,7 +71,7 @@ export async function POST(request: NextRequest) {
         <li>Keep this email safe - you'll need it to activate your eSIM</li>
         <li>Your eSIM will activate when you first connect to a network in your destination</li>
         <li>Make sure your device supports eSIM technology</li>
-        <li>Contact our support team if you need help: support@simryo.com</li>
+        <li>Contact our support team if you need help: info@simryo.com</li>
       </ul>
     </div>
     

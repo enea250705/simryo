@@ -85,7 +85,7 @@ export default function SettingsPage() {
         general: {
           siteName: "SIMRYO",
           siteDescription: "Global eSIM marketplace for travelers",
-          supportEmail: "support@simryo.com",
+          supportEmail: "info@simryo.com",
           defaultCurrency: "USD",
           timezone: "UTC",
           maintenanceMode: false

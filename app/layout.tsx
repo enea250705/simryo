@@ -211,11 +211,11 @@ const structuredData = {
       ],
   address: {
     '@type': 'PostalAddress',
-    addressCountry: 'US',
-    addressLocality: 'San Francisco',
-    addressRegion: 'CA',
-    postalCode: '94102',
-    streetAddress: '123 Tech Street'
+    addressCountry: 'Global',
+    addressLocality: 'Global',
+    addressRegion: '',
+    postalCode: '',
+    streetAddress: ''
   },
   founder: {
     '@type': 'Person',
@@ -385,10 +385,8 @@ export default function RootLayout({
         <meta httpEquiv="x-dns-prefetch-control" content="on" />
         
         {/* Geo Location */}
-        <meta name="geo.region" content="US" />
-        <meta name="geo.placename" content="San Francisco" />
-        <meta name="geo.position" content="37.7749;-122.4194" />
-        <meta name="ICBM" content="37.7749, -122.4194" />
+        <meta name="geo.region" content="Global" />
+        <meta name="geo.placename" content="Global" />
         
         {/* Business Information */}
         <meta name="rating" content="5" />

@@ -415,12 +415,10 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ### Community
 - **Discord**: [Join our community](https://discord.gg/simryo)
 - **GitHub Discussions**: [Ask questions](https://github.com/simryo/simryo/discussions)
-- **Twitter**: [@SimryoHQ](https://twitter.com/SimryoHQ)
+- **Twitter**: [@Simryo](https://twitter.com/Simryo)
 
 ### Enterprise Support
-- **Email**: enterprise@simryo.com
-- **Phone**: +1 (555) SIMRYO-1
-- **Slack**: Enterprise Slack workspace
+- **Email**: info@simryo.com
 - **Dedicated Account Manager**: For enterprise customers
 
 ### Documentation

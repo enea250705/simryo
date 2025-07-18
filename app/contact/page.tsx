@@ -5,8 +5,6 @@ import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
 import { 
   Mail, 
-  Phone, 
-  MapPin, 
   Clock,
   MessageCircle,
   Send
@@ -24,15 +22,8 @@ const contactMethods = [
     icon: Mail,
     title: "Email Support",
     description: "Get help via email",
-    contact: "support@simryo.com",
+    contact: "info@simryo.com",
     hours: "24/7 response within 2 hours"
-  },
-  {
-    icon: Phone,
-    title: "Phone Support",
-    description: "Speak with our team",
-    contact: "+1 (555) 123-4567",
-    hours: "Mon-Fri 9AM-6PM EST"
   },
   {
     icon: MessageCircle,
@@ -43,26 +34,6 @@ const contactMethods = [
   }
 ]
 
-const offices = [
-  {
-    city: "San Francisco",
-    address: "123 Tech Street, Suite 100",
-    postal: "San Francisco, CA 94105",
-    country: "United States"
-  },
-  {
-    city: "London",
-    address: "456 Innovation Ave, Floor 5",
-    postal: "London, EC2A 3QR",
-    country: "United Kingdom"
-  },
-  {
-    city: "Singapore",
-    address: "789 Business Hub, Level 12",
-    postal: "Singapore 018956",
-    country: "Singapore"
-  }
-]
 
 export default function ContactPage() {
   return (
@@ -79,7 +50,7 @@ export default function ContactPage() {
         </div>
 
         {/* Contact Methods */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
           {contactMethods.map((method, index) => (
             <Card key={index} className="hover:shadow-lg transition-shadow">
               <CardContent className="p-8">
@@ -93,8 +64,8 @@ export default function ContactPage() {
           ))}
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-          {/* Contact Form */}
+        {/* Contact Form */}
+        <div className="max-w-2xl mx-auto">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
@@ -145,57 +116,6 @@ export default function ContactPage() {
               </form>
             </CardContent>
           </Card>
-
-          {/* Office Locations */}
-          <div>
-            <h2 className="text-2xl font-bold text-foreground mb-6">Our Offices</h2>
-            <div className="space-y-6">
-              {offices.map((office, index) => (
-                <Card key={index}>
-                  <CardContent className="p-6">
-                    <div className="flex items-start space-x-4">
-                      <MapPin className="h-6 w-6 text-accent-500 mt-1 flex-shrink-0" />
-                      <div>
-                        <h3 className="font-semibold text-foreground mb-1">{office.city}</h3>
-                        <p className="text-gray-600 text-sm">{office.address}</p>
-                        <p className="text-gray-600 text-sm">{office.postal}</p>
-                        <p className="text-gray-600 text-sm">{office.country}</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-
-            {/* Business Hours */}
-            <Card className="mt-8">
-              <CardHeader>
-                <CardTitle className="flex items-center space-x-2">
-                  <Clock className="h-5 w-5" />
-                  <span>Business Hours</span>
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2 text-sm">
-                  <div className="flex justify-between">
-                    <span>Monday - Friday</span>
-                    <span>9:00 AM - 6:00 PM</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Saturday</span>
-                    <span>10:00 AM - 4:00 PM</span>
-                  </div>
-                  <div className="flex justify-between">
-                    <span>Sunday</span>
-                    <span>Closed</span>
-                  </div>
-                  <p className="text-gray-500 mt-4">
-                    * Times are in respective local time zones. Email support is available 24/7.
-                  </p>
-                </div>
-              </CardContent>
-            </Card>
-          </div>
         </div>
 
         {/* FAQ Link */}

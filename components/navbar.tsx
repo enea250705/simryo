@@ -36,7 +36,6 @@ import {
   Smartphone,
   Zap,
   Shield,
-  Phone,
   MessageCircle,
   HelpCircle,
   ChevronDown,

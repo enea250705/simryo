@@ -219,7 +219,7 @@ export default function ConfirmationPage() {
             <li>• Keep this information safe - you'll need it to activate your eSIM</li>
             <li>• Your eSIM will activate when you first connect to a network in your destination</li>
             <li>• Make sure your device supports eSIM technology before traveling</li>
-            <li>• Contact our support team if you need help: support@simryo.com</li>
+            <li>• Contact our support team if you need help: info@simryo.com</li>
             <li>• Check your email for a copy of all this information</li>
           </ul>
         </CardContent>

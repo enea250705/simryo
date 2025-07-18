@@ -132,7 +132,7 @@ export function CheckoutForm({ orderItems, onSuccessfulPurchase }: CheckoutFormP
           <Input
             id="phone"
             type="tel"
-            placeholder="+1 (555) 123-4567"
+            placeholder="Phone number (optional)"
             value={customerInfo.phone}
             onChange={(e) => setCustomerInfo(prev => ({ ...prev, phone: e.target.value }))}
             className="mt-1"
