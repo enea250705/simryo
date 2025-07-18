@@ -19,8 +19,6 @@ const nextConfig = {
       '@stripe/react-stripe-js',
       'sonner'
     ],
-    // Optimize CSS loading
-    optimizeCss: true,
     // Enable edge runtime for API routes where possible
   },
   
