@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
 
-    if (!session?.user?.id) {
+    if (!session?.user || !('id' in session.user)) {
       return NextResponse.json(
         { success: false, error: 'Authentication required' },
         { status: 401 }
@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
   }
 
     const user = await prisma.user.findUnique({
-      where: { id: session.user.id },
+      where: { id: (session.user as any).id },
       select: {
         id: true,
         name: true,
@@ -74,7 +74,7 @@ export async function PUT(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
 
-    if (!session?.user?.id) {
+    if (!session?.user || !('id' in session.user)) {
       return NextResponse.json(
         { success: false, error: 'Authentication required' },
         { status: 401 }
@@ -85,7 +85,7 @@ export async function PUT(request: NextRequest) {
     const { name, email, currentPassword, newPassword } = body
 
     const user = await prisma.user.findUnique({
-      where: { id: session.user.id }
+      where: { id: (session.user as any).id }
     })
     
     if (!user) {

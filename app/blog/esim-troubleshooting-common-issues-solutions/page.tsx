@@ -39,7 +39,7 @@ export default function EsimTroubleshootingPage() {
             <ul className="space-y-2 text-red-700">
               <li>• <strong>No Internet:</strong> Toggle Airplane mode ON/OFF</li>
               <li>• <strong>Can't Activate:</strong> Check WiFi connection and try again</li>
-              <li>• <strong>Wrong Network:</strong> Go to Settings > Cellular > Network Selection</li>
+              <li>• <strong>Wrong Network:</strong> Go to Settings {'>'} Cellular {'>'} Network Selection</li>
               <li>• <strong>Still Problems:</strong> Restart your device completely</li>
             </ul>
           </div>
@@ -117,7 +117,7 @@ export default function EsimTroubleshootingPage() {
               <div className="bg-white rounded-lg p-6 shadow-md">
                 <h3 className="text-lg font-semibold mb-3">🍎 iPhone Issues</h3>
                 <ul className="space-y-2 text-sm">
-                  <li>• Settings > Cellular > Add Cellular Plan</li>
+                  <li>• Settings {'>'} Cellular {'>'} Add Cellular Plan</li>
                   <li>• Check for iOS updates</li>
                   <li>• Reset Network Settings if needed</li>
                   <li>• Ensure device is unlocked</li>
@@ -127,7 +127,7 @@ export default function EsimTroubleshootingPage() {
               <div className="bg-white rounded-lg p-6 shadow-md">
                 <h3 className="text-lg font-semibold mb-3">🤖 Android Issues</h3>
                 <ul className="space-y-2 text-sm">
-                  <li>• Settings > Network > Mobile Network</li>
+                  <li>• Settings {'>'} Network {'>'} Mobile Network</li>
                   <li>• Clear SIM Toolkit cache</li>
                   <li>• Check Google Play Services</li>
                   <li>• Verify carrier compatibility</li>

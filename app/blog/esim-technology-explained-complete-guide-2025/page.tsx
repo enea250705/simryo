@@ -53,7 +53,7 @@ import {
   Microchip,
   CircuitBoard,
   Bluetooth,
-  NFC,
+  Nfc,
   QrCode,
   Scan,
   Download as DownloadIcon,
@@ -82,9 +82,7 @@ import {
   Building,
   Factory,
   Satellite,
-  Tower,
-  Router,
-  Modem
+  Router
 } from "lucide-react"
 
 export const metadata: Metadata = {

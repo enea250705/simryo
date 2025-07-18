@@ -4,10 +4,10 @@ import { esimAccessAPI } from '@/lib/esim-access'
 // GET /api/esim-access/[country] - Get eSIM plans for a specific country
 export async function GET(
   request: NextRequest,
-  { params }: { params: { country: string } }
+  { params }: { params: Promise<{ country: string }> }
 ) {
   try {
-    const country = params.country
+    const { country } = await params
     
     if (!country) {
       return NextResponse.json(
@@ -49,7 +49,8 @@ export async function GET(
     })
 
   } catch (error) {
-    console.error(`❌ Error fetching eSIM plans for ${params.country}:`, error)
+    const { country } = await params
+    console.error(`❌ Error fetching eSIM plans for ${country}:`, error)
     return NextResponse.json(
       { 
         success: false,
@@ -64,10 +65,10 @@ export async function GET(
 // POST /api/esim-access/[country] - Purchase/provision eSIM for a specific country
 export async function POST(
   request: NextRequest,
-  { params }: { params: { country: string } }
+  { params }: { params: Promise<{ country: string }> }
 ) {
   try {
-    const country = params.country
+    const { country } = await params
     const body = await request.json()
     
     const { planId, userId, userEmail, quantity = 1 } = body
@@ -134,7 +135,8 @@ export async function POST(
     })
 
   } catch (error) {
-    console.error(`❌ Error provisioning eSIM for ${params.country}:`, error)
+    const { country } = await params
+    console.error(`❌ Error provisioning eSIM for ${country}:`, error)
     return NextResponse.json(
       { 
         success: false,

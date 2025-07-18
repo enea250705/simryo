@@ -435,7 +435,7 @@ export default function CountrySpecificEsimGuidesPage() {
                       <span className="bg-green-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm mr-3 mt-0.5">4</span>
                       <div>
                         <strong>Enable eSIM</strong>
-                        <p className="text-gray-600">Go to Settings > Cellular and turn on your travel eSIM</p>
+                        <p className="text-gray-600">Go to Settings {'>'} Cellular and turn on your travel eSIM</p>
                       </div>
                     </li>
                     <li className="flex items-start">

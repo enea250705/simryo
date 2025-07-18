@@ -8,10 +8,9 @@ export async function POST(request: NextRequest) {
     const processedData = {
       ...analyticsData,
       processedAt: new Date().toISOString(),
-      ip: request.ip || request.headers.get('x-forwarded-for') || 'unknown',
-      country: request.geo?.country || 'unknown',
-      city: request.geo?.city || 'unknown',
-      region: request.geo?.region || 'unknown',
+      ip: request.headers.get('x-forwarded-for') || request.headers.get('x-real-ip') || 'unknown',
+      country: request.headers.get('cf-ipcountry') || 'unknown',
+      userAgent: request.headers.get('user-agent') || 'unknown',
     }
 
     // Log for development

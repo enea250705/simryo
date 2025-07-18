@@ -84,9 +84,9 @@ export async function POST(request: NextRequest) {
             await prisma.esim.create({
               data: {
                 orderId: order.id,
-                iccid: purchaseResponse.activationCode,
-                qrCodeUrl: purchaseResponse.qrCodeUrl,
-                activationCode: purchaseResponse.activationCode,
+                iccid: purchaseResponse.activationCode || '',
+                qrCodeUrl: purchaseResponse.qrCodeUrl || '',
+                activationCode: purchaseResponse.activationCode || '',
                 status: 'ACTIVE',
                 dataLimit: item.plan.dataInMB || 0,
                 expiresAt: purchaseResponse.expiresAt

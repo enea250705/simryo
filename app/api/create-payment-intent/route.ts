@@ -5,7 +5,7 @@ import { createStripePaymentIntent } from '@/lib/services/stripe'
 // Initialize Stripe with the secret key from environment variables.
 // The STRIPE_SECRET_KEY is kept on the server and never exposed to the client.
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  apiVersion: '2024-06-20',
+  apiVersion: '2025-05-28.basil',
   typescript: true,
 })
 

@@ -5,10 +5,10 @@ import { ProviderManager } from '@/lib/services/provider-manager'
 // GET /api/plans/[countryCode] - Get eSIM plans for a specific country
 export async function GET(
   request: NextRequest,
-  { params }: { params: { countryCode: string } }
+  { params }: { params: Promise<{ countryCode: string }> }
 ) {
   try {
-    const { countryCode } = params
+    const { countryCode } = await params
 
     if (!countryCode) {
       return NextResponse.json(
@@ -54,12 +54,13 @@ export async function GET(
     })
 
   } catch (error) {
-    console.error(`❌ Error fetching plans for ${params.countryCode}:`, error)
+    const { countryCode } = await params
+    console.error(`❌ Error fetching plans for ${countryCode}:`, error)
     return NextResponse.json(
       { 
         success: false,
         error: error instanceof Error ? error.message : 'Failed to fetch country plans',
-        countryCode: params.countryCode,
+        countryCode: countryCode,
         timestamp: new Date().toISOString()
       },
       { status: 500 }

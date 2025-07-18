@@ -185,8 +185,8 @@ export default function CountryPage() {
             const bestValue = (best.price / (best.dataInMB / 1024)) / best.days
             const currentValue = (current.price / (current.dataInMB / 1024)) / current.days
             return currentValue < bestValue ? current : best
-          })
-          bestOverallPlan.bestValue = true
+          }, sortedPlans[0])
+          ;(bestOverallPlan as any).bestValue = true
         }
         
         const countryData: Country = {
@@ -503,7 +503,7 @@ export default function CountryPage() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {getDisplayPlans().map((plan: EnhancedPlan, index: number) => {
             const savings = getSavings(plan)
-            const isRecommended = plan.bestValue || plan.popular
+            const isRecommended = (plan as any).bestValue || plan.popular
             
             return (
               <Card key={index} className={`relative transition-all duration-300 hover:shadow-xl border-2 ${
@@ -514,13 +514,13 @@ export default function CountryPage() {
                 
                 {/* Top badges */}
                 <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 flex gap-2">
-                  {plan.bestValue && (
+                  {(plan as any).bestValue && (
                     <Badge className="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white px-3 py-1 shadow-md">
                       <TrendingUp className="h-3 w-3 mr-1" />
                       Best Value
                     </Badge>
                   )}
-                  {plan.popular && !plan.bestValue && (
+                  {plan.popular && !(plan as any).bestValue && (
                     <Badge className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-3 py-1 shadow-md">
                       <Star className="h-3 w-3 mr-1" />
                       Popular

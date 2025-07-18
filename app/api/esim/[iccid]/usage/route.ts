@@ -5,7 +5,7 @@ import { prisma } from '@/lib/db'
 // GET /api/esim/[iccid]/usage - Get usage statistics for a specific eSIM
 export async function GET(
   request: NextRequest,
-  { params }: { params: { iccid: string } }
+  { params }: { params: Promise<{ iccid: string }> }
 ) {
   // Remove tokenVerification and use NextAuth session if needed
   // const tokenVerification = verifyToken(request)
@@ -14,7 +14,7 @@ export async function GET(
   //   return tokenVerification.error
   // }
 
-  const { iccid } = params
+  const { iccid } = await params
 
   if (!iccid) {
     return NextResponse.json(
@@ -24,7 +24,7 @@ export async function GET(
   }
 
   try {
-    const esim = await prisma.eSIM.findFirst({
+    const esim = await prisma.esim.findFirst({
       where: {
         iccid: iccid,
         // userId: tokenVerification.userId, // Remove this line
@@ -35,10 +35,10 @@ export async function GET(
         dataUsed: true,
         dataLimit: true,
         status: true,
-        activatedAt: true,
+        createdAt: true,
         expiresAt: true,
         plan: {
-          select: { name: true, dataAmount: true, validity: true }
+          select: { country: true, dataAmount: true, days: true }
         }
       }
     })

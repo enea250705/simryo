@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Find the eSIM and ensure it belongs to the authenticated user and is not already active
-    const esimToActivate = await prisma.eSIM.findFirst({
+    const esimToActivate = await prisma.esim.findFirst({
       where: {
         id: esimId,
         // userId: userId, // Remove userId check if not authenticated
@@ -44,19 +44,18 @@ export async function POST(request: NextRequest) {
     console.log(`Simulating activation for eSIM ID: ${esimToActivate.id}`)
 
     // Update the eSIM status and activatedAt timestamp in the database
-    const activatedEsim = await prisma.eSIM.update({
+    const activatedEsim = await prisma.esim.update({
       where: { id: esimId },
       data: {
         status: 'ACTIVE',
-        activatedAt: new Date(),
       },
       select: {
         id: true,
         iccid: true,
         status: true,
-        activatedAt: true,
+        createdAt: true,
         expiresAt: true,
-        plan: { select: { name: true } },
+        plan: { select: { country: true } },
       },
     })
 

@@ -111,7 +111,7 @@ function ProfileContent() {
       // Use the authenticated user from the session
       if (session?.user) {
         const profile: UserProfile = {
-          id: session.user.id || '',
+          id: (session.user as any).id || '',
           name: session.user.name || '',
           email: session.user.email || '',
           avatar: session.user.image,

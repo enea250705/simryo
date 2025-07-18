@@ -7,7 +7,7 @@ export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
 
-    if (!session?.user?.id) {
+    if (!session?.user || !('id' in session.user)) {
       return NextResponse.json(
         { success: false, error: 'Authentication required' },
         { status: 401 }
@@ -16,7 +16,7 @@ export async function GET(request: NextRequest) {
 
     // Get user's eSIMs with related data
     const esims = await prisma.esim.findMany({
-      where: { userId: session.user.id },
+      where: { userId: (session.user as any).id },
       include: {
         plan: {
           select: {
