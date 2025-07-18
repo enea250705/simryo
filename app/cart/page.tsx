@@ -14,7 +14,6 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { toast } from "sonner"
-import { CartErrorBoundary } from "@/components/cart-error-boundary"
 
 interface CartItem {
   countryId: number
@@ -35,19 +34,11 @@ interface CartItem {
 
 export default function CartPage() {
   const router = useRouter()
-  const [mounted, setMounted] = useState(false)
   const [cartItems, setCartItems] = useState<CartItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
-  // Handle mounting
+  // Load cart data on mount
   useEffect(() => {
-    setMounted(true)
-  }, [])
-
-  // Load cart data
-  useEffect(() => {
-    if (!mounted) return
-
     try {
       const savedCart = localStorage.getItem('cart')
       if (savedCart) {
@@ -61,24 +52,11 @@ export default function CartPage() {
     } finally {
       setIsLoading(false)
     }
-  }, [mounted])
+  }, [])
 
-  // Show loading state for SSR and initial load
-  if (!mounted || isLoading) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 pt-20">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12">
-          <div className="text-center">
-            <div className="text-2xl font-semibold text-gray-600">Loading cart...</div>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  // Save cart to localStorage
+  // Save cart to localStorage when it changes
   useEffect(() => {
-    if (mounted) {
+    if (!isLoading) {
       try {
         localStorage.setItem('cart', JSON.stringify(cartItems))
         window.dispatchEvent(new Event('cart-updated'))
@@ -87,7 +65,7 @@ export default function CartPage() {
         toast.error('Failed to save cart changes')
       }
     }
-  }, [cartItems, mounted])
+  }, [cartItems, isLoading])
 
   const updateQuantity = (planIndex: number, countryId: number, newQuantity: number) => {
     if (newQuantity < 1) {
@@ -113,65 +91,61 @@ export default function CartPage() {
   }
 
   const getTotalValue = () => {
-    try {
-      return cartItems.reduce((total, item) => {
-        if (!item.planData || typeof item.planData.price !== 'number') {
-          console.error('Invalid item in cart:', item)
-          return total
-        }
-        return total + (item.planData.price * item.quantity)
-      }, 0)
-    } catch (error) {
-      console.error('Error calculating total:', error)
-      return 0
-    }
+    return cartItems.reduce((total, item) => {
+      if (!item.planData || typeof item.planData.price !== 'number') {
+        return total
+      }
+      return total + (item.planData.price * item.quantity)
+    }, 0)
   }
 
   const getTotalItems = () => {
-    try {
-      return cartItems.reduce((total, item) => {
-        if (typeof item.quantity === 'number' && item.quantity > 0) {
-          return total + item.quantity
-        }
-        return total
-      }, 0)
-    } catch (error) {
-      console.error('Error calculating total items:', error)
-      return 0
-    }
+    return cartItems.reduce((total, item) => {
+      if (typeof item.quantity === 'number' && item.quantity > 0) {
+        return total + item.quantity
+      }
+      return total
+    }, 0)
   }
 
   const handleCheckout = () => {
-    try {
-      if (cartItems.length === 0) {
-        toast.error('Your cart is empty')
-        return
-      }
-      
-      // Validate cart items before checkout
-      const validItems = cartItems.filter(item => 
-        item.planData && 
-        typeof item.planData.price === 'number' && 
-        item.quantity > 0
-      )
-      
-      if (validItems.length === 0) {
-        toast.error('No valid items in cart')
-        return
-      }
-      
-      // Guest checkout - proceed directly to checkout with cart data
-      const cartDataParam = encodeURIComponent(JSON.stringify(validItems))
-      router.push(`/checkout?cart=${cartDataParam}`)
-    } catch (error) {
-      console.error('Checkout error:', error)
-      toast.error('Failed to proceed to checkout')
+    if (cartItems.length === 0) {
+      toast.error('Your cart is empty')
+      return
     }
+    
+    // Validate cart items before checkout
+    const validItems = cartItems.filter(item => 
+      item.planData && 
+      typeof item.planData.price === 'number' && 
+      item.quantity > 0
+    )
+    
+    if (validItems.length === 0) {
+      toast.error('No valid items in cart')
+      return
+    }
+    
+    // Guest checkout - proceed directly to checkout with cart data
+    const cartDataParam = encodeURIComponent(JSON.stringify(validItems))
+    router.push(`/checkout?cart=${cartDataParam}`)
+  }
+
+  // Show loading state
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 pt-20">
+        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12">
+          <div className="text-center">
+            <div className="text-2xl font-semibold text-gray-600">Loading cart...</div>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (
-    <CartErrorBoundary>
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 pt-20">
+    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 pt-20">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
@@ -309,6 +283,5 @@ export default function CartPage() {
         )}
       </div>
     </div>
-    </CartErrorBoundary>
   )
 }
