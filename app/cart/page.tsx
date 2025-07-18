@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import dynamic from "next/dynamic"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
@@ -15,6 +14,7 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { toast } from "sonner"
+import { CartErrorBoundary } from "@/components/cart-error-boundary"
 
 interface CartItem {
   countryId: number
@@ -35,57 +35,36 @@ interface CartItem {
 
 export default function CartPage() {
   const router = useRouter()
-  const [isClient, setIsClient] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const [cartItems, setCartItems] = useState<CartItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
 
+  // Handle mounting
   useEffect(() => {
-    const initializeCart = async () => {
-      try {
-        // Ensure we're on the client side
-        if (typeof window === 'undefined') return
-        
-        setIsClient(true)
-        
-        // Add a small delay to ensure DOM is ready
-        await new Promise(resolve => setTimeout(resolve, 100))
-        
-        const savedCart = localStorage.getItem('cart')
-        if (savedCart) {
-          try {
-            const parsedCart = JSON.parse(savedCart)
-            console.log('Parsed cart:', parsedCart)
-            setCartItems(Array.isArray(parsedCart) ? parsedCart : [])
-          } catch (parseError) {
-            console.error('Failed to parse cart JSON:', parseError)
-            setCartItems([])
-            localStorage.removeItem('cart')
-          }
-        } else {
-          console.log('No cart found in localStorage')
-          setCartItems([])
-        }
-      } catch (error) {
-        console.error('Failed to initialize cart:', error)
-        setCartItems([])
-        // Clear corrupted cart data
-        try {
-          if (typeof window !== 'undefined') {
-            localStorage.removeItem('cart')
-          }
-        } catch (e) {
-          console.error('Failed to clear cart:', e)
-        }
-      } finally {
-        setIsLoading(false)
-      }
-    }
-
-    initializeCart()
+    setMounted(true)
   }, [])
 
+  // Load cart data
+  useEffect(() => {
+    if (!mounted) return
+
+    try {
+      const savedCart = localStorage.getItem('cart')
+      if (savedCart) {
+        const parsedCart = JSON.parse(savedCart)
+        setCartItems(Array.isArray(parsedCart) ? parsedCart : [])
+      }
+    } catch (error) {
+      console.error('Failed to load cart:', error)
+      setCartItems([])
+      localStorage.removeItem('cart')
+    } finally {
+      setIsLoading(false)
+    }
+  }, [mounted])
+
   // Show loading state for SSR and initial load
-  if (!isClient || isLoading) {
+  if (!mounted || isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 pt-20">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12">
@@ -97,8 +76,9 @@ export default function CartPage() {
     )
   }
 
+  // Save cart to localStorage
   useEffect(() => {
-    if (isClient) {
+    if (mounted) {
       try {
         localStorage.setItem('cart', JSON.stringify(cartItems))
         window.dispatchEvent(new Event('cart-updated'))
@@ -107,7 +87,7 @@ export default function CartPage() {
         toast.error('Failed to save cart changes')
       }
     }
-  }, [cartItems, isClient])
+  }, [cartItems, mounted])
 
   const updateQuantity = (planIndex: number, countryId: number, newQuantity: number) => {
     if (newQuantity < 1) {
@@ -190,7 +170,8 @@ export default function CartPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 pt-20">
+    <CartErrorBoundary>
+      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 pt-20">
       <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
@@ -328,8 +309,6 @@ export default function CartPage() {
         )}
       </div>
     </div>
+    </CartErrorBoundary>
   )
-} 
-
-
-          
+}
