@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import Image from "next/image"
 import { usePathname, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -166,7 +167,13 @@ export function Navbar() {
           <Link href="/" className="flex items-center group">
             <div className="flex items-center space-x-3">
               <div className="relative">
-                <Globe className="h-8 w-8 text-blue-600 group-hover:text-blue-700 transition-colors" />
+                <Image
+                  src="/simryologo.png"
+                  alt="SIMRYO Logo"
+                  width={32}
+                  height={32}
+                  className="h-8 w-8 object-contain group-hover:scale-105 transition-transform"
+                />
                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-orange-500 rounded-full animate-pulse" />
               </div>
               <span className="text-xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors">
@@ -341,7 +348,13 @@ export function Navbar() {
             {/* Mobile Logo */}
             <Link href="/" className="flex items-center">
               <div className="flex items-center space-x-2">
-                <Globe className="h-7 w-7 text-blue-600" />
+                <Image
+                  src="/simryologo.png"
+                  alt="SIMRYO Logo"
+                  width={28}
+                  height={28}
+                  className="h-7 w-7 object-contain"
+                />
                 <span className="text-lg font-bold text-gray-900">SIMRYO</span>
               </div>
             </Link>

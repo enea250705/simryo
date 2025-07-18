@@ -147,18 +147,19 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
   icons: {
     icon: [
-      { url: '/favicon-16x16.png', sizes: '16x16', type: 'image/png' },
-      { url: '/favicon-32x32.png', sizes: '32x32', type: 'image/png' },
-      { url: '/icon-192x192.png', sizes: '192x192', type: 'image/png' },
-      { url: '/icon-512x512.png', sizes: '512x512', type: 'image/png' },
+      { url: '/favicon.ico', sizes: '16x16', type: 'image/x-icon' },
+      { url: '/favicon.ico', sizes: '32x32', type: 'image/x-icon' },
+      { url: '/simryologo.png', sizes: '192x192', type: 'image/png' },
+      { url: '/simryologo.png', sizes: '512x512', type: 'image/png' },
     ],
     apple: [
-      { url: '/apple-touch-icon.png', sizes: '180x180', type: 'image/png' },
-      { url: '/apple-touch-icon-152x152.png', sizes: '152x152', type: 'image/png' },
-      { url: '/apple-touch-icon-167x167.png', sizes: '167x167', type: 'image/png' },
+      { url: '/simryologo.png', sizes: '180x180', type: 'image/png' },
+      { url: '/simryologo.png', sizes: '152x152', type: 'image/png' },
+      { url: '/simryologo.png', sizes: '167x167', type: 'image/png' },
     ],
     other: [
-      { rel: 'mask-icon', url: '/safari-pinned-tab.svg', color: '#0066cc' },
+      { rel: 'mask-icon', url: '/simryologo.png', color: '#0066cc' },
+      { rel: 'shortcut icon', url: '/favicon.ico' },
     ],
   },
   other: {
@@ -182,7 +183,7 @@ const structuredData = {
   url: 'https://simryo.com',
       logo: {
         '@type': 'ImageObject',
-        url: 'https://simryo.com/logo.png',
+        url: 'https://simryo.com/simryologo.png',
         width: 200,
         height: 60
       },
@@ -426,6 +427,10 @@ export default function RootLayout({
         
         {/* Sitemap */}
         <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+        
+        {/* Favicon */}
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link rel="icon" href="/simryologo.png" type="image/png" />
       </head>
       <body className={`${inter.variable} font-sans antialiased`}>
         <ThemeProvider
