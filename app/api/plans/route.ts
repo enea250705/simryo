@@ -1,17 +1,18 @@
 // API Route: GET /api/plans - Fetch all plans from all providers
 import { NextRequest, NextResponse } from 'next/server'
-import { providerManager } from '@/lib/services/provider-manager'
+import { ProviderManager } from '@/lib/services/provider-manager'
 
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
-    const countryCode = searchParams.get('countryCode')
+    const countryCode = searchParams.get('countryCode') || undefined
     const popular = searchParams.get('popular') === 'true'
     const sortBy = searchParams.get('sortBy') as 'price' | 'data' | 'days' | 'popularity' || 'price'
     const sortOrder = searchParams.get('sortOrder') as 'asc' | 'desc' || 'asc'
     const limit = searchParams.get('limit') ? parseInt(searchParams.get('limit')!) : undefined
 
     // Fetch plans from provider manager
+    const providerManager = new ProviderManager()
     let plans
     if (popular) {
       plans = await providerManager.getPopularPlans(limit || 10)
@@ -27,7 +28,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({
       success: true,
       plans,
-      data: plans, // Also include as 'data' for frontend compatibility
       meta: {
         total: plans.length,
         filters: {
@@ -37,8 +37,7 @@ export async function GET(request: NextRequest) {
           sortOrder
         },
         timestamp: new Date().toISOString()
-      },
-      providers: providerManager.getEnabledProviders()
+      }
     })
   } catch (error) {
     console.error('Plans fetch error:', error)

@@ -269,7 +269,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
       {/* Hero Section */}
-      <section className="relative overflow-hidden pt-20 sm:pt-24 pb-20 sm:pb-24 hero-section">
+      <section className="relative overflow-hidden pt-32 sm:pt-36 pb-20 sm:pb-24 hero-section">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-purple-50" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-4xl mx-auto">

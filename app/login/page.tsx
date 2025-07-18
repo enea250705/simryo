@@ -1,25 +1,25 @@
 "use client"
 
-import { useState, Suspense } from "react"
-import { useRouter, useSearchParams } from "next/navigation"
+import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
-import { Loader2 } from "lucide-react"
+import { Globe, Loader2 } from "lucide-react"
+import { GoogleIcon } from "@/components/icons/google-icon"
 import { toast } from "sonner"
-import { useAuth } from "@/lib/serverless-auth"
+import { useAuth } from "@/lib/auth"
 
-function LoginForm() {
+export default function LoginPage() {
   const router = useRouter()
-  const searchParams = useSearchParams()
-  const { signIn } = useAuth()
+  const { signIn, signInWithGoogle, loading: authLoading } = useAuth()
   const [formData, setFormData] = useState({
     email: "",
     password: ""
   })
-  const [isLoading, setIsLoading] = useState(false)
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -29,23 +29,28 @@ function LoginForm() {
       return
     }
 
-    setIsLoading(true)
-
     try {
       await signIn(formData.email, formData.password)
-      
-      // Get redirect URL
-      const callbackUrl = searchParams.get('callbackUrl')
-      const redirectUrl = callbackUrl ? decodeURIComponent(callbackUrl) : '/checkout'
-      
-      // Redirect
-      window.location.href = redirectUrl
-      
+      toast.success("Logged in successfully!")
+      // Redirect is handled by auth context
     } catch (error) {
       console.error('Login error:', error)
-      toast.error(error instanceof Error ? error.message : "Login failed")
+      toast.error("Invalid email or password. Please try again.")
+    }
+  }
+
+  const handleGoogleLogin = async () => {
+    setIsGoogleLoading(true)
+    
+    try {
+      await signInWithGoogle()
+        toast.success("Logged in with Google successfully!")
+      // Redirect is handled by auth context
+    } catch (error) {
+      console.error('Google login error:', error)
+      toast.error("An error occurred with Google login. Please try again.")
     } finally {
-      setIsLoading(false)
+      setIsGoogleLoading(false)
     }
   }
 
@@ -57,28 +62,15 @@ function LoginForm() {
   }
 
   return (
-    <div className="min-h-[calc(100vh-4rem)] bg-gradient-to-br from-blue-50 via-white to-blue-50 flex items-center justify-center px-4 py-4 sm:py-8 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md space-y-4 sm:space-y-6">
-        {/* Logo/Brand section */}
-        <div className="text-center">
-          <div className="flex justify-center items-center space-x-2 mb-4 sm:mb-6">
-            <div className="relative">
-              <div className="w-10 h-10 sm:w-12 sm:h-12 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg">
-                <span className="text-white font-bold text-lg sm:text-xl">S</span>
-              </div>
-              <div className="absolute -top-1 -right-1 w-3 h-3 bg-orange-500 rounded-full animate-pulse" />
-            </div>
-            <span className="text-xl sm:text-2xl font-bold text-gray-900">SIMRYO</span>
-          </div>
-        </div>
-
-        <Card className="shadow-xl border border-gray-200 bg-white">
-          <CardHeader className="text-center pb-4">
-            <CardTitle className="text-2xl font-bold tracking-tight text-gray-900">
+    <div className="flex min-h-[calc(100vh-8rem)] justify-center bg-gray-50 px-4 pt-24 pb-12 sm:px-6 lg:px-8">
+      <div className="w-full max-w-md">
+        <Card className="shadow-lg">
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl font-bold tracking-tight text-foreground">
               Welcome Back
             </CardTitle>
-            <CardDescription className="text-gray-600 mt-2">
-              Sign in to manage your eSIMs and stay connected worldwide
+            <CardDescription>
+              Sign in to manage your eSIMs and stay connected
             </CardDescription>
           </CardHeader>
           <form onSubmit={handleSubmit}>
@@ -92,14 +84,13 @@ function LoginForm() {
                   required 
                   value={formData.email}
                   onChange={handleChange}
-                  disabled={isLoading}
-                  className="h-12 border-gray-200 focus:border-blue-500 focus:ring-blue-500 rounded-lg"
+                  disabled={authLoading}
                 />
               </div>
               <div className="space-y-2">
                 <div className="flex items-center justify-between">
-                  <Label htmlFor="password" className="text-gray-700">Password</Label>
-                  <Link href="/forgot-password" className="text-sm font-medium text-blue-600 hover:text-blue-700 transition-colors">
+                  <Label htmlFor="password">Password</Label>
+                  <Link href="/forgot-password" className="text-sm font-medium text-primary hover:text-primary/80">
                     Forgot password?
                   </Link>
                 </div>
@@ -109,76 +100,71 @@ function LoginForm() {
                   required 
                   value={formData.password}
                   onChange={handleChange}
-                  disabled={isLoading}
-                  className="h-12 border-gray-200 focus:border-blue-500 focus:ring-blue-500 rounded-lg"
+                  disabled={authLoading}
                 />
               </div>
               <Button 
                 type="submit" 
-                className="w-full h-12 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-all duration-200 transform hover:scale-[1.02] hover:shadow-lg disabled:scale-100 disabled:opacity-50 mt-6"
-                disabled={isLoading}
+                className="w-full" 
+                disabled={authLoading}
               >
-                {isLoading ? (
+                {authLoading ? (
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Signing In...
+                    Signing in...
                   </>
                 ) : (
-                  'Sign In'
+                  "Sign in"
+                )}
+              </Button>
+              <div className="relative">
+                <div className="absolute inset-0 flex items-center">
+                  <span className="w-full border-t" />
+                </div>
+                <div className="relative flex justify-center text-xs uppercase">
+                  <span className="bg-background px-2 text-muted-foreground">
+                    Or continue with
+                  </span>
+                </div>
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                className="w-full"
+                onClick={handleGoogleLogin}
+                disabled={isGoogleLoading || authLoading}
+              >
+                {isGoogleLoading ? (
+                  <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Signing in...
+                  </>
+                ) : (
+                  <>
+                  <GoogleIcon className="mr-2 h-4 w-4" />
+                    Sign in with Google
+                  </>
                 )}
               </Button>
             </CardContent>
           </form>
-          <CardFooter className="flex flex-col space-y-4 text-center pt-6">
+          <CardFooter className="flex flex-col space-y-4 text-center">
             <div className="text-sm text-gray-600">
               Don't have an account?{" "}
-              <Link href="/signup" className="font-semibold text-blue-600 hover:text-blue-700 transition-colors">
+              <Link href="/signup" className="font-semibold text-primary hover:text-primary/80">
                 Sign up
               </Link>
             </div>
             <div className="text-xs text-gray-500">
               By signing in, you agree to our{" "}
-              <Link href="/terms" className="underline hover:text-blue-600 transition-colors">Terms of Service</Link>
+              <Link href="/terms" className="underline hover:text-gray-800">Terms of Service</Link>
               {" "}and{" "}
-              <Link href="/privacy" className="underline hover:text-blue-600 transition-colors">Privacy Policy</Link>
+              <Link href="/privacy" className="underline hover:text-gray-800">Privacy Policy</Link>
             </div>
           </CardFooter>
         </Card>
-        
-        {/* Additional branding footer */}
-        <div className="text-center text-sm text-gray-500">
-          <p>Trusted by travelers worldwide</p>
-          <div className="flex justify-center items-center space-x-4 mt-2">
-            <div className="flex items-center space-x-1">
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <span>Secure</span>
-            </div>
-            <div className="flex items-center space-x-1">
-              <div className="w-2 h-2 bg-blue-500 rounded-full"></div>
-              <span>Instant</span>
-            </div>
-            <div className="flex items-center space-x-1">
-              <div className="w-2 h-2 bg-orange-500 rounded-full"></div>
-              <span>Reliable</span>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   )
 }
-
-export default function LoginPage() {
-  return (
-    <Suspense fallback={
-      <div className="min-h-[calc(100vh-4rem)] bg-gradient-to-br from-blue-50 via-white to-blue-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto"></div>
-          <p className="mt-2 text-gray-600">Loading...</p>
-        </div>
-      </div>
-    }>
-      <LoginForm />
-    </Suspense>
-  )
-}
+ 

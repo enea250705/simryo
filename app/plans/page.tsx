@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Search, MapPin, Clock, Globe, ArrowRight, Loader2, Wifi, Shield, Zap, RefreshCw, Smartphone } from "lucide-react"
+import { Search, MapPin, Clock, Globe, ArrowRight, Loader2, Wifi, Shield, Zap, RefreshCw } from "lucide-react"
 import Link from "next/link"
 import { toast } from 'sonner'
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
@@ -54,11 +54,6 @@ export interface Country {
 
 // Helper function to group plans by country and select top 3
 function groupPlansByCountry(plans: EnhancedPlan[]): Country[] {
-  if (!plans || !Array.isArray(plans)) {
-    console.warn('Plans data is invalid or undefined:', plans)
-    return []
-  }
-
   const countryMap: Record<string, { country: string, flag: string, region: string, plans: EnhancedPlan[] }> = {}
 
   plans.forEach(plan => {
@@ -96,7 +91,7 @@ const apiService = {
     limit?: number
   } = {}) {
     const searchParams = new URLSearchParams()
-    if (params.country) searchParams.set('country', params.country)
+    if (params.country) searchParams.set('countryCode', params.country) // Fix: use countryCode
     if (params.sortBy) searchParams.set('sortBy', params.sortBy)
     if (params.sortOrder) searchParams.set('sortOrder', params.sortOrder)
     if (params.limit) searchParams.set('limit', params.limit.toString())
@@ -151,19 +146,13 @@ export default function PlansPage() {
       })
 
       if (response.success) {
-        const plansData = response.plans || response.data || []
-        
-        // Validate that plansData is an array
-        if (!Array.isArray(plansData)) {
-          throw new Error('Invalid plans data format received from API')
-        }
-        
-        setPlans(plansData)
-        const groupedCountries = groupPlansByCountry(plansData)
+        const plans = response.plans || response.data || []
+        setPlans(plans)
+        const groupedCountries = groupPlansByCountry(plans)
         setCountries(groupedCountries)
         setFilteredCountries(groupedCountries)
         
-        toast.success(`Loaded ${plansData.length} plans from ${response.providers?.length || 0} providers`)
+        toast.success(`Loaded ${plans.length} plans from ${response.meta?.providers?.length || 0} providers`)
       } else {
         throw new Error(response.error || 'Failed to load plans')
       }
@@ -252,57 +241,46 @@ export default function PlansPage() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 pt-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
         {/* Header */}
-        <div className="mb-8 sm:mb-12 px-4 text-center">
-          <div className="flex justify-center items-center gap-2 mb-4">
-            <Globe className="h-8 w-8 text-blue-600" />
-            <MapPin className="h-8 w-8 text-green-600" />
-            <Smartphone className="h-8 w-8 text-purple-600" />
-          </div>
-          <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">Where are you going?</h1>
-          <p className="mt-3 sm:mt-4 text-base sm:text-lg text-gray-600 max-w-2xl mx-auto">
-            Choose your destination and get connected instantly. No roaming charges, no surprises.
-          </p>
+        <div className="mb-8 sm:mb-12 px-4">
+          <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-4xl lg:text-5xl">Choose Your eSIM Plan</h1>
+          <p className="mt-3 sm:mt-4 text-base sm:text-lg text-gray-600">Find the perfect data plan for your destination</p>
         </div>
 
-        {/* Traveler-focused Promo */}
-        <div className="mb-8 bg-gradient-to-r from-blue-50 to-purple-50 border border-blue-200 rounded-2xl p-6">
-          <div className="text-center">
-            <div className="text-2xl mb-2">🎉</div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">Welcome, Fellow Traveler!</h3>
-            <p className="text-gray-600 mb-3">Get 15% off your first eSIM + Free setup guide</p>
-            <Badge className="bg-blue-600 text-white">Code: WELCOME15</Badge>
-          </div>
-        </div>
+        {/* First Time User Promo Alert */}
+        <Alert className="mb-8 bg-green-50 border-green-200">
+          <AlertTitle className="text-green-800 flex items-center gap-2">
+            Special Offer! <Badge variant="secondary" className="bg-green-100 text-green-800">WELCOME15</Badge>
+          </AlertTitle>
+          <AlertDescription className="text-green-700">
+            Get 15% off on your first eSIM purchase! Discount will be automatically applied at checkout.
+          </AlertDescription>
+        </Alert>
 
-        {/* Simple Search */}
-        <div className="mb-8 max-w-2xl mx-auto">
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-6 w-6 text-gray-400" />
-            <Input
-              type="search"
-              placeholder="Search your destination (e.g., Japan, Europe, USA)..."
-              className="w-full pl-12 pr-4 py-4 text-lg rounded-2xl border-2 border-gray-200 focus:border-blue-500 focus:ring-blue-500"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-          
-          {/* Popular Destinations */}
-          <div className="mt-6 text-center">
-            <p className="text-sm text-gray-600 mb-3">Popular destinations:</p>
-            <div className="flex flex-wrap justify-center gap-2">
-              {['Europe', 'Asia', 'Americas', 'Africa', 'Oceania'].map((region) => (
-                <Button
-                  key={region}
-                  variant="outline"
-                  size="sm"
-                  className="text-sm px-4 py-2 rounded-full"
-                  onClick={() => setSelectedRegion(region)}
-                >
-                  {region}
-                </Button>
-              ))}
+        {/* Filters */}
+        <div className="mb-6 sm:mb-8 flex flex-col gap-3 sm:gap-4 px-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+            <div className="relative lg:col-span-2">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
+              <Input
+                type="search"
+                placeholder="Search by country or region..."
+                className="w-full pl-10 h-11"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
             </div>
+            <Select value={selectedRegion} onValueChange={setSelectedRegion}>
+              <SelectTrigger className="w-full h-11">
+                <SelectValue placeholder="Filter by region" />
+              </SelectTrigger>
+              <SelectContent>
+                {regions.map(region => (
+                  <SelectItem key={region} value={region}>
+                    {region === 'all' ? 'All Regions' : region}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
           </div>
         </div>
 

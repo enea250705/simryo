@@ -46,7 +46,7 @@ export default function CartPage() {
     if (savedCart) {
       try {
         setCartItems(JSON.parse(savedCart))
-      } catch (error) {
+    } catch (error) {
         console.error('Failed to parse cart:', error)
         setCartItems([])
       }
@@ -55,7 +55,7 @@ export default function CartPage() {
 
   useEffect(() => {
     if (isClient) {
-      localStorage.setItem('cart', JSON.stringify(cartItems))
+        localStorage.setItem('cart', JSON.stringify(cartItems))
       window.dispatchEvent(new Event('cart-updated'))
     }
   }, [cartItems, isClient])

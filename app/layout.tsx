@@ -175,29 +175,29 @@ const structuredData = {
   '@context': 'https://schema.org',
   '@graph': [
     {
-      '@type': 'Organization',
+  '@type': 'Organization',
       '@id': 'https://simryo.com/#organization',
-      name: 'SIMRYO',
-      description: 'Global eSIM marketplace providing instant mobile data plans worldwide',
-      url: 'https://simryo.com',
+  name: 'SIMRYO',
+  description: 'Global eSIM marketplace providing instant mobile data plans worldwide',
+  url: 'https://simryo.com',
       logo: {
         '@type': 'ImageObject',
         url: 'https://simryo.com/logo.png',
         width: 200,
         height: 60
       },
-      image: 'https://simryo.com/og-image.jpg',
-      sameAs: [
-        'https://twitter.com/simryo',
-        'https://facebook.com/simryo',
-        'https://instagram.com/simryo',
-        'https://linkedin.com/company/simryo'
-      ],
+  image: 'https://simryo.com/og-image.jpg',
+  sameAs: [
+    'https://twitter.com/simryo',
+    'https://facebook.com/simryo',
+    'https://instagram.com/simryo',
+    'https://linkedin.com/company/simryo'
+  ],
       contactPoint: [
         {
-          '@type': 'ContactPoint',
-          telephone: '+1-555-SIMRYO',
-          contactType: 'customer service',
+    '@type': 'ContactPoint',
+    telephone: '+1-555-SIMRYO',
+    contactType: 'customer service',
           availableLanguage: ['English', 'Spanish', 'French', 'German', 'Italian', 'Portuguese', 'Japanese', 'Korean', 'Chinese'],
           areaServed: 'Worldwide'
         },
@@ -209,35 +209,35 @@ const structuredData = {
           areaServed: 'Worldwide'
         }
       ],
-      address: {
-        '@type': 'PostalAddress',
-        addressCountry: 'US',
-        addressLocality: 'San Francisco',
-        addressRegion: 'CA',
-        postalCode: '94102',
-        streetAddress: '123 Tech Street'
-      },
-      founder: {
-        '@type': 'Person',
-        name: 'SIMRYO Founder'
-      },
-      foundingDate: '2024',
-      numberOfEmployees: '50-100',
-      industry: 'Telecommunications',
+  address: {
+    '@type': 'PostalAddress',
+    addressCountry: 'US',
+    addressLocality: 'San Francisco',
+    addressRegion: 'CA',
+    postalCode: '94102',
+    streetAddress: '123 Tech Street'
+  },
+  founder: {
+    '@type': 'Person',
+    name: 'SIMRYO Founder'
+  },
+  foundingDate: '2024',
+  numberOfEmployees: '50-100',
+  industry: 'Telecommunications',
       naics: '517312',
       parentOrganization: {
         '@type': 'Organization',
         name: 'SIMRYO Global Ltd'
       },
-      hasOfferCatalog: {
-        '@type': 'OfferCatalog',
-        name: 'eSIM Data Plans',
-        itemListElement: [
-          {
-            '@type': 'Offer',
-            itemOffered: {
-              '@type': 'Service',
-              name: 'Global eSIM Data Plans',
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'eSIM Data Plans',
+    itemListElement: [
+      {
+        '@type': 'Offer',
+        itemOffered: {
+          '@type': 'Service',
+          name: 'Global eSIM Data Plans',
               description: 'Instant activation eSIM data plans for international travel',
               serviceType: 'Telecommunications',
               provider: {
@@ -438,11 +438,11 @@ export default function RootLayout({
         >
           <ErrorBoundary>
             <div className="relative min-h-screen bg-background">
-              <Navbar />
+        <Navbar />
               <main className="relative">
                 <PageAnimation>{children}</PageAnimation>
               </main>
-              <Footer />
+        <Footer />
               <Toaster />
               <WebVitals />
             </div>
