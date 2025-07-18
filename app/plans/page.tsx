@@ -334,7 +334,7 @@ function PlansPageContent() {
                             <span className="text-4xl">{country.flag}</span>
                           </div>
                           <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center shadow-lg">
-                            <span className="text-white text-sm font-bold">{country.plans.length}</span>
+                            <span className="text-white text-sm font-bold">{country.allPlans.length}</span>
                           </div>
                         </div>
                         <div>
@@ -350,7 +350,7 @@ function PlansPageContent() {
                         </div>
                       </div>
                       <Link href={`/plans/${countrySlug}`}>
-                        <Button variant="outline" className="w-full sm:w-auto border-white/30 text-white hover:bg-white/20 backdrop-blur-sm px-6 py-3 text-lg">
+                        <Button variant="outline" className="w-full sm:w-auto border-white/50 text-white hover:bg-white/20 backdrop-blur-sm px-6 py-3 text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-200">
                           View All Plans <ArrowRight className="ml-2 h-5 w-5" />
                         </Button>
                       </Link>
@@ -368,20 +368,20 @@ function PlansPageContent() {
                               ? 'ring-2 ring-blue-400 bg-gradient-to-br from-blue-50 to-indigo-50 shadow-lg'
                               : 'border border-gray-200 bg-white hover:border-gray-300'
                         } overflow-hidden rounded-2xl`}>
-                          {/* Badges */}
+                          {/* Badges - positioned to avoid overlapping */}
                           {plan.featured && (
-                            <div className="absolute top-4 right-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
+                            <div className="absolute top-4 right-4 bg-gradient-to-r from-emerald-500 to-teal-500 text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg z-10">
                               ✨ Featured
                             </div>
                           )}
                           
-                          {index === 0 && (
-                            <div className="absolute top-4 left-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg">
+                          {index === 0 && !plan.featured && (
+                            <div className="absolute top-4 left-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-3 py-1 rounded-full text-sm font-semibold shadow-lg z-10">
                               🏆 Best Value
                             </div>
                           )}
 
-                          <CardHeader className="pb-4">
+                          <CardHeader className="pb-4 pt-8">
                             <div className="flex items-center justify-between mb-4">
                               <div className="flex items-center gap-4">
                                 <div className={`w-12 h-12 rounded-xl flex items-center justify-center shadow-md ${

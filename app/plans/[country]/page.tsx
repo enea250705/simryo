@@ -410,42 +410,58 @@ export default function CountryPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50">
       {/* Hero Section */}
-      <div className="relative overflow-hidden bg-gradient-to-r from-emerald-600 to-teal-600 text-white pt-20">
+      <div className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 text-white pt-20">
         <div className="absolute inset-0 bg-black/20"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-500/20"></div>
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
           <div className="flex items-center justify-between mb-8">
-            <Link href="/plans" className="inline-flex items-center text-white/90 hover:text-white transition-colors">
-              <ArrowLeft className="h-5 w-5 mr-2" />
+            <Link href="/plans" className="inline-flex items-center text-white/90 hover:text-white transition-colors group">
+              <ArrowLeft className="h-5 w-5 mr-2 group-hover:-translate-x-1 transition-transform" />
               Back to Plans
             </Link>
             
             {/* Cart Icon */}
             {getTotalCartItems() > 0 && (
               <div className="relative">
-                <div className="bg-white/20 backdrop-blur-sm rounded-lg px-4 py-2 flex items-center gap-2">
+                <div className="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2 flex items-center gap-2 shadow-lg border border-white/30">
                   <ShoppingCart className="h-5 w-5" />
                   <span className="text-sm font-medium">{getTotalCartItems()} items</span>
-                  <span className="text-sm">${getTotalCartValue().toFixed(2)}</span>
+                  <span className="text-sm font-bold">${getTotalCartValue().toFixed(2)}</span>
                 </div>
               </div>
             )}
           </div>
           
           <div className="text-center">
-            <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6 mb-8">
-              <span className="text-7xl sm:text-8xl drop-shadow-2xl">{country.flag}</span>
+            <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-8 mb-8">
+              <div className="relative">
+                <div className="w-24 h-24 sm:w-32 sm:h-32 bg-white/20 backdrop-blur-sm rounded-3xl flex items-center justify-center shadow-2xl border border-white/30">
+                  <span className="text-6xl sm:text-7xl drop-shadow-2xl">{country.flag}</span>
+                </div>
+                <div className="absolute -top-2 -right-2 w-8 h-8 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-full flex items-center justify-center shadow-lg">
+                  <span className="text-white text-sm font-bold">{country.plans.length}</span>
+                </div>
+              </div>
               <div className="text-center sm:text-left">
-                <h1 className="text-3xl sm:text-5xl font-bold mb-2">{country.country}</h1>
-                <div className="flex items-center justify-center sm:justify-start text-lg sm:text-xl text-emerald-100">
+                <h1 className="text-4xl sm:text-6xl font-bold mb-4 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
+                  {country.country}
+                </h1>
+                <div className="flex items-center justify-center sm:justify-start text-lg sm:text-xl text-blue-100 mb-2">
                   <MapPin className="h-5 w-5 mr-2" />
                   {country.region}
                 </div>
+                <div className="flex items-center justify-center sm:justify-start text-sm text-blue-200">
+                  <Globe className="h-4 w-4 mr-2" />
+                  {country.plans.length} premium plans available
+                </div>
               </div>
             </div>
-            <p className="text-lg sm:text-xl text-emerald-100 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-lg sm:text-xl text-blue-100 max-w-4xl mx-auto leading-relaxed">
               Premium eSIM plans for {country.country}. Instant activation, blazing-fast speeds, and reliable coverage nationwide.
+              <br />
+              <span className="text-white font-semibold">✨ Best prices guaranteed with 24/7 customer support</span>
             </p>
           </div>
         </div>
@@ -453,43 +469,43 @@ export default function CountryPage() {
 
       {/* Plans Section */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
-        <div className="text-center mb-8">
-          <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4">Choose Your Plan</h2>
-          <p className="text-lg text-gray-600">Select from our premium eSIM data plans for {country.country}</p>
+        <div className="text-center mb-12">
+          <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Choose Your Perfect Plan</h2>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto">Select from our premium eSIM data plans for {country.country}. All plans include instant activation and 24/7 support.</p>
         </div>
 
         {/* Filters and Sorting */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mb-8">
-          <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between">
-            <div className="flex flex-wrap gap-3 items-center">
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl shadow-xl border border-white/20 p-8 mb-12">
+          <div className="flex flex-col sm:flex-row gap-6 items-start sm:items-center justify-between">
+            <div className="flex flex-wrap gap-4 items-center">
               <div className="flex items-center gap-2">
-                <SlidersHorizontal className="h-4 w-4 text-gray-500" />
-                <span className="text-sm font-medium text-gray-700">Sort by:</span>
+                <SlidersHorizontal className="h-5 w-5 text-blue-600" />
+                <span className="text-sm font-semibold text-gray-700">Sort by:</span>
               </div>
               <select 
                 value={sortBy} 
                 onChange={(e) => setSortBy(e.target.value as any)}
-                className="text-sm border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                className="text-sm border-2 border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white shadow-sm font-medium min-w-[180px]"
               >
-                <option value="best-value">Best Value</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
-                <option value="data-high">Data: High to Low</option>
-                <option value="data-low">Data: Low to High</option>
-                <option value="duration-short">Duration: Short to Long</option>
-                <option value="duration-long">Duration: Long to Short</option>
+                <option value="best-value">🏆 Best Value</option>
+                <option value="price-low">💰 Price: Low to High</option>
+                <option value="price-high">💎 Price: High to Low</option>
+                <option value="data-high">📊 Data: High to Low</option>
+                <option value="data-low">📊 Data: Low to High</option>
+                <option value="duration-short">⏱️ Duration: Short to Long</option>
+                <option value="duration-long">⏳ Duration: Long to Short</option>
               </select>
             </div>
             
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
-                <Filter className="h-4 w-4 text-gray-500" />
-                <span className="text-sm font-medium text-gray-700">Duration:</span>
+                <Filter className="h-5 w-5 text-blue-600" />
+                <span className="text-sm font-semibold text-gray-700">Duration:</span>
               </div>
               <select 
                 value={durationFilter} 
                 onChange={(e) => setDurationFilter(e.target.value as any)}
-                className="text-sm border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                className="text-sm border-2 border-gray-200 rounded-xl px-4 py-3 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white shadow-sm font-medium min-w-[160px]"
               >
                 <option value="all">All Durations</option>
                 <option value="short">Short (1-7 days)</option>
@@ -500,29 +516,29 @@ export default function CountryPage() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {getDisplayPlans().map((plan: EnhancedPlan, index: number) => {
             const savings = getSavings(plan)
             const isRecommended = (plan as any).bestValue || plan.popular
             
             return (
-              <Card key={index} className={`relative transition-all duration-300 hover:shadow-xl border-2 ${
+              <Card key={index} className={`relative transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 border-2 ${
                 isRecommended 
-                  ? 'border-emerald-500 bg-gradient-to-br from-emerald-50 to-white shadow-lg' 
-                  : 'border-gray-200 hover:border-emerald-300'
-              } ${selectedPlan === index ? 'ring-2 ring-emerald-500 shadow-lg' : ''}`}>
+                  ? 'border-blue-400 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 shadow-xl' 
+                  : 'border-gray-200 hover:border-blue-300 bg-white'
+              } ${selectedPlan === index ? 'ring-2 ring-blue-500 shadow-2xl' : ''} rounded-2xl overflow-hidden`}>
                 
                 {/* Top badges */}
-                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 flex gap-2">
+                <div className="absolute -top-3 left-1/2 transform -translate-x-1/2 flex gap-2 z-10">
                   {(plan as any).bestValue && (
-                    <Badge className="bg-gradient-to-r from-emerald-600 to-emerald-700 text-white px-3 py-1 shadow-md">
-                      <TrendingUp className="h-3 w-3 mr-1" />
+                    <Badge className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-4 py-2 shadow-lg text-sm font-semibold">
+                      <TrendingUp className="h-4 w-4 mr-1" />
                       Best Value
                     </Badge>
                   )}
                   {plan.popular && !(plan as any).bestValue && (
-                    <Badge className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-3 py-1 shadow-md">
-                      <Star className="h-3 w-3 mr-1" />
+                    <Badge className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white px-4 py-2 shadow-lg text-sm font-semibold">
+                      <Star className="h-4 w-4 mr-1" />
                       Popular
                     </Badge>
                   )}
@@ -678,32 +694,35 @@ export default function CountryPage() {
 
         {/* Plan Summary */}
         {country.plans.length > 0 && (
-          <div className="mt-12 bg-gradient-to-r from-emerald-50 to-blue-50 rounded-2xl p-8">
-            <div className="text-center mb-6">
-              <h3 className="text-2xl font-bold text-gray-900 mb-2">Plan Summary</h3>
-              <p className="text-gray-600">Quick overview of your options</p>
+          <div className="mt-16 bg-gradient-to-r from-blue-50 via-indigo-50 to-purple-50 rounded-3xl p-8 shadow-xl border border-blue-200">
+            <div className="text-center mb-8">
+              <h3 className="text-3xl font-bold text-gray-900 mb-4">Plan Summary</h3>
+              <p className="text-lg text-gray-600">Quick overview of your options in {country.country}</p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="text-center">
-                <div className="text-3xl font-bold text-emerald-600 mb-2">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              <div className="text-center bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg">
+                <div className="text-4xl font-bold text-blue-600 mb-3">
                   {country.plans.length}
                 </div>
-                <div className="text-sm text-gray-600">Total Plans Available</div>
+                <div className="text-sm font-semibold text-gray-700">Total Plans Available</div>
+                <div className="text-xs text-gray-500 mt-1">Choose from multiple providers</div>
               </div>
               
-              <div className="text-center">
-                <div className="text-3xl font-bold text-blue-600 mb-2">
+              <div className="text-center bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg">
+                <div className="text-4xl font-bold text-emerald-600 mb-3">
                   {formatPrice(Math.min(...country.plans.map(p => p.price)))}
                 </div>
-                <div className="text-sm text-gray-600">Starting Price</div>
+                <div className="text-sm font-semibold text-gray-700">Starting Price</div>
+                <div className="text-xs text-gray-500 mt-1">Best value guaranteed</div>
               </div>
               
-              <div className="text-center">
-                <div className="text-3xl font-bold text-purple-600 mb-2">
+              <div className="text-center bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg">
+                <div className="text-4xl font-bold text-purple-600 mb-3">
                   {formatData(Math.max(...country.plans.map(p => p.dataInMB)))}
                 </div>
-                <div className="text-sm text-gray-600">Max Data Available</div>
+                <div className="text-sm font-semibold text-gray-700">Max Data Available</div>
+                <div className="text-xs text-gray-500 mt-1">High-speed connectivity</div>
               </div>
             </div>
           </div>
@@ -711,22 +730,28 @@ export default function CountryPage() {
 
         {/* Additional Information */}
         <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
-          <Card className="text-center p-6">
-            <Zap className="h-12 w-12 text-emerald-600 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold mb-2">Instant Activation</h3>
-            <p className="text-gray-600 text-sm">Your eSIM activates immediately after purchase. No waiting time.</p>
+          <Card className="text-center p-8 bg-gradient-to-br from-blue-50 to-white shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-blue-100">
+            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+              <Zap className="h-8 w-8 text-white" />
+            </div>
+            <h3 className="text-xl font-bold mb-3 text-gray-900">Instant Activation</h3>
+            <p className="text-gray-600">Your eSIM activates immediately after purchase. No waiting time, no hassle.</p>
           </Card>
           
-          <Card className="text-center p-6">
-            <Shield className="h-12 w-12 text-emerald-600 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold mb-2">Secure & Reliable</h3>
-            <p className="text-gray-600 text-sm">Enterprise-grade security with 99.9% network uptime guarantee.</p>
+          <Card className="text-center p-8 bg-gradient-to-br from-emerald-50 to-white shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-emerald-100">
+            <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+              <Shield className="h-8 w-8 text-white" />
+            </div>
+            <h3 className="text-xl font-bold mb-3 text-gray-900">Secure & Reliable</h3>
+            <p className="text-gray-600">Enterprise-grade security with 99.9% network uptime guarantee.</p>
           </Card>
           
-          <Card className="text-center p-6">
-            <Users className="h-12 w-12 text-emerald-600 mx-auto mb-4" />
-            <h3 className="text-lg font-semibold mb-2">24/7 Support</h3>
-            <p className="text-gray-600 text-sm">Round-the-clock customer support for all your connectivity needs.</p>
+          <Card className="text-center p-8 bg-gradient-to-br from-purple-50 to-white shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-purple-100">
+            <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
+              <Users className="h-8 w-8 text-white" />
+            </div>
+            <h3 className="text-xl font-bold mb-3 text-gray-900">24/7 Support</h3>
+            <p className="text-gray-600">Round-the-clock customer support for all your connectivity needs.</p>
           </Card>
         </div>
       </div>
