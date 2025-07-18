@@ -6,10 +6,14 @@ const urlsToCache = [
   '/',
   '/plans',
   '/blog',
-  '/static/css/main.css',
-  '/static/js/main.js',
   '/api/plans/popular',
-  '/manifest.json'
+  '/manifest.json',
+  // Add critical CSS and JS files from build
+  '/_next/static/css/app/layout.css',
+  '/_next/static/chunks/webpack.js',
+  // Add fonts
+  'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap',
+  'https://fonts.gstatic.com/s/inter/v12/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMa1ZL7W0Q5nw.woff2'
 ];
 
 // Install event - cache static assets

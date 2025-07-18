@@ -14,6 +14,8 @@ const inter = Inter({
   subsets: ["latin"],
   display: 'swap',
   variable: '--font-inter',
+  preload: true,
+  fallback: ['system-ui', 'arial'],
 })
 
 export const viewport: Viewport = {
@@ -362,24 +364,29 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://api.simryo.com" />
         
-        {/* DNS Prefetch */}
+        {/* DNS Prefetch for critical resources only */}
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
         
-        {/* Preload critical resources */}
-        <link
+        {/* Resource hints for better performance */}
+        <link rel="prefetch" href="/plans" />
+        <link rel="prefetch" href="/api/plans/popular" />
+        
+        {/* Preload critical resources - Only if font file exists */}
+        {/* <link
           rel="preload"
           href="/fonts/inter-var.woff2"
           as="font"
           type="font/woff2"
           crossOrigin="anonymous"
-        />
+        /> */}
         
         {/* Security Headers */}
         <meta httpEquiv="X-Content-Type-Options" content="nosniff" />
         <meta httpEquiv="X-Frame-Options" content="DENY" />
         <meta httpEquiv="X-XSS-Protection" content="1; mode=block" />
         <meta httpEquiv="Referrer-Policy" content="strict-origin-when-cross-origin" />
+        <meta httpEquiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.googletagmanager.com https://www.google-analytics.com https://static.hotjar.com https://www.clarity.ms; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https://api.simryo.com https://www.google-analytics.com https://www.clarity.ms https://static.hotjar.com; frame-ancestors 'none';" />
         
         {/* Performance Hints */}
         <meta httpEquiv="x-dns-prefetch-control" content="on" />
@@ -434,7 +441,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <ErrorBoundary>
+          <ErrorBoundary>\n            <a href=\"#main-content\" className=\"skip-link\">Skip to main content</a>
             <div className="relative min-h-screen bg-background">
         <Navbar />
               <main className="relative">
@@ -447,7 +454,7 @@ export default function RootLayout({
           </ErrorBoundary>
         </ThemeProvider>
         
-        {/* Analytics Scripts */}
+        {/* Analytics Scripts - Deferred for better performance */}
         <script
           async
           src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"
@@ -455,43 +462,55 @@ export default function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'GA_MEASUREMENT_ID', {
-                page_title: document.title,
-                page_location: window.location.href,
-                send_page_view: true
+              window.addEventListener('load', function() {
+                setTimeout(function() {
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  gtag('config', 'GA_MEASUREMENT_ID', {
+                    page_title: document.title,
+                    page_location: window.location.href,
+                    send_page_view: true
+                  });
+                }, 3000);
               });
             `,
           }}
         />
         
-        {/* Microsoft Clarity */}
+        {/* Microsoft Clarity - Deferred */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              (function(c,l,a,r,i,t,y){
-                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-              })(window, document, "clarity", "script", "CLARITY_PROJECT_ID");
+              window.addEventListener('load', function() {
+                setTimeout(function() {
+                  (function(c,l,a,r,i,t,y){
+                    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+                  })(window, document, "clarity", "script", "CLARITY_PROJECT_ID");
+                }, 3000);
+              });
             `,
           }}
         />
         
-        {/* Hotjar */}
+        {/* Hotjar - Deferred */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              (function(h,o,t,j,a,r){
-                h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-                h._hjSettings={hjid:HOTJAR_ID,hjsv:6};
-                a=o.getElementsByTagName('head')[0];
-                r=o.createElement('script');r.async=1;
-                r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-                a.appendChild(r);
-              })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+              window.addEventListener('load', function() {
+                setTimeout(function() {
+                  (function(h,o,t,j,a,r){
+                    h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+                    h._hjSettings={hjid:HOTJAR_ID,hjsv:6};
+                    a=o.getElementsByTagName('head')[0];
+                    r=o.createElement('script');r.async=1;
+                    r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+                    a.appendChild(r);
+                  })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+                }, 3000);
+              });
             `,
           }}
         />
