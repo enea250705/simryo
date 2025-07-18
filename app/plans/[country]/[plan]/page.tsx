@@ -21,7 +21,8 @@ import {
   Loader2,
   AlertCircle,
   Users,
-  Zap
+  Zap,
+  ShoppingCart
 } from "lucide-react"
 import Link from "next/link"
 import { toast } from 'sonner'
@@ -48,6 +49,7 @@ interface PlanDetails {
   features: string[]
   inStock: boolean
   lastUpdated: Date
+  featured?: boolean
 }
 
 interface CustomerInfo {
@@ -80,6 +82,7 @@ export default function PlanDetailPage() {
     deviceType: 'smartphone',
     os: 'ios'
   })
+  const [addingToCart, setAddingToCart] = useState(false)
 
   // Convert slug back to country name
   const countryName = countrySlug
@@ -125,6 +128,79 @@ export default function PlanDetailPage() {
       setError(error instanceof Error ? error.message : 'Failed to load plan')
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleAddToCart = async () => {
+    if (!plan) return
+
+    try {
+      setAddingToCart(true)
+
+      // Create cart item
+      const cartItem = {
+        countryId: Math.random(), // Use plan ID as unique identifier
+        countryName: plan.country,
+        flag: plan.flag,
+        planIndex: 0,
+        quantity: 1,
+        planData: {
+          data: plan.data,
+          days: plan.days,
+          price: plan.price,
+          provider: {
+            name: plan.providerDisplayName,
+            apiKey: plan.providerId
+          }
+        }
+      }
+
+      // Get existing cart
+      const existingCart = localStorage.getItem('cart')
+      let cart = []
+      
+      if (existingCart) {
+        try {
+          cart = JSON.parse(existingCart)
+        } catch (e) {
+          console.error('Failed to parse cart:', e)
+          cart = []
+        }
+      }
+
+      // Check if item already exists
+      const existingItemIndex = cart.findIndex((item: any) => 
+        item.countryName === cartItem.countryName && 
+        item.planData.data === cartItem.planData.data &&
+        item.planData.days === cartItem.planData.days
+      )
+
+      if (existingItemIndex >= 0) {
+        // Update quantity
+        cart[existingItemIndex].quantity += 1
+        toast.success('Updated quantity in cart')
+      } else {
+        // Add new item
+        cart.push(cartItem)
+        toast.success('Added to cart successfully!')
+      }
+
+      // Save to localStorage
+      localStorage.setItem('cart', JSON.stringify(cart))
+      
+      // Dispatch event to update cart counter
+      window.dispatchEvent(new Event('cart-updated'))
+      
+      // Redirect to cart page
+      setTimeout(() => {
+        router.push('/cart')
+      }, 1000)
+
+    } catch (error) {
+      console.error('Error adding to cart:', error)
+      toast.error('Failed to add to cart')
+    } finally {
+      setAddingToCart(false)
     }
   }
 
@@ -264,12 +340,19 @@ export default function PlanDetailPage() {
           {/* Plan Details */}
           <Card className="bg-white shadow-xl">
             <CardHeader className="bg-gradient-to-r from-emerald-600 to-teal-600 text-white">
-              <div className="flex items-center space-x-4">
-                <span className="text-6xl">{plan.flag}</span>
-                <div>
-                  <CardTitle className="text-2xl">{plan.country}</CardTitle>
-                  <p className="text-emerald-100">{plan.region}</p>
+              <div className="flex items-center justify-between">
+                <div className="flex items-center space-x-4">
+                  <span className="text-6xl">{plan.flag}</span>
+                  <div>
+                    <CardTitle className="text-2xl">{plan.country}</CardTitle>
+                    <p className="text-emerald-100">{plan.region}</p>
+                  </div>
                 </div>
+                {plan.featured && (
+                  <Badge className="bg-yellow-400 text-yellow-900 border-yellow-300">
+                    ⭐ Featured
+                  </Badge>
+                )}
               </div>
             </CardHeader>
             <CardContent className="p-6">
@@ -359,89 +442,29 @@ export default function PlanDetailPage() {
           <Card className="bg-white shadow-xl">
             <CardHeader>
               <CardTitle className="flex items-center">
-                <CreditCard className="h-5 w-5 mr-2" />
-                Complete Your Purchase
+                {plan.featured ? (
+                  <>
+                    <ShoppingCart className="h-5 w-5 mr-2" />
+                    Quick Purchase
+                  </>
+                ) : (
+                  <>
+                    <CreditCard className="h-5 w-5 mr-2" />
+                    Complete Your Purchase
+                  </>
+                )}
               </CardTitle>
+              {plan.featured && (
+                <div className="flex items-center gap-2 mt-2">
+                  <Badge className="bg-emerald-100 text-emerald-800 border-emerald-300">
+                    Featured Plan
+                  </Badge>
+                  <p className="text-sm text-gray-600">Skip the form - add to cart and checkout!</p>
+                </div>
+              )}
             </CardHeader>
             <CardContent className="p-6">
               <div className="space-y-6">
-                {/* Customer Information */}
-                <div>
-                  <h4 className="font-semibold text-gray-900 mb-3">Customer Information</h4>
-                  <div className="space-y-4">
-                    <div>
-                      <Label htmlFor="name">Full Name *</Label>
-                      <Input
-                        id="name"
-                        value={customerInfo.name}
-                        onChange={(e) => setCustomerInfo({...customerInfo, name: e.target.value})}
-                        placeholder="Enter your full name"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="email">Email Address *</Label>
-                      <Input
-                        id="email"
-                        type="email"
-                        value={customerInfo.email}
-                        onChange={(e) => setCustomerInfo({...customerInfo, email: e.target.value})}
-                        placeholder="Enter your email address"
-                        required
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="phone">Phone Number (Optional)</Label>
-                      <Input
-                        id="phone"
-                        type="tel"
-                        value={customerInfo.phone || ''}
-                        onChange={(e) => setCustomerInfo({...customerInfo, phone: e.target.value})}
-                        placeholder="Enter your phone number"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                <Separator />
-
-                {/* Device Information */}
-                <div>
-                  <h4 className="font-semibold text-gray-900 mb-3">Device Information</h4>
-                  <div className="space-y-4">
-                    <div>
-                      <Label htmlFor="deviceType">Device Type</Label>
-                      <select
-                        id="deviceType"
-                        value={deviceInfo.deviceType}
-                        onChange={(e) => setDeviceInfo({...deviceInfo, deviceType: e.target.value})}
-                        className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                      >
-                        <option value="smartphone">Smartphone</option>
-                        <option value="tablet">Tablet</option>
-                        <option value="laptop">Laptop</option>
-                        <option value="other">Other</option>
-                      </select>
-                    </div>
-                    <div>
-                      <Label htmlFor="os">Operating System</Label>
-                      <select
-                        id="os"
-                        value={deviceInfo.os}
-                        onChange={(e) => setDeviceInfo({...deviceInfo, os: e.target.value})}
-                        className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                      >
-                        <option value="ios">iOS</option>
-                        <option value="android">Android</option>
-                        <option value="windows">Windows</option>
-                        <option value="other">Other</option>
-                      </select>
-                    </div>
-                  </div>
-                </div>
-
-                <Separator />
-
                 {/* Order Summary */}
                 <div>
                   <h4 className="font-semibold text-gray-900 mb-3">Order Summary</h4>
@@ -466,24 +489,137 @@ export default function PlanDetailPage() {
                   </div>
                 </div>
 
-                {/* Purchase Button */}
-                <Button 
-                  onClick={handlePurchase}
-                  disabled={purchasing || !plan.inStock}
-                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 text-lg"
-                >
-                  {purchasing ? (
-                    <>
-                      <Loader2 className="h-5 w-5 mr-2 animate-spin" />
-                      Processing Purchase...
-                    </>
-                  ) : (
-                    <>
-                      <CreditCard className="h-5 w-5 mr-2" />
-                      Purchase Now - ${plan.price}
-                    </>
-                  )}
-                </Button>
+                {plan.featured ? (
+                  /* Featured Plan - Simple Add to Cart */
+                  <div className="space-y-4">
+                    <div className="bg-emerald-50 border border-emerald-200 rounded-lg p-4">
+                      <h4 className="font-semibold text-emerald-800 mb-2">✨ Featured Plan Benefits</h4>
+                      <ul className="text-sm text-emerald-700 space-y-1">
+                        <li>• Instant activation</li>
+                        <li>• No complicated forms</li>
+                        <li>• Add to cart and checkout quickly</li>
+                        <li>• 24/7 customer support</li>
+                      </ul>
+                    </div>
+                    
+                    <Button 
+                      onClick={handleAddToCart}
+                      disabled={addingToCart || !plan.inStock}
+                      className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 text-lg"
+                    >
+                      {addingToCart ? (
+                        <>
+                          <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                          Adding to Cart...
+                        </>
+                      ) : (
+                        <>
+                          <ShoppingCart className="h-5 w-5 mr-2" />
+                          Add to Cart - ${plan.price}
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                ) : (
+                  /* Regular Plan - Full Form */
+                  <div className="space-y-6">
+                    {/* Customer Information */}
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-3">Customer Information</h4>
+                      <div className="space-y-4">
+                        <div>
+                          <Label htmlFor="name">Full Name *</Label>
+                          <Input
+                            id="name"
+                            value={customerInfo.name}
+                            onChange={(e) => setCustomerInfo({...customerInfo, name: e.target.value})}
+                            placeholder="Enter your full name"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="email">Email Address *</Label>
+                          <Input
+                            id="email"
+                            type="email"
+                            value={customerInfo.email}
+                            onChange={(e) => setCustomerInfo({...customerInfo, email: e.target.value})}
+                            placeholder="Enter your email address"
+                            required
+                          />
+                        </div>
+                        <div>
+                          <Label htmlFor="phone">Phone Number (Optional)</Label>
+                          <Input
+                            id="phone"
+                            type="tel"
+                            value={customerInfo.phone || ''}
+                            onChange={(e) => setCustomerInfo({...customerInfo, phone: e.target.value})}
+                            placeholder="Enter your phone number"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <Separator />
+
+                    {/* Device Information */}
+                    <div>
+                      <h4 className="font-semibold text-gray-900 mb-3">Device Information</h4>
+                      <div className="space-y-4">
+                        <div>
+                          <Label htmlFor="deviceType">Device Type</Label>
+                          <select
+                            id="deviceType"
+                            value={deviceInfo.deviceType}
+                            onChange={(e) => setDeviceInfo({...deviceInfo, deviceType: e.target.value})}
+                            className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                          >
+                            <option value="smartphone">Smartphone</option>
+                            <option value="tablet">Tablet</option>
+                            <option value="laptop">Laptop</option>
+                            <option value="other">Other</option>
+                          </select>
+                        </div>
+                        <div>
+                          <Label htmlFor="os">Operating System</Label>
+                          <select
+                            id="os"
+                            value={deviceInfo.os}
+                            onChange={(e) => setDeviceInfo({...deviceInfo, os: e.target.value})}
+                            className="w-full mt-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-emerald-500"
+                          >
+                            <option value="ios">iOS</option>
+                            <option value="android">Android</option>
+                            <option value="windows">Windows</option>
+                            <option value="other">Other</option>
+                          </select>
+                        </div>
+                      </div>
+                    </div>
+
+                    <Separator />
+
+                    {/* Purchase Button */}
+                    <Button 
+                      onClick={handlePurchase}
+                      disabled={purchasing || !plan.inStock}
+                      className="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 text-lg"
+                    >
+                      {purchasing ? (
+                        <>
+                          <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                          Processing Purchase...
+                        </>
+                      ) : (
+                        <>
+                          <CreditCard className="h-5 w-5 mr-2" />
+                          Purchase Now - ${plan.price}
+                        </>
+                      )}
+                    </Button>
+                  </div>
+                )}
 
                 {!plan.inStock && (
                   <p className="text-center text-red-600 text-sm">

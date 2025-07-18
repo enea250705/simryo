@@ -12,6 +12,7 @@ export interface EnhancedPlan extends ProviderPlan {
   providerDisplayName: string
   popularity: number
   lastUpdated: Date
+  featured?: boolean
   promoApplied?: {
     id: string
     originalPrice: number
@@ -118,7 +119,8 @@ export class ProviderManager {
           providerId,
           providerDisplayName: provider.getDisplayName(),
           popularity: this.calculatePopularity(plan),
-          lastUpdated: new Date()
+          lastUpdated: new Date(),
+          featured: this.isFeaturedPlan(plan, provider.getDisplayName())
         }))
 
         return enhancedPlans
@@ -272,6 +274,38 @@ export class ProviderManager {
     const networkBonus = plan.network.type.includes('5G') ? 0.5 : 0
     
     return Math.round((dataToPrice + featureBonus + networkBonus) * 10) / 10
+  }
+
+  private isFeaturedPlan(plan: ProviderPlan, providerName: string): boolean {
+    // Mark plans as featured based on various criteria
+    // 1. High data/price ratio (good value)
+    const dataToPrice = plan.dataInMB / plan.price
+    const valueThreshold = 150 // MB per dollar
+    
+    // 2. Common travel durations (7, 14, 30 days)
+    const popularDurations = [7, 14, 30]
+    
+    // 3. Good data amounts (1GB+)
+    const minimumDataMB = 1000
+    
+    // 4. In stock and affordable
+    const maxPrice = 50
+    
+    // 5. Has good features
+    const hasGoodFeatures = plan.features.some(feature => 
+      feature.toLowerCase().includes('unlimited') ||
+      feature.toLowerCase().includes('5g') ||
+      feature.toLowerCase().includes('hotspot')
+    )
+    
+    return (
+      plan.inStock &&
+      plan.price <= maxPrice &&
+      plan.dataInMB >= minimumDataMB &&
+      dataToPrice >= valueThreshold &&
+      popularDurations.includes(plan.days) &&
+      (hasGoodFeatures || dataToPrice >= 200) // Either has good features or excellent value
+    )
   }
 
   private sortPlans(plans: EnhancedPlan[], sortBy: string, sortOrder: 'asc' | 'desc'): EnhancedPlan[] {
