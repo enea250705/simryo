@@ -339,6 +339,81 @@ img {
   outline: none;
 }
 
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  :root {
+    --text-color: #000000;
+    --bg-color: #ffffff;
+    --border-color: #000000;
+    --link-color: #0000ff;
+  }
+  
+  body {
+    color: var(--text-color);
+    background-color: var(--bg-color);
+  }
+  
+  a {
+    color: var(--link-color);
+  }
+  
+  button, .btn {
+    border: 2px solid var(--border-color);
+    background-color: var(--bg-color);
+    color: var(--text-color);
+  }
+  
+  button:hover, .btn:hover {
+    background-color: var(--text-color);
+    color: var(--bg-color);
+  }
+}
+
+/* Ensure sufficient color contrast */
+.text-gray-600 {
+  color: #374151 !important; /* Darker gray for better contrast */
+}
+
+.text-gray-500 {
+  color: #4b5563 !important; /* Darker gray for better contrast */
+}
+
+.text-gray-400 {
+  color: #6b7280 !important; /* Darker gray for better contrast */
+}
+
+/* Ensure minimum touch targets */
+a, button, [role="button"], [role="link"], input[type="button"], input[type="submit"] {
+  min-height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+}
+
+/* Mobile-specific touch targets */
+@media (max-width: 768px) {
+  a, button, [role="button"], [role="link"], input[type="button"], input[type="submit"] {
+    min-height: 48px;
+    min-width: 48px;
+    padding: 0.75rem 1.5rem;
+  }
+  
+  /* Ensure form elements are touch-friendly */
+  input, textarea, select {
+    min-height: 48px;
+    font-size: 16px; /* Prevent zoom on iOS */
+  }
+  
+  /* Increase tap target for small elements */
+  .icon-button {
+    min-height: 48px;
+    min-width: 48px;
+    padding: 12px;
+  }
+}
+
 /* Skip link for accessibility */
 .skip-link {
   position: absolute;
@@ -396,15 +471,75 @@ img {
   @apply bg-blue-50 border border-blue-200 text-blue-700 p-4 rounded-lg;
 }
 
-/* Professional Responsive Design */
+/* Mobile-First Optimizations */
 @media (max-width: 640px) {
   .hero-section {
-    padding-top: 2rem;
-    padding-bottom: 2rem;
+    padding-top: 6rem;
+    padding-bottom: 3rem;
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  }
+  
+  .hero-section::before {
+    display: none; /* Remove pattern on mobile for better performance */
   }
   
   .professional-card {
     margin-bottom: 1rem;
+    will-change: auto; /* Reduce will-change on mobile */
+  }
+  
+  .professional-card:hover {
+    transform: none; /* Disable hover effects on mobile */
+    transition: none;
+  }
+  
+  /* Mobile-specific optimizations */
+  h1 {
+    font-size: clamp(1.75rem, 8vw, 2.5rem);
+    line-height: 1.1;
+  }
+  
+  h2 {
+    font-size: clamp(1.5rem, 6vw, 2rem);
+    line-height: 1.2;
+  }
+  
+  /* Optimize buttons for mobile */
+  .btn-primary {
+    min-height: 44px; /* Minimum touch target */
+    font-size: 1rem;
+    padding: 0.75rem 1.5rem;
+  }
+  
+  .btn-secondary {
+    min-height: 44px; /* Minimum touch target */
+    font-size: 1rem;
+    padding: 0.75rem 1.5rem;
+  }
+  
+  /* Reduce motion on mobile */
+  * {
+    animation-duration: 0.3s !important;
+    transition-duration: 0.3s !important;
+  }
+}
+
+/* Additional mobile optimizations */
+@media (max-width: 768px) {
+  .container {
+    padding: 0 1rem;
+  }
+  
+  /* Optimize grid layouts for mobile */
+  .grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+  
+  /* Optimize image containers */
+  .aspect-ratio-container {
+    aspect-ratio: 16/9;
+    overflow: hidden;
   }
 }
 

@@ -1,12 +1,11 @@
 "use client"
 
-import { useEffect, useState } from "react"
+import { useEffect, useState, lazy, Suspense } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { 
   Globe, 
   Zap, 
@@ -39,6 +38,11 @@ import Link from "next/link"
 import { Separator } from "@/components/ui/separator"
 
 import { TravelTips } from "@/components/travel-tips"
+
+// Lazy load heavy components
+const Testimonials = lazy(() => import("@/components/testimonials"))
+const FAQSection = lazy(() => import("@/components/faq-section"))
+const MobileOptimizedHero = lazy(() => import("@/components/mobile-optimized-hero"))
 
 
 
@@ -81,41 +85,6 @@ interface Testimonial {
   verified: boolean;
 }
 
-const testimonials: Testimonial[] = [
-  {
-    id: "1",
-    name: "Sarah Chen",
-    role: "Travel Blogger",
-    company: "Wanderlust Weekly",
-    avatar: "/testimonials/sarah.jpg",
-    rating: 5,
-    content: "SIMRYO saved my European trip! Instant activation, great speeds, and transparent pricing. No more expensive roaming charges!",
-    country: "🇺🇸 United States",
-    verified: true
-  },
-  {
-    id: "2", 
-    name: "Marcus Rodriguez",
-    role: "Business Consultant",
-    company: "Global Solutions Inc",
-    avatar: "/testimonials/marcus.jpg",
-    rating: 5,
-    content: "Perfect for business travel. Reliable connection across 12 countries in one trip. Customer support was exceptional.",
-    country: "🇪🇸 Spain",
-    verified: true
-  },
-  {
-    id: "3",
-    name: "Emily Johnson",
-    role: "Digital Nomad",
-    company: "Remote Designer",
-    avatar: "/testimonials/emily.jpg",
-    rating: 5,
-    content: "As a digital nomad, reliable internet is crucial. SIMRYO delivers consistently high speeds worldwide. Highly recommended!",
-    country: "🇨🇦 Canada",
-    verified: true
-  }
-]
 
 const features = [
   {
@@ -219,71 +188,24 @@ const reviewSchema = {
 }
 
 // Component for testimonials section
-function TestimonialsComponent() {
-  return (
-    <section className="py-16 sm:py-20 bg-white" aria-labelledby="testimonials-heading">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <Badge className="mb-4 bg-yellow-100 text-yellow-700 hover:bg-yellow-200 border-yellow-200">
-            Customer Stories
-          </Badge>
-          <h2 id="testimonials-heading" className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-            Loved by Travelers Worldwide
-          </h2>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            See what our customers say about their SIMRYO experience
-          </p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {testimonials.map((testimonial) => (
-            <Card key={testimonial.id} className="professional-card group hover:shadow-2xl transition-all duration-300 border-0">
-              <CardContent className="p-8">
-                <div className="flex items-center gap-1 mb-4" role="img" aria-label={`${testimonial.rating} out of 5 stars`}>
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" aria-hidden="true" />
-                  ))}
-                </div>
-                
-                <Quote className="h-8 w-8 text-gray-300 mb-4" aria-hidden="true" />
-                
-                <blockquote className="text-gray-700 mb-6 leading-relaxed">
-                  {testimonial.content}
-                </blockquote>
-                
-                <div className="flex items-center gap-4">
-                  <Avatar className="h-12 w-12">
-                    <AvatarImage src={testimonial.avatar} alt={`${testimonial.name} profile photo`} />
-                    <AvatarFallback className="bg-blue-100 text-blue-600">
-                      {testimonial.name.split(' ').map(n => n[0]).join('')}
-                    </AvatarFallback>
-                  </Avatar>
-                  <div className="flex-1">
-                    <div className="flex items-center gap-2">
-                      <div className="font-semibold text-gray-900">{testimonial.name}</div>
-                      {testimonial.verified && (
-                        <CheckCircle className="h-4 w-4 text-green-500" aria-label="Verified customer" />
-                      )}
-                    </div>
-                    <div className="text-sm text-gray-600">{testimonial.role}</div>
-                    <div className="text-sm text-gray-500">{testimonial.country}</div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
-    </section>
-  )
-}
 
 export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [popularPlans, setPopularPlans] = useState<Plan[]>([])
   const [loadingPlans, setLoadingPlans] = useState(true)
   const [errorPlans, setErrorPlans] = useState<string | null>(null)
+  const [isMobile, setIsMobile] = useState(false)
   const router = useRouter()
+
+  // Mobile detection
+  useEffect(() => {
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth < 768)
+    }
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   useEffect(() => {
     const fetchPopularPlans = async () => {
@@ -327,7 +249,12 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
       {/* Hero Section */}
-      <section className="relative overflow-hidden pt-32 sm:pt-48 pb-20 sm:pb-24 hero-section" aria-labelledby="hero-heading">
+      {isMobile ? (
+        <Suspense fallback={<div className="pt-32 pb-20 flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>}>
+          <MobileOptimizedHero isMobile={isMobile} />
+        </Suspense>
+      ) : (
+        <section className="relative overflow-hidden pt-32 sm:pt-48 pb-20 sm:pb-24 hero-section" aria-labelledby="hero-heading">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-purple-50" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-4xl mx-auto">
@@ -441,6 +368,7 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+      )}
 
       {/* Stats Section */}
       <section className="py-16 sm:py-20 bg-white" aria-labelledby="stats-heading">
@@ -650,7 +578,9 @@ export default function HomePage() {
       </section>
 
       {/* Testimonials Section */}
-      <TestimonialsComponent />
+      <Suspense fallback={<div className="py-16 sm:py-20 bg-white flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>}>
+        <Testimonials />
+      </Suspense>
 
       {/* Travel Tips Section */}
       <section className="py-16 sm:py-20 bg-gray-50">
@@ -658,6 +588,11 @@ export default function HomePage() {
           <TravelTips />
         </div>
       </section>
+
+      {/* FAQ Section */}
+      <Suspense fallback={<div className="py-16 sm:py-20 bg-white flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>}>
+        <FAQSection />
+      </Suspense>
 
       {/* CTA Section */}
       <section className="py-16 sm:py-20 bg-gradient-to-br from-blue-600 to-purple-600">

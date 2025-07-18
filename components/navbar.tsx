@@ -347,7 +347,10 @@ export function Navbar() {
               variant="ghost"
               size="sm"
               onClick={() => setIsOpen(!isOpen)}
-              className="text-gray-700 hover:text-blue-600"
+              className="text-gray-700 hover:text-blue-600 min-h-[44px] min-w-[44px]"
+              aria-label={isOpen ? "Close menu" : "Open menu"}
+              aria-expanded={isOpen}
+              aria-controls="mobile-menu"
             >
               {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             </Button>
@@ -395,16 +398,23 @@ export function Navbar() {
 
           {/* Mobile Menu */}
           {isOpen && (
-            <div className="absolute top-16 left-0 right-0 bg-white border-b border-gray-200 shadow-lg max-h-[calc(100vh-4rem)] overflow-y-auto">
+            <div 
+              id="mobile-menu"
+              className="absolute top-16 left-0 right-0 bg-white border-b border-gray-200 shadow-lg max-h-[calc(100vh-4rem)] overflow-y-auto"
+              role="menu"
+              aria-labelledby="mobile-menu-button"
+            >
               <div className="px-4 py-6 space-y-6">
                 {/* Home Link */}
                 <div>
                   <Link
                     href="/"
-                    className="flex items-center space-x-3 p-2 rounded-md hover:bg-gray-50 text-gray-700 hover:text-blue-600"
+                    className="flex items-center space-x-3 p-2 rounded-md hover:bg-gray-50 text-gray-700 hover:text-blue-600 min-h-[44px]"
                     onClick={() => setIsOpen(false)}
+                    role="menuitem"
+                    aria-label="Go to home page"
                   >
-                    <Globe className="h-5 w-5" />
+                    <Globe className="h-5 w-5" aria-hidden="true" />
                     <span className="text-sm font-medium">Home</span>
                   </Link>
                 </div>

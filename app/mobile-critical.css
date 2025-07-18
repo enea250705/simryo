@@ -1,0 +1,242 @@
+/* Mobile-specific Critical CSS - Inline this in the head for mobile */
+@media (max-width: 768px) {
+  /* Reset and base styles */
+  * {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-size: 16px;
+    overflow-x: hidden;
+  }
+
+  /* Mobile hero optimizations */
+  .hero-section {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+    padding: 6rem 1rem 3rem;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .hero-section::before {
+    display: none; /* Remove decorative elements on mobile */
+  }
+
+  /* Typography optimizations */
+  h1 {
+    font-size: 2rem;
+    line-height: 1.1;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    color: #1e293b;
+  }
+
+  h2 {
+    font-size: 1.5rem;
+    line-height: 1.2;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: #1e293b;
+  }
+
+  p {
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+    color: #475569;
+  }
+
+  /* Button optimizations */
+  .btn, button, [role="button"] {
+    min-height: 44px;
+    min-width: 44px;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    font-weight: 500;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  .btn-primary {
+    background: #0066cc;
+    color: white;
+  }
+
+  .btn-primary:hover, .btn-primary:focus {
+    background: #0052a3;
+    transform: translateY(-1px);
+  }
+
+  .btn-outline {
+    background: transparent;
+    border: 2px solid #e2e8f0;
+    color: #475569;
+  }
+
+  /* Input optimizations */
+  input, textarea, select {
+    min-height: 44px;
+    padding: 0.75rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 0.75rem;
+    font-size: 1rem;
+    -webkit-appearance: none;
+    appearance: none;
+  }
+
+  input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: #0066cc;
+    box-shadow: 0 0 0 3px rgba(0, 102, 204, 0.1);
+  }
+
+  /* Card optimizations */
+  .card {
+    background: white;
+    border-radius: 1rem;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .card:hover {
+    transform: none; /* Disable hover effects on mobile */
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  /* Navigation optimizations */
+  nav {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 50;
+    background: white;
+    border-bottom: 1px solid #e2e8f0;
+    backdrop-filter: blur(10px);
+  }
+
+  /* Grid optimizations */
+  .grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  /* Flex optimizations */
+  .flex {
+    display: flex;
+    gap: 0.5rem;
+  }
+
+  .flex-col {
+    flex-direction: column;
+  }
+
+  .items-center {
+    align-items: center;
+  }
+
+  .justify-center {
+    justify-content: center;
+  }
+
+  /* Spacing optimizations */
+  .container {
+    max-width: 100%;
+    padding: 0 1rem;
+    margin: 0 auto;
+  }
+
+  .section {
+    padding: 3rem 1rem;
+  }
+
+  /* Text optimizations */
+  .text-center {
+    text-align: center;
+  }
+
+  .text-sm {
+    font-size: 0.875rem;
+  }
+
+  .text-lg {
+    font-size: 1.125rem;
+  }
+
+  .text-xl {
+    font-size: 1.25rem;
+  }
+
+  /* Color optimizations */
+  .text-primary {
+    color: #0066cc;
+  }
+
+  .text-secondary {
+    color: #475569;
+  }
+
+  .text-muted {
+    color: #64748b;
+  }
+
+  .bg-primary {
+    background: #0066cc;
+  }
+
+  .bg-secondary {
+    background: #f8fafc;
+  }
+
+  /* Loading optimizations */
+  .loading {
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+
+  /* Accessibility optimizations */
+  .sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+  }
+
+  /* Focus optimizations */
+  *:focus {
+    outline: 2px solid #0066cc;
+    outline-offset: 2px;
+  }
+
+  /* Reduce motion for users who prefer it */
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}

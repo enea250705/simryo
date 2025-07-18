@@ -2,19 +2,19 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { ProviderManager } from '@/lib/services/provider-manager'
 
+// Enable edge runtime for better performance
+export const runtime = 'nodejs'
+
+// Cache the response for 5 minutes
+const CACHE_DURATION = 300 // 5 minutes
+
 // GET /api/plans/popular - Get all popular eSIM plans
 export async function GET(request: NextRequest) {
   try {
-    console.log('Fetching popular plans from providers...')
-    
     const providerManager = new ProviderManager()
     const popularPlans = await providerManager.getPopularPlans(10) // Get top 10 popular plans
     
-    console.log(`Found ${popularPlans.length} popular plans`)
-    console.log('MAYA_NET_API_KEY (first 5 chars):', process.env.MAYA_NET_API_KEY?.substring(0, 5))
-    console.log('MAYA_NET_PARTNER_TYPE:', process.env.MAYA_NET_PARTNER_TYPE)
-    
-    return NextResponse.json({ 
+    const response = NextResponse.json({ 
       success: true, 
       plans: popularPlans,
       meta: {
@@ -23,14 +23,14 @@ export async function GET(request: NextRequest) {
         timestamp: new Date().toISOString()
       }
     })
+
+    // Add cache headers
+    response.headers.set('Cache-Control', `public, max-age=${CACHE_DURATION}, stale-while-revalidate=600`)
+    response.headers.set('CDN-Cache-Control', `public, max-age=${CACHE_DURATION}`)
+    
+    return response
   } catch (error) {
     console.error('Error fetching popular plans:', error)
-    
-    // Check for specific error types
-    if (error instanceof Error) {
-      console.error('Error details:', error.message)
-      console.error('Error stack:', error.stack)
-    }
     
     return NextResponse.json(
       { 

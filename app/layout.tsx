@@ -15,6 +15,8 @@ const inter = Inter({
   subsets: ["latin"],
   display: 'swap',
   variable: '--font-inter',
+  preload: true,
+  fallback: ['system-ui', 'sans-serif'],
 })
 
 export const viewport: Viewport = {
@@ -367,6 +369,15 @@ export default function RootLayout({
         {/* DNS Prefetch */}
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        
+        {/* Critical Resource Preloading */}
+        <link rel="preload" href="/api/plans/popular" as="fetch" crossOrigin="anonymous" />
+        <link rel="preload" href="/_next/static/css/app/layout.css" as="style" />
+        <link rel="preload" href="/_next/static/css/app/globals.css" as="style" />
+        
+        {/* Preload critical images */}
+        <link rel="preload" href="/simryologo.png" as="image" />
+        <link rel="preload" href="/og-image.jpg" as="image" />
         
         {/* Google Analytics */}
         <GoogleAnalytics />

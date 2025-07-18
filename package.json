@@ -14,7 +14,10 @@
     "db:seed": "prisma db seed",
     "check-errors": "node scripts/check-build-errors.js",
     "fix-issues": "node scripts/fix-build-issues.js",
-    "deploy-seo": "node scripts/deploy-seo.js"
+    "deploy-seo": "node scripts/deploy-seo.js",
+    "optimize": "node scripts/optimize-build.js",
+    "build:analyze": "ANALYZE=true npm run build",
+    "lighthouse:mobile": "node scripts/lighthouse-mobile-100.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",

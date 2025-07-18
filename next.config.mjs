@@ -22,6 +22,15 @@ const nextConfig = {
     // Optimize CSS loading for better SEO performance
     optimizeCss: true,
     // Enable edge runtime for API routes where possible
+    turbotrace: {
+      logLevel: 'bug',
+      logDetail: true,
+      logAll: false
+    },
+    // Optimize server components
+    serverComponentsExternalPackages: ['@prisma/client', 'bcryptjs'],
+    // Optimize for static generation
+    staticWorkerRequestDeduping: true,
   },
   
   // Image optimization
@@ -128,6 +137,23 @@ const nextConfig = {
         ...config.optimization,
         usedExports: true,
         sideEffects: false,
+        splitChunks: {
+          chunks: 'all',
+          cacheGroups: {
+            vendor: {
+              test: /[\\/]node_modules[\\/]/,
+              name: 'vendors',
+              priority: 10,
+              reuseExistingChunk: true,
+            },
+            common: {
+              name: 'common',
+              minChunks: 2,
+              priority: 5,
+              reuseExistingChunk: true,
+            },
+          },
+        },
       }
     }
     
