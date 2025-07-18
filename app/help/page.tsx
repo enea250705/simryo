@@ -298,7 +298,7 @@ export default function HelpPage() {
                       </span>
                     </div>
                   ))}
-                  <Button variant="outline" className="w-full mt-4">
+                  <Button variant="outline" className="w-full mt-4 text-gray-900 hover:text-gray-900">
                     View All Articles
                   </Button>
                 </CardContent>
@@ -347,7 +347,7 @@ export default function HelpPage() {
                       <span className="text-green-600">{article.helpful} helpful</span>
                     </div>
                   </div>
-                  <Button variant="outline" className="w-full">
+                  <Button variant="outline" className="w-full text-gray-900 hover:text-gray-900">
                     Read Article
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
@@ -378,7 +378,7 @@ export default function HelpPage() {
               </CardHeader>
               <CardContent className="text-center">
                 <p className="text-gray-600 mb-4">Download our comprehensive setup guide</p>
-                <Button variant="outline" className="w-full">
+                <Button variant="outline" className="w-full text-gray-900 hover:text-gray-900">
                   Download PDF
                 </Button>
               </CardContent>
@@ -391,7 +391,7 @@ export default function HelpPage() {
               </CardHeader>
               <CardContent className="text-center">
                 <p className="text-gray-600 mb-4">Check if your device supports eSIM</p>
-                <Button variant="outline" className="w-full">
+                <Button variant="outline" className="w-full text-gray-900 hover:text-gray-900">
                   Check Device
                 </Button>
               </CardContent>
@@ -404,7 +404,7 @@ export default function HelpPage() {
               </CardHeader>
               <CardContent className="text-center">
                 <p className="text-gray-600 mb-4">Check network coverage worldwide</p>
-                <Button variant="outline" className="w-full">
+                <Button variant="outline" className="w-full text-gray-900 hover:text-gray-900">
                   View Coverage
                 </Button>
               </CardContent>
@@ -417,7 +417,7 @@ export default function HelpPage() {
               </CardHeader>
               <CardContent className="text-center">
                 <p className="text-gray-600 mb-4">Get personalized help from our team</p>
-                <Button variant="outline" className="w-full">
+                <Button variant="outline" className="w-full text-gray-900 hover:text-gray-900">
                   Contact Support
                 </Button>
               </CardContent>

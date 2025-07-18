@@ -327,7 +327,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
       {/* Hero Section */}
-      <section className="relative overflow-hidden pt-32 sm:pt-36 pb-20 sm:pb-24 hero-section" aria-labelledby="hero-heading">
+      <section className="relative overflow-hidden pt-40 sm:pt-44 pb-20 sm:pb-24 hero-section" aria-labelledby="hero-heading">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-purple-50" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-4xl mx-auto">
@@ -678,16 +678,6 @@ export default function HomePage() {
                 >
                   Get Started Now
                   <ArrowRight className="ml-2 h-5 w-5" />
-                </Button>
-              </Link>
-              <Link href="/contact">
-                <Button 
-                  variant="outline" 
-                  size="lg" 
-                  className="w-full sm:w-auto border-2 border-white text-white hover:bg-white hover:text-blue-600 px-8 py-4 text-lg rounded-xl"
-                >
-                  <PhoneCall className="mr-2 h-5 w-5" />
-                  Talk to Sales
                 </Button>
               </Link>
             </div>

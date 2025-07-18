@@ -7,7 +7,6 @@ export function Footer() {
   const productLinks = [
     { name: "eSIM Plans", href: "/plans" },
     { name: "Coverage Map", href: "/coverage" },
-    { name: "Pricing", href: "/pricing" },
   ]
 
   const supportLinks = [
@@ -19,7 +18,6 @@ export function Footer() {
   const companyLinks = [
     { name: "About Us", href: "/about" },
     { name: "Blog", href: "/blog" },
-    { name: "Careers", href: "/careers" },
   ]
 
   const legalLinks = [
@@ -51,26 +49,6 @@ export function Footer() {
               <span>info@simryo.com</span>
             </div>
 
-            {/* Social Links */}
-            <div className="flex space-x-4">
-              {[
-                { icon: Twitter, href: "https://twitter.com/simryo", label: "Twitter" },
-                { icon: Facebook, href: "https://facebook.com/simryo", label: "Facebook" },
-                { icon: Instagram, href: "https://instagram.com/simryo", label: "Instagram" },
-                { icon: Linkedin, href: "https://linkedin.com/company/simryo", label: "LinkedIn" },
-                { icon: Youtube, href: "https://youtube.com/simryo", label: "YouTube" },
-                { icon: Mail, href: "mailto:info@simryo.com", label: "Email" },
-              ].map((social, index) => (
-                <Link 
-                  key={index}
-                  href={social.href} 
-                  className="w-10 h-10 bg-gray-800 rounded-lg flex items-center justify-center hover:bg-blue-600 transition-colors group"
-                  aria-label={social.label}
-                >
-                  <social.icon className="h-5 w-5 text-gray-400 group-hover:text-white" />
-                </Link>
-              ))}
-            </div>
           </div>
 
           {/* Products */}

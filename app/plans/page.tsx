@@ -153,7 +153,6 @@ function PlansPageContent() {
         setCountries(groupedCountries)
         setFilteredCountries(groupedCountries)
         
-        toast.success(`Loaded ${plans.length} plans from ${response.meta?.providers?.length || 0} providers`)
       } else {
         throw new Error(response.error || 'Failed to load plans')
       }
@@ -331,7 +330,7 @@ function PlansPageContent() {
                         </div>
                       </div>
                       <Link href={`/plans/${countrySlug}`}>
-                        <Button variant="outline" className="w-full sm:w-auto border-white/50 text-white hover:bg-white/20 backdrop-blur-sm px-6 py-3 text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-200">
+                        <Button variant="outline" className="w-full sm:w-auto border-white/50 text-white hover:bg-white/20 hover:text-white backdrop-blur-sm px-6 py-3 text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-200 [&]:text-white [&]:hover:text-white">
                           View All Plans <ArrowRight className="ml-2 h-5 w-5" />
                         </Button>
                       </Link>
@@ -376,7 +375,6 @@ function PlansPageContent() {
                                 </div>
                                 <div>
                                   <CardTitle className="text-xl font-bold text-gray-900">{plan.data}</CardTitle>
-                                  <CardDescription className="text-sm text-gray-600">{plan.providerDisplayName}</CardDescription>
                                 </div>
                               </div>
                             </div>
