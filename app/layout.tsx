@@ -10,7 +10,7 @@ import dynamic from "next/dynamic"
 import { ThemeProvider } from "@/components/theme-provider"
 import { WebVitals } from "@/components/web-vitals"
 import { GoogleAnalytics, GoogleAnalyticsPageView } from "@/components/analytics/google-analytics"
-import { ClientToaster } from "@/components/client-toast"
+import { Toaster } from "@/components/ui/sonner"
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -453,7 +453,7 @@ export default function RootLayout({
                 <PageAnimation>{children}</PageAnimation>
               </main>
         <Footer />
-              <ClientToaster />
+              <Toaster />
               <WebVitals />
               <GoogleAnalyticsPageView />
             </div>
