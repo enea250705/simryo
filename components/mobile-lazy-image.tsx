@@ -10,7 +10,7 @@ interface MobileLazyImageProps {
   height: number
   className?: string
   priority?: boolean
-  placeholder?: string
+  placeholder?: 'blur' | 'empty' | `data:image/${string}`
 }
 
 export default function MobileLazyImage({
