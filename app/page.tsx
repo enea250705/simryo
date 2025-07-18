@@ -37,19 +37,10 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { Separator } from "@/components/ui/separator"
-import dynamic from 'next/dynamic'
 
-// Lazy load non-critical components
-const TravelTips = dynamic(() => import("@/components/travel-tips").then(mod => ({default: mod.TravelTips})), {
-  ssr: false,
-  loading: () => <div className="h-64 bg-gray-100 animate-pulse rounded-lg" />
-})
+import { TravelTips } from "@/components/travel-tips"
 
-// Lazy load testimonials section
-const TestimonialsSection = dynamic(() => Promise.resolve(TestimonialsComponent), {
-  ssr: false,
-  loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-lg" />
-})
+
 
 interface Plan {
   id: string;
@@ -659,7 +650,7 @@ export default function HomePage() {
       </section>
 
       {/* Testimonials Section */}
-      <TestimonialsSection />
+      <TestimonialsComponent />
 
       {/* Travel Tips Section */}
       <section className="py-16 sm:py-20 bg-gray-50">
