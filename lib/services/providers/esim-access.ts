@@ -84,6 +84,7 @@ export class EsimAccessProvider extends BaseProvider {
         'Accept': 'application/json'
       }
 
+      // Use the correct purchase endpoint based on API docs
       const url = `${this.config.baseUrl}/open/order/profile`
       const requestBody = {
         packageCode: planId,
@@ -146,7 +147,10 @@ export class EsimAccessProvider extends BaseProvider {
       return {
         success: false,
         error: error instanceof Error ? error.message : 'Failed to purchase eSIM from provider',
-        orderId: `EA-FAILED-${Date.now()}`
+        orderId: `EA-FAILED-${Date.now()}`,
+        instructions: [],
+        estimatedActivationTime: 'N/A',
+        expiresAt: new Date()
       }
     }
   }
@@ -162,6 +166,7 @@ export class EsimAccessProvider extends BaseProvider {
         'Accept': 'application/json'
       }
 
+      // Use the correct endpoint for checking availability
       const url = `${this.config.baseUrl}/open/package/list`
       const requestBody = {
         locationCode: "",
@@ -218,6 +223,7 @@ export class EsimAccessProvider extends BaseProvider {
       'Accept': 'application/json'
     }
 
+    // Use the correct endpoint for fetching plans
     const url = `${this.config.baseUrl}/open/package/list`
     const requestBody = {
       locationCode: countryCode ? countryCode.toUpperCase() : "",

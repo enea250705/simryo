@@ -18,7 +18,8 @@
     "optimize": "node scripts/optimize-build.js",
     "build:analyze": "ANALYZE=true npm run build",
     "lighthouse:mobile": "node scripts/lighthouse-mobile-100.js",
-    "check:esim": "node scripts/check-esim-config.js"
+    "check:esim": "node scripts/check-esim-config.js",
+    "test:esim": "node scripts/test-esim-access.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",

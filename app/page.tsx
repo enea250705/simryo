@@ -18,6 +18,7 @@ import {
   Search, 
   MapPin,
   CheckCircle,
+  Loader2,
   Smartphone,
   Users,
   TrendingUp,
