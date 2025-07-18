@@ -261,11 +261,45 @@ export class EsimAccessProvider extends BaseProvider {
 
     return packages.map((pkg: any) => {
       // Extract data quota and convert from bytes to MB
-      const dataQuotaBytes = pkg.volume || 0 // 'volume' is the data quota in bytes
-      const dataInMB = dataQuotaBytes > 0 ? Math.round(dataQuotaBytes / (1024 * 1024)) : 0
+      const dataQuotaBytes = pkg.volume || pkg.dataQuota || 0 // 'volume' is the data quota in bytes
+      let dataInMB = dataQuotaBytes > 0 ? Math.round(dataQuotaBytes / (1024 * 1024)) : 0
       
-      // Extract pricing - price is in 1/100 cents, convert to dollars
-      const priceUsd = pkg.retailPrice ? pkg.retailPrice / 10000 : (pkg.price ? pkg.price / 10000 : 0)
+      // If no data quota found, try to extract from name or description
+      if (dataInMB === 0 && pkg.name) {
+        const nameMatch = pkg.name.match(/(\d+(?:\.\d+)?)\s*(GB|MB)/i)
+        if (nameMatch) {
+          const amount = parseFloat(nameMatch[1])
+          const unit = nameMatch[2].toUpperCase()
+          if (unit === 'GB') {
+            dataInMB = amount * 1024
+          } else if (unit === 'MB') {
+            dataInMB = amount
+          }
+        }
+      }
+      
+      // Extract pricing - different providers use different pricing formats
+      // Try multiple price fields and formats
+      let priceUsd = 0
+      
+      if (pkg.retailPrice) {
+        // If retailPrice is in cents (divide by 100) or in 1/100 cents (divide by 10000)
+        priceUsd = pkg.retailPrice > 10000 ? pkg.retailPrice / 10000 : pkg.retailPrice / 100
+      } else if (pkg.price) {
+        // If price is in cents (divide by 100) or in 1/100 cents (divide by 10000)
+        priceUsd = pkg.price > 10000 ? pkg.price / 10000 : pkg.price / 100
+      } else if (pkg.priceUsd) {
+        // If already in USD
+        priceUsd = pkg.priceUsd
+      } else if (pkg.cost) {
+        // Alternative cost field
+        priceUsd = pkg.cost > 10000 ? pkg.cost / 10000 : pkg.cost / 100
+      }
+      
+      // Ensure minimum price
+      if (priceUsd < 0.01) {
+        priceUsd = 1.99 // Default minimum price
+      }
       
       // Extract location information
       const locationNetwork = pkg.locationNetworkList && pkg.locationNetworkList[0]
@@ -273,7 +307,7 @@ export class EsimAccessProvider extends BaseProvider {
       const countryCode = pkg.location || locationNetwork?.locationCode || 'WW'
       
       // Extract validity period
-      const validityDays = pkg.duration || 0
+      const validityDays = pkg.duration || pkg.validityDays || pkg.days || 7 // Default to 7 days if not specified
       
       // Extract network information
       const networkType = pkg.speed || '4G/5G'
@@ -284,6 +318,9 @@ export class EsimAccessProvider extends BaseProvider {
       // Map country to region and flag
       const regionInfo = this.getRegionInfo(countryCode, countryName)
 
+      // Apply markup
+      const finalPrice = this.applyMarkup(priceUsd)
+
       const plan: ProviderPlan = {
         id: `ea-${pkg.packageCode || pkg.slug}`,
         country: countryName,
@@ -293,7 +330,7 @@ export class EsimAccessProvider extends BaseProvider {
         data: dataInMB > 1024 ? `${Math.round(dataInMB / 1024)}GB` : `${dataInMB}MB`,
         dataInMB,
         days: validityDays,
-        price: this.applyMarkup(priceUsd),
+        price: finalPrice,
         currency: 'USD',
         network: {
           type: networkType,
@@ -312,7 +349,7 @@ export class EsimAccessProvider extends BaseProvider {
       }
 
       // Log individual plan for debugging
-      console.log(`Transformed plan: ${plan.id} - ${plan.country} ${plan.data} for ${plan.days} days at $${plan.price}`)
+      console.log(`Transformed plan: ${plan.id} - ${plan.country} ${plan.data} for ${plan.days} days at $${plan.price} (original: $${priceUsd})`)
       
       return plan
     }).filter((plan: ProviderPlan) => {
