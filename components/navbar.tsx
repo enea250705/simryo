@@ -173,6 +173,7 @@ export function Navbar() {
                   width={32}
                   height={32}
                   className="h-8 w-8 object-contain group-hover:scale-105 transition-transform"
+                  unoptimized={true}
                 />
                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-orange-500 rounded-full animate-pulse" />
               </div>
@@ -354,6 +355,10 @@ export function Navbar() {
                   width={28}
                   height={28}
                   className="h-7 w-7 object-contain"
+                  onError={(e) => {
+                    console.error('Mobile logo failed to load:', e);
+                    (e.target as HTMLImageElement).style.display = 'none';
+                  }}
                 />
                 <span className="text-lg font-bold text-gray-900">SIMRYO</span>
               </div>

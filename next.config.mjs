@@ -22,7 +22,6 @@ const nextConfig = {
     // Optimize CSS loading
     optimizeCss: true,
     // Enable edge runtime for API routes where possible
-    serverComponentsExternalPackages: ['sharp'],
   },
   
   // Image optimization
@@ -123,11 +122,13 @@ const nextConfig = {
   
   // Webpack optimizations
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-    // Optimize bundle size
-    config.optimization = {
-      ...config.optimization,
-      usedExports: true,
-      sideEffects: false,
+    // Optimize bundle size only in production
+    if (!dev) {
+      config.optimization = {
+        ...config.optimization,
+        usedExports: true,
+        sideEffects: false,
+      }
     }
     
     // Add bundle analyzer in development
