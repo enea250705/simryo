@@ -59,27 +59,25 @@ export const metadata: Metadata = {
   title: "Digital Nomad's Complete Guide to Global Connectivity with eSIMs | SIMRYO",
   description: "The ultimate resource for location-independent professionals seeking reliable, cost-effective connectivity across multiple countries and time zones with eSIM technology.",
   keywords: "esim for digital nomads, remote work connectivity, nomad internet, global data plans, work from anywhere, digital nomad sim card",
-  authors: [{ name: "Alex Thompson" }],
   openGraph: {
     title: "Digital Nomad's Complete Guide to Global Connectivity with eSIMs",
     description: "The ultimate resource for location-independent professionals seeking reliable, cost-effective connectivity across multiple countries and time zones with eSIM technology.",
     images: [
       {
-        url: "/blog/digital-nomad-connectivity.jpg",
+        url: "/blog/digital-nomad-working-globally.jpg",
         width: 1200,
         height: 630,
         alt: "Digital Nomad Global Connectivity eSIM Guide"
       }
     ],
     type: "article",
-    publishedTime: "2024-12-08T10:00:00.000Z",
-    authors: ["Alex Thompson"]
+    publishedTime: "2025-07-18T10:00:00.000Z"
   },
   twitter: {
     card: "summary_large_image",
     title: "Digital Nomad's Complete Guide to Global Connectivity with eSIMs",
     description: "The ultimate resource for location-independent professionals seeking reliable, cost-effective connectivity across multiple countries and time zones with eSIM technology.",
-    images: ["/blog/digital-nomad-connectivity.jpg"]
+    images: ["/blog/digital-nomad-working-globally.jpg"]
   },
   alternates: {
     canonical: "https://simryo.com/blog/digital-nomad-global-connectivity-esim-guide"
@@ -109,7 +107,7 @@ export default function DigitalNomadESIMGuidePage() {
             <div className="flex flex-wrap justify-center items-center gap-6 text-green-100">
               <div className="flex items-center space-x-2">
                 <Calendar className="h-4 w-4" />
-                <span>December 8, 2024</span>
+                <span>July 18, 2025</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Clock className="h-4 w-4" />

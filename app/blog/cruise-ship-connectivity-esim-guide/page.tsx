@@ -5,6 +5,19 @@ export const metadata: Metadata = {
   title: 'Cruise Ship Connectivity: eSIM Guide for Ocean Travel 2025',
   description: 'Stay connected on cruise ships with eSIM technology. Compare options for port connectivity, satellite internet alternatives, and cost-effective solutions.',
   keywords: 'cruise ship esim, cruise connectivity, ship internet, cruise wifi alternative, maritime esim',
+  openGraph: {
+    title: 'Cruise Ship Connectivity: eSIM Guide for Ocean Travel 2025',
+    description: 'Stay connected on cruise ships with eSIM technology. Compare options for port connectivity, satellite internet alternatives, and cost-effective solutions.',
+    images: ['/blog/cruise-ship-connectivity.jpg'],
+    type: 'article',
+    publishedTime: '2025-07-18T10:00:00.000Z'
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Cruise Ship Connectivity: eSIM Guide for Ocean Travel 2025',
+    description: 'Stay connected on cruise ships with eSIM technology. Compare options for port connectivity, satellite internet alternatives, and cost-effective solutions.',
+    images: ['/blog/cruise-ship-connectivity.jpg']
+  }
 }
 
 export default function CruiseShipEsimPage() {

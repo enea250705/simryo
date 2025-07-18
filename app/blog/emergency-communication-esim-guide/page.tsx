@@ -4,6 +4,19 @@ export const metadata: Metadata = {
   title: 'Emergency Communication & Backup eSIM Guide 2025',
   description: 'Essential guide to emergency communication with eSIM technology. Learn about backup connectivity, emergency services, and crisis communication.',
   keywords: 'emergency esim, backup connectivity, emergency communication, crisis esim, emergency data plan',
+  openGraph: {
+    title: 'Emergency Communication & Backup eSIM Guide 2025',
+    description: 'Essential guide to emergency communication with eSIM technology. Learn about backup connectivity, emergency services, and crisis communication.',
+    images: ['/blog/emergency-communication.jpg'],
+    type: 'article',
+    publishedTime: '2025-07-18T10:00:00.000Z'
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Emergency Communication & Backup eSIM Guide 2025',
+    description: 'Essential guide to emergency communication with eSIM technology. Learn about backup connectivity, emergency services, and crisis communication.',
+    images: ['/blog/emergency-communication.jpg']
+  }
 }
 
 export default function EmergencyEsimPage() {

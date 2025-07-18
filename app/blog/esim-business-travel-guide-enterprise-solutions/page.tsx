@@ -5,6 +5,19 @@ export const metadata: Metadata = {
   title: 'eSIM for Business Travel: Complete Enterprise Guide 2025',
   description: 'Enterprise eSIM solutions for business travel. Bulk plans, expense management, global coverage, and corporate policies for seamless connectivity.',
   keywords: 'business esim, corporate esim, enterprise esim, business travel connectivity, bulk esim plans',
+  openGraph: {
+    title: 'eSIM for Business Travel: Complete Enterprise Guide 2025',
+    description: 'Enterprise eSIM solutions for business travel. Bulk plans, expense management, global coverage, and corporate policies for seamless connectivity.',
+    images: ['/blog/business-travel-connectivity.jpg'],
+    type: 'article',
+    publishedTime: '2025-07-18T10:00:00.000Z'
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'eSIM for Business Travel: Complete Enterprise Guide 2025',
+    description: 'Enterprise eSIM solutions for business travel. Bulk plans, expense management, global coverage, and corporate policies for seamless connectivity.',
+    images: ['/blog/business-travel-connectivity.jpg']
+  }
 }
 
 export default function BusinessEsimPage() {

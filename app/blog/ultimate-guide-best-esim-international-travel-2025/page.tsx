@@ -40,27 +40,25 @@ export const metadata: Metadata = {
   title: "The Ultimate Guide to the Best eSIM for International Travel in 2025 | SIMRYO",
   description: "Discover the best eSIM for international travel in 2025. Compare top providers, learn setup tips, and find the perfect SIMRYO eSIM plan for your next adventure abroad.",
   keywords: "best esim for international travel, international esim plans, travel connectivity, esim guide, travel data plans, international roaming alternatives",
-  authors: [{ name: "Sarah Chen" }],
   openGraph: {
     title: "The Ultimate Guide to the Best eSIM for International Travel in 2025",
     description: "Discover the best eSIM for international travel in 2025. Compare top providers, learn setup tips, and find the perfect SIMRYO eSIM plan for your next adventure abroad.",
     images: [
       {
-        url: "/blog/featured-esim-guide.jpg",
+        url: "/blog/esim-travel-guide-hero.jpg",
         width: 1200,
         height: 630,
         alt: "Ultimate Guide to Best eSIM for International Travel 2025"
       }
     ],
     type: "article",
-    publishedTime: "2024-12-15T10:00:00.000Z",
-    authors: ["Sarah Chen"]
+    publishedTime: "2025-07-18T10:00:00.000Z"
   },
   twitter: {
     card: "summary_large_image",
     title: "The Ultimate Guide to the Best eSIM for International Travel in 2025",
     description: "Discover the best eSIM for international travel in 2025. Compare top providers, learn setup tips, and find the perfect SIMRYO eSIM plan for your next adventure abroad.",
-    images: ["/blog/featured-esim-guide.jpg"]
+    images: ["/blog/esim-travel-guide-hero.jpg"]
   },
   alternates: {
     canonical: "https://simryo.com/blog/ultimate-guide-best-esim-international-travel-2025"
@@ -96,7 +94,7 @@ const author = {
 }
 
 const articleStats = {
-  publishedAt: "2024-12-15",
+  publishedAt: "2025-07-18",
   readTime: 12,
   views: 15420,
   comments: 89,

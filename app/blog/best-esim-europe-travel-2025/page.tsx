@@ -34,21 +34,19 @@ export const metadata: Metadata = {
   title: "Best eSIM for Europe Travel in 2025: Complete Coverage Guide | SIMRYO",
   description: "Discover the best eSIM options for traveling in Europe in 2025. Compare plans, coverage, and prices for 45+ European countries with our comprehensive guide.",
   keywords: "best esim for europe, europe travel data, eu roaming, european esim plans, travel connectivity europe",
-  authors: [{ name: "Emma Wilson" }],
   openGraph: {
     title: "Best eSIM for Europe Travel in 2025: Complete Coverage Guide",
     description: "Discover the best eSIM options for traveling in Europe in 2025. Compare plans, coverage, and prices for 45+ European countries with our comprehensive guide.",
     images: [
       {
-        url: "/blog/best-esim-europe-travel.jpg",
+        url: "/blog/europe-travel-connectivity.jpg",
         width: 1200,
         height: 630,
         alt: "Best eSIM for Europe Travel 2025"
       }
     ],
     type: "article",
-    publishedTime: "2024-12-05T10:00:00.000Z",
-    authors: ["Emma Wilson"]
+    publishedTime: "2025-07-18T10:00:00.000Z"
   },
   alternates: {
     canonical: "https://simryo.com/blog/best-esim-europe-travel-2025"

@@ -5,6 +5,19 @@ export const metadata: Metadata = {
   title: 'eSIM Troubleshooting: Fix Common Issues & Problems [2025 Guide]',
   description: 'Complete guide to fix eSIM problems. Solutions for activation issues, no internet connection, network problems, and device compatibility troubles.',
   keywords: 'esim not working, esim problems, esim troubleshooting, esim activation failed, esim no internet',
+  openGraph: {
+    title: 'eSIM Troubleshooting: Fix Common Issues & Problems [2025 Guide]',
+    description: 'Complete guide to fix eSIM problems. Solutions for activation issues, no internet connection, network problems, and device compatibility troubles.',
+    images: ['/blog/esim-troubleshooting-guide.jpg'],
+    type: 'article',
+    publishedTime: '2025-07-18T10:00:00.000Z'
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'eSIM Troubleshooting: Fix Common Issues & Problems [2025 Guide]',
+    description: 'Complete guide to fix eSIM problems. Solutions for activation issues, no internet connection, network problems, and device compatibility troubles.',
+    images: ['/blog/esim-troubleshooting-guide.jpg']
+  }
 }
 
 export default function EsimTroubleshootingPage() {

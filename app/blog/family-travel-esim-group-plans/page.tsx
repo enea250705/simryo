@@ -4,6 +4,19 @@ export const metadata: Metadata = {
   title: 'Family Travel eSIM & Group Plans 2025: Complete Guide',
   description: 'Best eSIM solutions for family travel and groups. Compare shared data plans, individual eSIMs, and cost-effective options for multiple travelers.',
   keywords: 'family esim, group esim plans, family travel connectivity, shared esim, group travel esim',
+  openGraph: {
+    title: 'Family Travel eSIM & Group Plans 2025: Complete Guide',
+    description: 'Best eSIM solutions for family travel and groups. Compare shared data plans, individual eSIMs, and cost-effective options for multiple travelers.',
+    images: ['/blog/family-travel-plans.jpg'],
+    type: 'article',
+    publishedTime: '2025-07-18T10:00:00.000Z'
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Family Travel eSIM & Group Plans 2025: Complete Guide',
+    description: 'Best eSIM solutions for family travel and groups. Compare shared data plans, individual eSIMs, and cost-effective options for multiple travelers.',
+    images: ['/blog/family-travel-plans.jpg']
+  }
 }
 
 export default function FamilyTravelEsimPage() {

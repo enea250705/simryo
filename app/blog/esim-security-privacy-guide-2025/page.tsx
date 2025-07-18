@@ -5,6 +5,19 @@ export const metadata: Metadata = {
   title: 'eSIM Security & Privacy Guide 2025: Is eSIM Safe?',
   description: 'Complete guide to eSIM security and privacy. Learn about encryption, data protection, and best practices for secure mobile connectivity.',
   keywords: 'esim security, esim privacy, is esim safe, esim encryption, secure esim',
+  openGraph: {
+    title: 'eSIM Security & Privacy Guide 2025: Is eSIM Safe?',
+    description: 'Complete guide to eSIM security and privacy. Learn about encryption, data protection, and best practices for secure mobile connectivity.',
+    images: ['/blog/esim-security-privacy.jpg'],
+    type: 'article',
+    publishedTime: '2025-07-18T10:00:00.000Z'
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'eSIM Security & Privacy Guide 2025: Is eSIM Safe?',
+    description: 'Complete guide to eSIM security and privacy. Learn about encryption, data protection, and best practices for secure mobile connectivity.',
+    images: ['/blog/esim-security-privacy.jpg']
+  }
 }
 
 export default function EsimSecurityPage() {

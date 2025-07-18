@@ -9,14 +9,15 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Best eSIM for USA, Canada & Mexico 2025: Complete North America Guide',
     description: 'Ultimate guide to eSIMs for North America travel. Compare plans for USA, Canada, and Mexico.',
-    images: ['/placeholder.jpg'],
+    images: ['/blog/north-america-connectivity.jpg'],
     type: 'article',
+    publishedTime: '2025-07-18T10:00:00.000Z'
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Best eSIM for USA, Canada & Mexico 2025: Complete North America Guide',
     description: 'Ultimate guide to eSIMs for North America travel. Compare plans for USA, Canada, and Mexico.',
-    images: ['/placeholder.jpg'],
+    images: ['/blog/north-america-connectivity.jpg'],
   },
 }
 
@@ -25,9 +26,9 @@ const jsonLd = {
   '@type': 'Article',
   headline: 'Best eSIM for USA, Canada & Mexico 2025: Complete North America Guide',
   description: 'Ultimate guide to eSIMs for North America travel. Compare plans for USA, Canada, and Mexico.',
-  image: '/placeholder.jpg',
-  datePublished: '2025-01-15',
-  dateModified: '2025-01-15',
+  image: '/blog/north-america-connectivity.jpg',
+  datePublished: '2025-07-18',
+  dateModified: '2025-07-18',
   author: {
     '@type': 'Person',
     name: 'SIMRYO Travel Tech Team',
@@ -72,7 +73,7 @@ export default function CountrySpecificEsimGuidesPage() {
                 Your comprehensive guide to staying connected across North America. Compare the best eSIM plans for USA, Canada, and Mexico with instant activation and unlimited data options.
               </p>
               <div className="flex items-center justify-center space-x-6 mt-6 text-sm text-gray-500">
-                <span>📅 January 15, 2025</span>
+                <span>📅 July 18, 2025</span>
                 <span>⏱️ 12 min read</span>
                 <span>✍️ SIMRYO Travel Tech Team</span>
               </div>

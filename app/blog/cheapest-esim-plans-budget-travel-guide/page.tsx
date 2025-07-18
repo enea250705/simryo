@@ -5,6 +5,19 @@ export const metadata: Metadata = {
   title: 'Cheapest eSIM Plans 2025: Budget Travel Connectivity Guide',
   description: 'Find the cheapest eSIM plans for budget travelers. Compare low-cost options, get the best value for money, and stay connected without breaking the bank.',
   keywords: 'cheapest esim, budget esim plans, affordable esim, low cost esim, cheap international data',
+  openGraph: {
+    title: 'Cheapest eSIM Plans 2025: Budget Travel Connectivity Guide',
+    description: 'Find the cheapest eSIM plans for budget travelers. Compare low-cost options, get the best value for money, and stay connected without breaking the bank.',
+    images: ['/blog/budget-travel-esim.jpg'],
+    type: 'article',
+    publishedTime: '2025-07-18T10:00:00.000Z'
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Cheapest eSIM Plans 2025: Budget Travel Connectivity Guide',
+    description: 'Find the cheapest eSIM plans for budget travelers. Compare low-cost options, get the best value for money, and stay connected without breaking the bank.',
+    images: ['/blog/budget-travel-esim.jpg']
+  }
 }
 
 export default function CheapestEsimPage() {

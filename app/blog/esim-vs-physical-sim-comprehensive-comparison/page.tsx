@@ -5,15 +5,29 @@ export const metadata: Metadata = {
   title: 'eSIM vs Physical SIM Card: Complete 2025 Comparison Guide',
   description: 'Detailed comparison of eSIM vs physical SIM cards. Learn about advantages, disadvantages, compatibility, and which option is best for travel and daily use.',
   keywords: 'esim vs physical sim, esim advantages, physical sim benefits, esim comparison, digital sim vs physical sim',
+  openGraph: {
+    title: 'eSIM vs Physical SIM Card: Complete 2025 Comparison Guide',
+    description: 'Detailed comparison of eSIM vs physical SIM cards. Learn about advantages, disadvantages, compatibility, and which option is best for travel and daily use.',
+    images: ['/blog/esim-vs-physical-sim.jpg'],
+    type: 'article',
+    publishedTime: '2025-07-18T10:00:00.000Z'
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'eSIM vs Physical SIM Card: Complete 2025 Comparison Guide',
+    description: 'Detailed comparison of eSIM vs physical SIM cards. Learn about advantages, disadvantages, compatibility, and which option is best for travel and daily use.',
+    images: ['/blog/esim-vs-physical-sim.jpg']
+  }
 }
 
 const jsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Article',
   headline: 'eSIM vs Physical SIM Card: Complete 2025 Comparison Guide',
-  datePublished: '2025-01-15',
+  datePublished: '2025-07-18',
   author: { '@type': 'Person', name: 'SIMRYO Tech Team' },
-  publisher: { '@type': 'Organization', name: 'SIMRYO' }
+  publisher: { '@type': 'Organization', name: 'SIMRYO' },
+  image: '/blog/esim-vs-physical-sim.jpg'
 }
 
 export default function EsimVsPhysicalSimPage() {

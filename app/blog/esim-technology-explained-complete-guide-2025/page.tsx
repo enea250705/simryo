@@ -91,7 +91,6 @@ export const metadata: Metadata = {
   title: "eSIM Technology Explained: Everything You Need to Know in 2025 | SIMRYO",
   description: "A comprehensive deep dive into eSIM technology, how it works, benefits over physical SIM cards, and what the future holds for mobile connectivity.",
   keywords: "how esim works, esim technology, esim vs physical sim, embedded sim, cellular technology, mobile connectivity, sim card evolution",
-  authors: [{ name: "Dr. Michael Rodriguez" }],
   openGraph: {
     title: "eSIM Technology Explained: Everything You Need to Know in 2025",
     description: "A comprehensive deep dive into eSIM technology, how it works, benefits over physical SIM cards, and what the future holds for mobile connectivity.",
@@ -104,8 +103,7 @@ export const metadata: Metadata = {
       }
     ],
     type: "article",
-    publishedTime: "2024-12-10T10:00:00.000Z",
-    authors: ["Dr. Michael Rodriguez"]
+    publishedTime: "2025-07-18T10:00:00.000Z"
   },
   twitter: {
     card: "summary_large_image",
@@ -146,7 +144,7 @@ const author = {
 }
 
 const articleStats = {
-  publishedAt: "2024-12-10",
+  publishedAt: "2025-07-18",
   readTime: 15,
   views: 12350,
   comments: 67,
@@ -185,7 +183,7 @@ export default function ESIMTechnologyGuidePage() {
             <div className="flex flex-wrap justify-center items-center gap-6 text-purple-100">
               <div className="flex items-center space-x-2">
                 <Calendar className="h-4 w-4" />
-                <span>{formatDate(articleStats.publishedAt)}</span>
+                <span>July 18, 2025</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Clock className="h-4 w-4" />

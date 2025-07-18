@@ -5,6 +5,19 @@ export const metadata: Metadata = {
   title: '5G eSIM Coverage & Speed Guide 2025: Global Network Performance',
   description: 'Complete guide to 5G eSIM coverage worldwide. Compare speeds, network quality, and availability across countries for optimal mobile performance.',
   keywords: '5g esim, 5g coverage, 5g speeds, fastest esim, 5g international, esim network speed',
+  openGraph: {
+    title: '5G eSIM Coverage & Speed Guide 2025: Global Network Performance',
+    description: 'Complete guide to 5G eSIM coverage worldwide. Compare speeds, network quality, and availability across countries for optimal mobile performance.',
+    images: ['/blog/5g-network-coverage.jpg'],
+    type: 'article',
+    publishedTime: '2025-07-18T10:00:00.000Z'
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: '5G eSIM Coverage & Speed Guide 2025: Global Network Performance',
+    description: 'Complete guide to 5G eSIM coverage worldwide. Compare speeds, network quality, and availability across countries for optimal mobile performance.',
+    images: ['/blog/5g-network-coverage.jpg']
+  }
 }
 
 export default function FiveGEsimPage() {

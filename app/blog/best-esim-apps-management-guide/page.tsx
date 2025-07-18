@@ -4,6 +4,19 @@ export const metadata: Metadata = {
   title: 'Best eSIM Apps & Management Tools 2025: Complete Guide',
   description: 'Discover the best eSIM apps for managing your digital SIM cards. Compare features, pricing, and usability of top eSIM management platforms.',
   keywords: 'best esim apps, esim management, esim tools, esim app comparison, digital sim apps',
+  openGraph: {
+    title: 'Best eSIM Apps & Management Tools 2025: Complete Guide',
+    description: 'Discover the best eSIM apps for managing your digital SIM cards. Compare features, pricing, and usability of top eSIM management platforms.',
+    images: ['/blog/esim-management-apps.jpg'],
+    type: 'article',
+    publishedTime: '2025-07-18T10:00:00.000Z'
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Best eSIM Apps & Management Tools 2025: Complete Guide',
+    description: 'Discover the best eSIM apps for managing your digital SIM cards. Compare features, pricing, and usability of top eSIM management platforms.',
+    images: ['/blog/esim-management-apps.jpg']
+  }
 }
 
 export default function BestEsimAppsPage() {

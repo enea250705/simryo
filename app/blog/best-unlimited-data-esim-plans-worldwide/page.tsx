@@ -5,6 +5,19 @@ export const metadata: Metadata = {
   title: 'Best Unlimited Data eSIM Plans Worldwide 2025 [Complete Guide]',
   description: 'Compare the best unlimited data eSIM plans for international travel. Find truly unlimited options, fair usage policies, and premium network access.',
   keywords: 'unlimited data esim, unlimited esim plans, best unlimited esim, global unlimited esim, unlimited data international',
+  openGraph: {
+    title: 'Best Unlimited Data eSIM Plans Worldwide 2025 [Complete Guide]',
+    description: 'Compare the best unlimited data eSIM plans for international travel. Find truly unlimited options, fair usage policies, and premium network access.',
+    images: ['/blog/unlimited-data-plans.jpg'],
+    type: 'article',
+    publishedTime: '2025-07-18T10:00:00.000Z'
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Best Unlimited Data eSIM Plans Worldwide 2025 [Complete Guide]',
+    description: 'Compare the best unlimited data eSIM plans for international travel. Find truly unlimited options, fair usage policies, and premium network access.',
+    images: ['/blog/unlimited-data-plans.jpg']
+  }
 }
 
 export default function UnlimitedDataEsimPage() {

@@ -35,7 +35,10 @@
       "Bash(git push:*)",
       "Bash(pnpm install:*)",
       "Bash(pnpm prisma generate:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(touch:*)",
+      "WebFetch(domain:unsplash.com)",
+      "WebFetch(domain:images.unsplash.com)"
     ],
     "deny": []
   }

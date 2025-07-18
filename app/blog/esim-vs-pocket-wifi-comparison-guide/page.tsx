@@ -4,6 +4,19 @@ export const metadata: Metadata = {
   title: 'eSIM vs Pocket WiFi: Complete Travel Comparison Guide 2025',
   description: 'Compare eSIM and pocket WiFi for travel connectivity. Analyze costs, convenience, battery life, and coverage to choose the best option.',
   keywords: 'esim vs pocket wifi, travel wifi comparison, esim or wifi, pocket wifi vs esim',
+  openGraph: {
+    title: 'eSIM vs Pocket WiFi: Complete Travel Comparison Guide 2025',
+    description: 'Compare eSIM and pocket WiFi for travel connectivity. Analyze costs, convenience, battery life, and coverage to choose the best option.',
+    images: ['/blog/esim-vs-pocket-wifi.jpg'],
+    type: 'article',
+    publishedTime: '2025-07-18T10:00:00.000Z'
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'eSIM vs Pocket WiFi: Complete Travel Comparison Guide 2025',
+    description: 'Compare eSIM and pocket WiFi for travel connectivity. Analyze costs, convenience, battery life, and coverage to choose the best option.',
+    images: ['/blog/esim-vs-pocket-wifi.jpg']
+  }
 }
 
 export default function EsimVsPocketWifiPage() {
