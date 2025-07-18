@@ -265,25 +265,6 @@ function PlansPageContent() {
           </p>
         </div>
 
-        {/* Promo Banner */}
-        <div className="mb-10 max-w-4xl mx-auto">
-          <div className="bg-gradient-to-r from-emerald-500 to-teal-500 rounded-3xl shadow-2xl p-8 text-white relative overflow-hidden">
-            <div className="absolute inset-0 bg-white/10 backdrop-blur-sm"></div>
-            <div className="relative z-10">
-              <div className="flex items-center justify-center gap-4 mb-3">
-                <div className="text-4xl">🎉</div>
-                <h3 className="text-2xl font-bold">Welcome Offer</h3>
-                <Badge className="bg-white/20 text-white border-white/30 px-4 py-2 text-lg font-bold">
-                  WELCOME15
-                </Badge>
-              </div>
-              <p className="text-center text-emerald-50 text-lg">
-                Get <strong className="text-white">15% off</strong> your first eSIM purchase! 
-                Discount applied automatically at checkout.
-              </p>
-            </div>
-          </div>
-        </div>
 
         {/* Search and Filter */}
         <div className="mb-10">
