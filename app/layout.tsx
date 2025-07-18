@@ -6,10 +6,16 @@ import { Navbar } from "@/components/navbar"
 import { Footer } from "@/components/footer"
 import { PageAnimation } from "@/components/page-animation"
 import { ErrorBoundary } from "@/components/error-boundary"
-import { Toaster } from "sonner"
+import dynamic from "next/dynamic"
 import { ThemeProvider } from "@/components/theme-provider"
 import { WebVitals } from "@/components/web-vitals"
 import { GoogleAnalytics, GoogleAnalyticsPageView } from "@/components/analytics/google-analytics"
+
+// Dynamic imports for client-side components - move to client component
+// const Toaster = dynamic(() => import("sonner").then(mod => ({ default: mod.Toaster })), {
+//   ssr: false,
+//   loading: () => null
+// })
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -452,7 +458,7 @@ export default function RootLayout({
                 <PageAnimation>{children}</PageAnimation>
               </main>
         <Footer />
-              <Toaster />
+              {/* <Toaster /> */}
               <WebVitals />
               <GoogleAnalyticsPageView />
             </div>

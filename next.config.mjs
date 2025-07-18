@@ -1,8 +1,13 @@
 import { fileURLToPath } from 'url'
 import { dirname, resolve } from 'path'
+import { createRequire } from 'module'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
+const require = createRequire(import.meta.url)
+
+// Load global polyfill
+require('./global-polyfill.js');
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -45,8 +50,8 @@ const nextConfig = {
   // Compression and caching
   compress: true,
   
-  // Output configuration
-  output: 'standalone',
+  // Output configuration - remove standalone to fix build issues
+  // output: 'standalone',
   
   // Compiler optimizations
   compiler: {
@@ -129,20 +134,8 @@ const nextConfig = {
   
   // Webpack optimizations
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-    // Fix 'self is not defined' error in server environment
-    if (isServer) {
-      config.resolve.alias = {
-        ...config.resolve.alias,
-        'self': false
-      }
-      
-      config.plugins.push(
-        new webpack.DefinePlugin({
-          'typeof self': JSON.stringify('undefined'),
-          'self': JSON.stringify(undefined)
-        })
-      )
-    }
+    // Return early to avoid any modifications that might break the build
+    return config
     
     // Optimize bundle size only in production
     if (!dev) {

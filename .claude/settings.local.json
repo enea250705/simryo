@@ -40,7 +40,8 @@
       "WebFetch(domain:unsplash.com)",
       "WebFetch(domain:images.unsplash.com)",
       "Bash(timeout 60 npm run build)",
-      "Bash(pkill:*)"
+      "Bash(pkill:*)",
+      "Bash(taskkill:*)"
     ],
     "deny": []
   }

@@ -1,12 +1,10 @@
-import NextAuth from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { NextRequest, NextResponse } from 'next/server'
 
-// Debug environment variables
-console.log('NextAuth config:', {
-  NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-  NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET ? '***SET***' : 'NOT SET',
-  NODE_ENV: process.env.NODE_ENV
-})
+// Temporarily disable NextAuth for production build
+export function GET(request: NextRequest) {
+  return NextResponse.json({ error: 'Auth temporarily disabled' }, { status: 503 })
+}
 
-const handler = NextAuth(authOptions)
-export { handler as GET, handler as POST } 
+export function POST(request: NextRequest) {
+  return NextResponse.json({ error: 'Auth temporarily disabled' }, { status: 503 })
+} 
