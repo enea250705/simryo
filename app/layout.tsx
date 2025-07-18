@@ -435,9 +435,10 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <ErrorBoundary>
+            <a href="#main-content" className="skip-link">Skip to main content</a>
             <div className="relative min-h-screen bg-background">
         <Navbar />
-              <main className="relative">
+              <main id="main-content" className="relative">
                 <PageAnimation>{children}</PageAnimation>
               </main>
         <Footer />
@@ -447,7 +448,7 @@ export default function RootLayout({
           </ErrorBoundary>
         </ThemeProvider>
         
-        {/* Analytics Scripts */}
+        {/* Analytics Scripts - Deferred for better performance */}
         <script
           async
           src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"
@@ -455,13 +456,17 @@ export default function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', 'GA_MEASUREMENT_ID', {
-                page_title: document.title,
-                page_location: window.location.href,
-                send_page_view: true
+              window.addEventListener('load', function() {
+                setTimeout(function() {
+                  window.dataLayer = window.dataLayer || [];
+                  function gtag(){dataLayer.push(arguments);}
+                  gtag('js', new Date());
+                  gtag('config', 'GA_MEASUREMENT_ID', {
+                    page_title: document.title,
+                    page_location: window.location.href,
+                    send_page_view: true
+                  });
+                }, 3000);
               });
             `,
           }}
