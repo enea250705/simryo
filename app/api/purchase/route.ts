@@ -114,34 +114,25 @@ export async function POST(request: NextRequest) {
             expiresAt: purchaseResponse.expiresAt
           })
         } else {
-          // Handle failed purchase
-          results.push({
+          // Handle failed purchase - fail entire transaction
+          console.error('eSIM provisioning failed:', purchaseResponse.error)
+          return NextResponse.json({
             success: false,
-            orderId: `failed_${Date.now()}_${i}`,
-            countryName: item.countryName,
-            flag: item.flag,
-            plan: item.plan,
-            quantity: item.quantity,
-            providerName: 'eSIM Access',
-            error: 'eSIM provisioning failed',
-            message: 'Failed to provision eSIM - please contact support'
-          })
+            error: purchaseResponse.error || 'eSIM provisioning failed',
+            message: 'Failed to provision eSIM. Please try again or contact support.',
+            orderId: purchaseResponse.orderId || `failed_${Date.now()}_${i}`
+          }, { status: 400 })
         }
       } catch (error) {
         console.error(`Failed to process eSIM order ${i + 1}:`, error)
         
-        // Add failed result
-        results.push({
+        // Fail entire transaction on any error
+        return NextResponse.json({
           success: false,
-          orderId: `error_${Date.now()}_${i}`,
-          countryName: item.countryName,
-          flag: item.flag,
-          plan: item.plan,
-          quantity: item.quantity,
-          providerName: 'eSIM Access',
-          error: error instanceof Error ? error.message : 'Unknown error',
-          message: 'Failed to provision eSIM - please contact support'
-        })
+          error: error instanceof Error ? error.message : 'Unknown error occurred',
+          message: 'Failed to process eSIM order. Please try again or contact support.',
+          orderId: `error_${Date.now()}_${i}`
+        }, { status: 500 })
       }
     }
 

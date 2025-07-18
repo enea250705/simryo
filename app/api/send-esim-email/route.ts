@@ -49,6 +49,7 @@ export async function POST(request: NextRequest) {
           <h3>${item.flag} ${item.countryName}</h3>
           <p><strong>Plan:</strong> ${item.plan.data} for ${item.plan.days} days</p>
           <p><strong>Price:</strong> $${item.plan.price}</p>
+          <p><strong>Status:</strong> ✅ Active</p>
           
           <div class="qr-code">
             <h4>QR Code for Activation:</h4>

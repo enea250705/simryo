@@ -44,12 +44,31 @@ export class EsimAccessProvider extends BaseProvider {
       if (realPlans && realPlans.length > 0) {
         return realPlans
       }
+      
+      // If API returns empty results, return empty array instead of mock data
+      console.warn('eSIM Access API returned no plans for country:', countryCode)
+      return []
     } catch (error) {
-      console.error('eSIM Access API call failed, falling back to mock data:', error)
+      console.error('eSIM Access API call failed:', error)
+      
+      // In production, return empty array instead of mock data
+      if (process.env.NODE_ENV === 'production') {
+        return []
+      }
+      
+      // Only return mock data in development if API key is not configured
+      const hasApiKey = process.env.ESIM_ACCESS_API_KEY && 
+                       process.env.ESIM_ACCESS_API_KEY !== 'your-esim-access-api-key' &&
+                       process.env.ESIM_ACCESS_API_KEY !== ''
+      
+      if (!hasApiKey) {
+        console.warn('No eSIM Access API key configured, returning mock data for development')
+        return this.getMockPlans(countryCode)
+      }
+      
+      // If API key is configured but call failed, return empty array
+      return []
     }
-
-    // Fallback to mock data if API call fails
-    return this.getMockPlans(countryCode)
   }
 
   async purchasePlan(request: PurchaseRequest): Promise<PurchaseResponse> {
@@ -123,21 +142,11 @@ export class EsimAccessProvider extends BaseProvider {
     } catch (error) {
       console.error('Failed to purchase plan from eSIM Access:', error)
       
-      // Return mock success response as fallback for development
+      // ALWAYS return failure - no mock data in production
       return {
-        success: true,
-        orderId: `EA-MOCK-${Date.now()}`,
-        qrCodeUrl: this.generateMockQRCode(`esimaccess-qr-${request.planId}`),
-        activationCode: 'ESIM-MOCK-1234-5678',
-        instructions: [
-          'This is a mock purchase for development',
-          'Download the eSIM QR code',
-          'Go to your phone settings',
-          'Add cellular plan',
-          'Scan the QR code'
-        ],
-        estimatedActivationTime: '1-2 minutes',
-        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000)
+        success: false,
+        error: error instanceof Error ? error.message : 'Failed to purchase eSIM from provider',
+        orderId: `EA-FAILED-${Date.now()}`
       }
     }
   }

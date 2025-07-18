@@ -17,7 +17,8 @@
     "deploy-seo": "node scripts/deploy-seo.js",
     "optimize": "node scripts/optimize-build.js",
     "build:analyze": "ANALYZE=true npm run build",
-    "lighthouse:mobile": "node scripts/lighthouse-mobile-100.js"
+    "lighthouse:mobile": "node scripts/lighthouse-mobile-100.js",
+    "check:esim": "node scripts/check-esim-config.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",
