@@ -330,7 +330,7 @@ function PlansPageContent() {
                         </div>
                       </div>
                       <Link href={`/plans/${countrySlug}`}>
-                        <Button variant="outline" className="w-full sm:w-auto border-white/50 text-white hover:bg-white/20 hover:text-white backdrop-blur-sm px-6 py-3 text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-200 [&]:text-white [&]:hover:text-white">
+                        <Button className="w-full sm:w-auto bg-black text-white hover:bg-gray-800 px-6 py-3 text-lg font-medium shadow-lg hover:shadow-xl transition-all duration-200">
                           View All Plans <ArrowRight className="ml-2 h-5 w-5" />
                         </Button>
                       </Link>
