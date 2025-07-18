@@ -1,3 +1,9 @@
+import { fileURLToPath } from 'url'
+import { dirname, resolve } from 'path'
+
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Performance optimizations
@@ -15,23 +21,15 @@ const nextConfig = {
       '@radix-ui/react-tabs',
       '@radix-ui/react-toast',
       'lucide-react',
-      '@stripe/stripe-js',
       '@stripe/react-stripe-js',
       'sonner'
     ],
     // Optimize CSS loading for better SEO performance
     optimizeCss: true,
-    // Enable edge runtime for API routes where possible
-    turbotrace: {
-      logLevel: 'bug',
-      logDetail: true,
-      logAll: false
-    },
-    // Optimize server components
-    serverComponentsExternalPackages: ['@prisma/client', 'bcryptjs'],
-    // Optimize for static generation
-    staticWorkerRequestDeduping: true,
   },
+  
+  // Moved from experimental as per Next.js warnings
+  serverExternalPackages: ['@prisma/client', 'bcryptjs', '@stripe/stripe-js'],
   
   // Image optimization
   images: {
@@ -131,6 +129,21 @@ const nextConfig = {
   
   // Webpack optimizations
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
+    // Fix 'self is not defined' error in server environment
+    if (isServer) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        'self': false
+      }
+      
+      config.plugins.push(
+        new webpack.DefinePlugin({
+          'typeof self': JSON.stringify('undefined'),
+          'self': JSON.stringify(undefined)
+        })
+      )
+    }
+    
     // Optimize bundle size only in production
     if (!dev) {
       config.optimization = {
