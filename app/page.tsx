@@ -23,26 +23,33 @@ import {
   Users,
   TrendingUp,
   Award,
-  PlayCircle,
   Quote,
   ChevronRight,
-  Download,
   PhoneCall,
   MessageCircle,
   Sparkles,
   Target,
-  BarChart3,
-  Gauge,
   Plane,
   Luggage,
   Camera,
-  Coffee,
   Heart,
   ThumbsUp
 } from "lucide-react"
 import Link from "next/link"
 import { Separator } from "@/components/ui/separator"
-import { TravelTips } from "@/components/travel-tips"
+import dynamic from 'next/dynamic'
+
+// Lazy load non-critical components
+const TravelTips = dynamic(() => import("@/components/travel-tips").then(mod => ({default: mod.TravelTips})), {
+  ssr: false,
+  loading: () => <div className="h-64 bg-gray-100 animate-pulse rounded-lg" />
+})
+
+// Lazy load testimonials section
+const TestimonialsSection = dynamic(() => Promise.resolve(TestimonialsComponent), {
+  ssr: false,
+  loading: () => <div className="h-96 bg-gray-100 animate-pulse rounded-lg" />
+})
 
 interface Plan {
   id: string;
@@ -220,6 +227,66 @@ const reviewSchema = {
   "datePublished": "2024-12-15"
 }
 
+// Component for testimonials section
+function TestimonialsComponent() {
+  return (
+    <section className="py-16 sm:py-20 bg-white" aria-labelledby="testimonials-heading">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="text-center mb-16">
+          <Badge className="mb-4 bg-yellow-100 text-yellow-700 hover:bg-yellow-200 border-yellow-200">
+            Customer Stories
+          </Badge>
+          <h2 id="testimonials-heading" className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+            Loved by Travelers Worldwide
+          </h2>
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            See what our customers say about their SIMRYO experience
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {testimonials.map((testimonial) => (
+            <Card key={testimonial.id} className="professional-card group hover:shadow-2xl transition-all duration-300 border-0">
+              <CardContent className="p-8">
+                <div className="flex items-center gap-1 mb-4" role="img" aria-label={`${testimonial.rating} out of 5 stars`}>
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" aria-hidden="true" />
+                  ))}
+                </div>
+                
+                <Quote className="h-8 w-8 text-gray-300 mb-4" aria-hidden="true" />
+                
+                <blockquote className="text-gray-700 mb-6 leading-relaxed">
+                  {testimonial.content}
+                </blockquote>
+                
+                <div className="flex items-center gap-4">
+                  <Avatar className="h-12 w-12">
+                    <AvatarImage src={testimonial.avatar} alt={`${testimonial.name} profile photo`} />
+                    <AvatarFallback className="bg-blue-100 text-blue-600">
+                      {testimonial.name.split(' ').map(n => n[0]).join('')}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="flex-1">
+                    <div className="flex items-center gap-2">
+                      <div className="font-semibold text-gray-900">{testimonial.name}</div>
+                      {testimonial.verified && (
+                        <CheckCircle className="h-4 w-4 text-green-500" aria-label="Verified customer" />
+                      )}
+                    </div>
+                    <div className="text-sm text-gray-600">{testimonial.role}</div>
+                    <div className="text-sm text-gray-500">{testimonial.country}</div>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </div>
+    </section>
+  )
+}
+
 export default function HomePage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [popularPlans, setPopularPlans] = useState<Plan[]>([])
@@ -269,7 +336,7 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
       {/* Hero Section */}
-      <section className="relative overflow-hidden pt-32 sm:pt-36 pb-20 sm:pb-24 hero-section">
+      <section className="relative overflow-hidden pt-32 sm:pt-36 pb-20 sm:pb-24 hero-section" aria-labelledby="hero-heading">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-purple-50" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-4xl mx-auto">
@@ -285,7 +352,7 @@ export default function HomePage() {
                 <Camera className="h-8 w-8 text-green-600" />
               </div>
             </div>
-            <h1 className="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight text-gray-900 mb-6">
+            <h1 id="hero-heading" className="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight text-gray-900 mb-6">
               Travel Data Made
               <span className="block gradient-hero-text">
                 Simple
@@ -311,7 +378,7 @@ export default function HomePage() {
                       onClick={() => {
                         const countryName = country.split(' ')[1]
                         setSearchQuery(countryName)
-                        handleSearch(new Event('submit') as any)
+                        router.push(`/plans?q=${encodeURIComponent(countryName)}`)
                       }}
                     >
                       {country}
@@ -328,12 +395,15 @@ export default function HomePage() {
                     className="w-full pl-12 pr-32 py-6 text-lg rounded-2xl border-2 border-gray-200 focus:border-blue-500 focus:ring-blue-500 bg-white/80 backdrop-blur-sm"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
+                    aria-label="Search destination"
+                    role="searchbox"
                   />
                   <Button
                     type="submit"
                     className="absolute right-2 top-1/2 -translate-y-1/2 bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-xl"
+                    aria-label="Search for travel plans"
                   >
-                    <Search className="h-5 w-5 mr-2" />
+                    <Search className="h-5 w-5 mr-2" aria-hidden="true" />
                     Search
                   </Button>
                 </div>
@@ -382,13 +452,13 @@ export default function HomePage() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 sm:py-20 bg-white">
+      <section className="py-16 sm:py-20 bg-white" aria-labelledby="stats-heading">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
-              <div key={index} className="text-center group">
+              <div key={index} className="text-center group" role="img" aria-label={`${stat.value} ${stat.label}: ${stat.description}`}>
                 <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-2xl mb-4 group-hover:bg-blue-200 transition-colors">
-                  <stat.icon className="h-8 w-8 text-blue-600" />
+                  <stat.icon className="h-8 w-8 text-blue-600" aria-hidden="true" />
                 </div>
                 <div className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">{stat.value}</div>
                 <div className="text-lg font-semibold text-gray-700 mb-1">{stat.label}</div>
@@ -400,13 +470,13 @@ export default function HomePage() {
       </section>
 
       {/* Features Section */}
-      <section className="py-16 sm:py-20 bg-gray-50">
+      <section className="py-16 sm:py-20 bg-gray-50" aria-labelledby="features-heading">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <Badge className="mb-4 bg-blue-100 text-blue-700 hover:bg-blue-200 border-blue-200">
               Why Choose SIMRYO
             </Badge>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+            <h2 id="features-heading" className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
               Travel Smart, Stay Connected
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -434,13 +504,13 @@ export default function HomePage() {
       </section>
 
       {/* How It Works Section */}
-      <section className="py-16 sm:py-20 bg-white">
+      <section className="py-16 sm:py-20 bg-white" aria-labelledby="how-it-works-heading">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <Badge className="mb-4 bg-green-100 text-green-700 hover:bg-green-200 border-green-200">
               Simple Process
             </Badge>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+            <h2 id="how-it-works-heading" className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
               Get Connected in 3 Steps
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -471,13 +541,13 @@ export default function HomePage() {
       </section>
 
       {/* Popular Plans Section */}
-      <section className="py-16 sm:py-20 bg-gradient-to-br from-blue-50 to-purple-50">
+      <section className="py-16 sm:py-20 bg-gradient-to-br from-blue-50 to-purple-50" aria-labelledby="popular-plans-heading">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <Badge className="mb-4 bg-purple-100 text-purple-700 hover:bg-purple-200 border-purple-200">
               Popular Destinations
             </Badge>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
+            <h2 id="popular-plans-heading" className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
               Top Travel Destinations
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
@@ -589,60 +659,7 @@ export default function HomePage() {
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-16 sm:py-20 bg-white">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <Badge className="mb-4 bg-yellow-100 text-yellow-700 hover:bg-yellow-200 border-yellow-200">
-              Customer Stories
-            </Badge>
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
-              Loved by Travelers Worldwide
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              See what our customers say about their SIMRYO experience
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {testimonials.map((testimonial) => (
-              <Card key={testimonial.id} className="professional-card group hover:shadow-2xl transition-all duration-300 border-0">
-                <CardContent className="p-8">
-                  <div className="flex items-center gap-1 mb-4">
-                    {[...Array(5)].map((_, i) => (
-                      <Star key={i} className="h-5 w-5 fill-yellow-400 text-yellow-400" />
-                    ))}
-                  </div>
-                  
-                  <Quote className="h-8 w-8 text-gray-300 mb-4" />
-                  
-                  <p className="text-gray-700 mb-6 leading-relaxed">
-                    {testimonial.content}
-                  </p>
-                  
-                  <div className="flex items-center gap-4">
-                    <Avatar className="h-12 w-12">
-                      <AvatarImage src={testimonial.avatar} alt={testimonial.name} />
-                      <AvatarFallback className="bg-blue-100 text-blue-600">
-                        {testimonial.name.split(' ').map(n => n[0]).join('')}
-                      </AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2">
-                        <div className="font-semibold text-gray-900">{testimonial.name}</div>
-                        {testimonial.verified && (
-                          <CheckCircle className="h-4 w-4 text-green-500" />
-                        )}
-                      </div>
-                      <div className="text-sm text-gray-600">{testimonial.role}</div>
-                      <div className="text-sm text-gray-500">{testimonial.country}</div>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      </section>
+      <TestimonialsSection />
 
       {/* Travel Tips Section */}
       <section className="py-16 sm:py-20 bg-gray-50">

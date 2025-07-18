@@ -2,8 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Import Google Fonts */
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
+/* Google Fonts are now loaded via next/font in layout.tsx for better performance */
 
 /* Custom CSS Variables for Professional Design */
 :root {
@@ -178,13 +177,24 @@
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'kern' 1, 'liga' 1;
+    text-rendering: optimizeLegibility;
   }
   
   /* Professional Typography */
   h1, h2, h3, h4, h5, h6 {
     @apply font-semibold tracking-tight;
     line-height: 1.2;
+    color: #1e293b;
   }
+  
+  /* Ensure proper heading hierarchy */
+  h1 { font-size: clamp(2rem, 5vw, 4rem); }
+  h2 { font-size: clamp(1.5rem, 4vw, 3rem); }
+  h3 { font-size: clamp(1.25rem, 3vw, 2rem); }
+  h4 { font-size: clamp(1.125rem, 2.5vw, 1.5rem); }
+  h5 { font-size: clamp(1rem, 2vw, 1.25rem); }
+  h6 { font-size: clamp(0.875rem, 1.5vw, 1rem); }
   
   h1 {
     @apply text-4xl md:text-5xl lg:text-6xl;
@@ -230,43 +240,16 @@
   }
 }
 
-/* Professional Card Animations */
+/* Professional Card Animations - Critical above-the-fold styles */
 .professional-card {
-  @apply bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300;
-  backdrop-filter: blur(10px);
+  @apply bg-white rounded-xl border border-gray-200 shadow-sm;
+  will-change: transform, box-shadow;
 }
 
 .professional-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-}
-
-/* Feature Cards with Glow Effects */
-.feature-card {
-  @apply relative overflow-hidden bg-white rounded-2xl border border-gray-200 shadow-sm hover:shadow-xl transition-all duration-500;
-  backdrop-filter: blur(10px);
-}
-
-.feature-card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: var(--gradient-primary);
-  opacity: 0;
-  transition: opacity 0.5s var(--ease-out-cubic);
-  z-index: -1;
-}
-
-.feature-card:hover::before {
-  opacity: 0.05;
-}
-
-.feature-card:hover {
-  transform: translateY(-6px);
-  border-color: rgba(0, 102, 204, 0.2);
+  transition: transform 0.3s ease-out, box-shadow 0.3s ease-out;
 }
 
 /* Professional Hero Section */
@@ -287,7 +270,7 @@
   opacity: 0.5;
 }
 
-/* Professional Animations */
+/* Critical animations only - others loaded on demand */
 @keyframes fade-in-up {
   from {
     opacity: 0;
@@ -299,67 +282,27 @@
   }
 }
 
-@keyframes fade-in-down {
-  from {
-    opacity: 0;
-    transform: translateY(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
-
-@keyframes fade-in-left {
-  from {
-    opacity: 0;
-    transform: translateX(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes fade-in-right {
-  from {
-    opacity: 0;
-    transform: translateX(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-@keyframes pulse-glow {
-  0%, 100% {
-    box-shadow: 0 0 0 0 rgba(0, 102, 204, 0.7);
-  }
-  50% {
-    box-shadow: 0 0 0 10px rgba(0, 102, 204, 0);
-  }
-}
-
-/* Animation Classes */
 .animate-fade-in-up {
-  animation: fade-in-up 0.6s var(--ease-out-cubic) forwards;
+  animation: fade-in-up 0.6s cubic-bezier(0.215, 0.610, 0.355, 1.000) forwards;
 }
 
-.animate-fade-in-down {
-  animation: fade-in-down 0.6s var(--ease-out-cubic) forwards;
+/* Optimize for better performance */
+.professional-card {
+  contain: layout style;
+  will-change: transform;
 }
 
-.animate-fade-in-left {
-  animation: fade-in-left 0.6s var(--ease-out-cubic) forwards;
+/* Optimize images */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
 }
 
-.animate-fade-in-right {
-  animation: fade-in-right 0.6s var(--ease-out-cubic) forwards;
-}
-
-.animate-pulse-glow {
-  animation: pulse-glow 2s infinite;
+/* Improve text readability */
+.text-content {
+  line-height: 1.6;
+  letter-spacing: 0.01em;
 }
 
 /* Professional Scrollbar */
@@ -383,6 +326,49 @@
 /* Professional Focus States */
 .focus-visible {
   @apply outline-none ring-2 ring-blue-500 ring-offset-2;
+}
+
+/* Improved focus for accessibility */
+*:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Remove focus outline for mouse users */
+*:focus:not(:focus-visible) {
+  outline: none;
+}
+
+/* Skip link for accessibility */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 6px;
+  background: #000;
+  color: #fff;
+  padding: 8px;
+  z-index: 100;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.skip-link:focus {
+  top: 6px;
+}
+
+/* Reduced motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-delay: -1ms !important;
+    animation-duration: 1ms !important;
+    animation-iteration-count: 1 !important;
+    background-attachment: initial !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
+  }
 }
 
 /* Professional Loading States */
