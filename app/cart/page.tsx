@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import dynamic from "next/dynamic"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
@@ -36,22 +37,44 @@ export default function CartPage() {
   const router = useRouter()
   const [isClient, setIsClient] = useState(false)
   const [cartItems, setCartItems] = useState<CartItem[]>([])
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    setIsClient(true)
-    const savedCart = localStorage.getItem('cart')
-    if (savedCart) {
+    const initializeCart = async () => {
       try {
-        setCartItems(JSON.parse(savedCart))
+        setIsClient(true)
+        
+        // Add a small delay to ensure DOM is ready
+        await new Promise(resolve => setTimeout(resolve, 100))
+        
+        const savedCart = localStorage.getItem('cart')
+        if (savedCart) {
+          const parsedCart = JSON.parse(savedCart)
+          console.log('Parsed cart:', parsedCart)
+          setCartItems(Array.isArray(parsedCart) ? parsedCart : [])
+        } else {
+          console.log('No cart found in localStorage')
+          setCartItems([])
+        }
       } catch (error) {
         console.error('Failed to parse cart:', error)
         setCartItems([])
+        // Clear corrupted cart data
+        try {
+          localStorage.removeItem('cart')
+        } catch (e) {
+          console.error('Failed to clear cart:', e)
+        }
+      } finally {
+        setIsLoading(false)
       }
     }
+
+    initializeCart()
   }, [])
 
-  // Prevent hydration mismatch during SSR
-  if (!isClient) {
+  // Show loading state for SSR and initial load
+  if (!isClient || isLoading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 pt-20">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12">
@@ -65,8 +88,13 @@ export default function CartPage() {
 
   useEffect(() => {
     if (isClient) {
+      try {
         localStorage.setItem('cart', JSON.stringify(cartItems))
-      window.dispatchEvent(new Event('cart-updated'))
+        window.dispatchEvent(new Event('cart-updated'))
+      } catch (error) {
+        console.error('Failed to save cart:', error)
+        toast.error('Failed to save cart changes')
+      }
     }
   }, [cartItems, isClient])
 
@@ -94,9 +122,18 @@ export default function CartPage() {
   }
 
   const getTotalValue = () => {
-    return cartItems.reduce((total, item) => {
-      return total + (item.planData.price * item.quantity)
-    }, 0)
+    try {
+      return cartItems.reduce((total, item) => {
+        if (!item.planData || typeof item.planData.price !== 'number') {
+          console.error('Invalid item in cart:', item)
+          return total
+        }
+        return total + (item.planData.price * item.quantity)
+      }, 0)
+    } catch (error) {
+      console.error('Error calculating total:', error)
+      return 0
+    }
   }
 
   const getTotalItems = () => {
@@ -104,9 +141,31 @@ export default function CartPage() {
   }
 
   const handleCheckout = () => {
-    // Guest checkout - proceed directly to checkout with cart data
-    const cartDataParam = encodeURIComponent(JSON.stringify(cartItems))
-    router.push(`/checkout?cart=${cartDataParam}`)
+    try {
+      if (cartItems.length === 0) {
+        toast.error('Your cart is empty')
+        return
+      }
+      
+      // Validate cart items before checkout
+      const validItems = cartItems.filter(item => 
+        item.planData && 
+        typeof item.planData.price === 'number' && 
+        item.quantity > 0
+      )
+      
+      if (validItems.length === 0) {
+        toast.error('No valid items in cart')
+        return
+      }
+      
+      // Guest checkout - proceed directly to checkout with cart data
+      const cartDataParam = encodeURIComponent(JSON.stringify(validItems))
+      router.push(`/checkout?cart=${cartDataParam}`)
+    } catch (error) {
+      console.error('Checkout error:', error)
+      toast.error('Failed to proceed to checkout')
+    }
   }
 
   return (
