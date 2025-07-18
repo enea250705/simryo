@@ -11,7 +11,10 @@
     "db:push": "prisma db push",
     "db:generate": "prisma generate",
     "db:studio": "prisma studio",
-    "db:seed": "prisma db seed"
+    "db:seed": "prisma db seed",
+    "check-errors": "node scripts/check-build-errors.js",
+    "fix-issues": "node scripts/fix-build-issues.js",
+    "deploy-seo": "node scripts/deploy-seo.js"
   },
   "dependencies": {
     "@hookform/resolvers": "^3.9.1",

@@ -114,7 +114,7 @@ function ProfileContent() {
           id: (session.user as any).id || '',
           name: session.user.name || '',
           email: session.user.email || '',
-          avatar: session.user.image,
+          avatar: session.user.image || undefined,
           joinDate: new Date().toISOString().split('T')[0], // Default to today
           totalEsims: 0,
           totalSpent: 0

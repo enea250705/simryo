@@ -106,7 +106,7 @@ export function ESIMQRModal({ isOpen, onClose, esimData }: ESIMQRModalProps) {
             <CardHeader>
               <CardTitle>QR Code</CardTitle>
               <CardDescription>
-                Scan this QR code with your phone's camera or go to Settings > Cellular > Add Cellular Plan
+                Scan this QR code with your phone's camera or go to Settings {'>'} Cellular {'>'} Add Cellular Plan
               </CardDescription>
             </CardHeader>
             <CardContent className="text-center">
@@ -213,7 +213,7 @@ export function ESIMQRModal({ isOpen, onClose, esimData }: ESIMQRModalProps) {
               <ul className="space-y-1 text-sm text-blue-700">
                 <li>• Keep your original SIM card active for calls and SMS</li>
                 <li>• Use the eSIM for data while traveling</li>
-                <li>• Monitor your data usage in Settings > Cellular</li>
+                <li>• Monitor your data usage in Settings {'>'} Cellular</li>
                 <li>• Contact support if you need help with activation</li>
               </ul>
             </CardContent>

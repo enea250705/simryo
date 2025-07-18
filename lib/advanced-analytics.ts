@@ -188,7 +188,7 @@ export class AdvancedAnalytics {
   private getTimeToInteractive(): number {
     // Simplified TTI calculation
     const entries = performance.getEntriesByType('navigation')[0] as PerformanceNavigationTiming
-    return entries.loadEventEnd - entries.navigationStart
+    return entries.loadEventEnd - entries.fetchStart
   }
 
   private async sendEvent(event: AnalyticsEvent) {
@@ -207,8 +207,8 @@ export class AdvancedAnalytics {
   }
 
   private async sendToGoogleAnalytics(event: AnalyticsEvent) {
-    if (typeof gtag !== 'undefined') {
-      gtag('event', event.event, {
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('event', event.event, {
         custom_parameter: event.properties,
         session_id: event.sessionId,
         user_id: event.userId
