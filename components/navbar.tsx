@@ -435,74 +435,139 @@ export function Navbar() {
           {isOpen && (
             <div 
               id="mobile-menu"
-              className="absolute top-16 left-0 right-0 bg-white border-b border-gray-200 shadow-lg max-h-[calc(100vh-4rem)] overflow-y-auto z-40 animate-in slide-in-from-top-1 duration-200"
+              className="fixed top-16 left-0 right-0 bottom-0 bg-white shadow-xl z-50 animate-in slide-in-from-top-2 duration-300"
               role="menu"
               aria-labelledby="mobile-menu-button"
             >
-              <div className="px-4 py-6 space-y-6">
-                {/* Home Link */}
-                <div>
-                  <Link
-                    href="/"
-                    className="flex items-center space-x-3 p-2 rounded-md hover:bg-gray-50 text-gray-700 hover:text-blue-600 min-h-[44px]"
-                    onClick={() => setIsOpen(false)}
-                    role="menuitem"
-                    aria-label="Go to home page"
-                  >
-                    <Globe className="h-5 w-5" aria-hidden="true" />
-                    <span className="text-sm font-medium">Home</span>
-                  </Link>
-                </div>
+              <div className="h-full overflow-y-auto">
+                <div className="px-6 py-8 space-y-8">
+                  {/* Main Navigation */}
+                  <div className="space-y-4">
+                    <Link
+                      href="/"
+                      className="flex items-center space-x-4 p-4 rounded-xl hover:bg-blue-50 text-gray-800 hover:text-blue-600 transition-all duration-200 min-h-[60px] border border-gray-100"
+                      onClick={() => setIsOpen(false)}
+                      role="menuitem"
+                    >
+                      <Globe className="h-6 w-6 text-blue-600" />
+                      <span className="text-lg font-medium">Home</span>
+                    </Link>
 
-                <Separator />
+                    <Link
+                      href="/plans"
+                      className="flex items-center space-x-4 p-4 rounded-xl hover:bg-blue-50 text-gray-800 hover:text-blue-600 transition-all duration-200 min-h-[60px] border border-gray-100"
+                      onClick={() => setIsOpen(false)}
+                      role="menuitem"
+                    >
+                      <Smartphone className="h-6 w-6 text-blue-600" />
+                      <span className="text-lg font-medium">Browse Plans</span>
+                    </Link>
 
-                {/* Plans Section */}
-                <div>
-                  <h3 className="text-sm font-semibold text-gray-900 mb-3">Plans</h3>
-                  <div className="space-y-2">
-                    {navigationItems.map((item) => (
+                    <Link
+                      href="/coverage"
+                      className="flex items-center space-x-4 p-4 rounded-xl hover:bg-blue-50 text-gray-800 hover:text-blue-600 transition-all duration-200 min-h-[60px] border border-gray-100"
+                      onClick={() => setIsOpen(false)}
+                      role="menuitem"
+                    >
+                      <MapPin className="h-6 w-6 text-blue-600" />
+                      <span className="text-lg font-medium">Coverage</span>
+                    </Link>
+
+                    <Link
+                      href="/pricing"
+                      className="flex items-center space-x-4 p-4 rounded-xl hover:bg-blue-50 text-gray-800 hover:text-blue-600 transition-all duration-200 min-h-[60px] border border-gray-100"
+                      onClick={() => setIsOpen(false)}
+                      role="menuitem"
+                    >
+                      <CreditCard className="h-6 w-6 text-blue-600" />
+                      <span className="text-lg font-medium">Pricing</span>
+                    </Link>
+                  </div>
+
+                  {/* Support Section */}
+                  <div className="space-y-4">
+                    <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider px-2">Support</h3>
+                    
+                    <Link
+                      href="/support"
+                      className="flex items-center space-x-4 p-4 rounded-xl hover:bg-gray-50 text-gray-700 hover:text-gray-900 transition-all duration-200 min-h-[56px]"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <HelpCircle className="h-5 w-5 text-gray-500" />
+                      <span className="text-base">Help Center</span>
+                    </Link>
+
+                    <Link
+                      href="/setup"
+                      className="flex items-center space-x-4 p-4 rounded-xl hover:bg-gray-50 text-gray-700 hover:text-gray-900 transition-all duration-200 min-h-[56px]"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <Settings className="h-5 w-5 text-gray-500" />
+                      <span className="text-base">Setup Guide</span>
+                    </Link>
+
+                    <Link
+                      href="/contact"
+                      className="flex items-center space-x-4 p-4 rounded-xl hover:bg-gray-50 text-gray-700 hover:text-gray-900 transition-all duration-200 min-h-[56px]"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <MessageCircle className="h-5 w-5 text-gray-500" />
+                      <span className="text-base">Contact Us</span>
+                    </Link>
+                  </div>
+
+                  {/* Action Buttons */}
+                  <div className="space-y-4 pt-4 border-t border-gray-100">
+                    <Link href="/cart" onClick={() => setIsOpen(false)} className="block">
+                      <div className="flex items-center justify-between p-4 rounded-xl border-2 border-gray-200 hover:border-blue-200 hover:bg-blue-50 transition-all duration-200">
+                        <div className="flex items-center space-x-3">
+                          <ShoppingCart className="h-6 w-6 text-gray-600" />
+                          <span className="text-lg font-medium text-gray-800">Cart</span>
+                        </div>
+                        {cartCount > 0 && (
+                          <Badge className="bg-red-500 text-white px-3 py-1">
+                            {cartCount}
+                          </Badge>
+                        )}
+                      </div>
+                    </Link>
+
+                    <Link href="/plans" onClick={() => setIsOpen(false)} className="block">
+                      <Button className="w-full h-14 bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white text-lg font-semibold rounded-xl shadow-lg">
+                        🌍 Buy eSIM Now
+                      </Button>
+                    </Link>
+                  </div>
+
+                  {/* Company Links */}
+                  <div className="space-y-3 pt-6 border-t border-gray-100">
+                    <h3 className="text-sm font-semibold text-gray-500 uppercase tracking-wider px-2">Company</h3>
+                    <div className="grid grid-cols-2 gap-2">
                       <Link
-                        key={item.href}
-                        href={item.href}
-                        className="flex items-center space-x-3 p-2 rounded-md hover:bg-gray-50 text-gray-700 hover:text-blue-600"
+                        href="/about"
+                        className="text-center p-3 rounded-lg hover:bg-gray-50 text-gray-600 hover:text-gray-800 transition-colors"
                         onClick={() => setIsOpen(false)}
                       >
-                        <item.icon className="h-5 w-5" />
-                        <span className="text-sm font-medium">{item.title}</span>
+                        <span className="text-sm">About</span>
                       </Link>
-                    ))}
-                  </div>
-                </div>
-
-                <Separator />
-
-                {/* Support Section */}
-                <div>
-                  <h3 className="text-sm font-semibold text-gray-900 mb-3">Support</h3>
-                  <div className="space-y-2">
-                    {supportItems.map((item) => (
                       <Link
-                        key={item.href}
-                        href={item.href}
-                        className="flex items-center space-x-3 p-2 rounded-md hover:bg-gray-50 text-gray-700 hover:text-blue-600"
+                        href="/blog"
+                        className="text-center p-3 rounded-lg hover:bg-gray-50 text-gray-600 hover:text-gray-800 transition-colors"
                         onClick={() => setIsOpen(false)}
                       >
-                        <item.icon className="h-5 w-5" />
-                        <span className="text-sm font-medium">{item.title}</span>
+                        <span className="text-sm">Blog</span>
                       </Link>
-                    ))}
+                    </div>
                   </div>
-                </div>
-
-                <Separator />
-                <div className="space-y-3">
-                  <Link href="/plans" onClick={() => setIsOpen(false)}>
-                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-                      Buy eSIM Now
-                    </Button>
-                  </Link>
                 </div>
               </div>
+
+              {/* Close overlay when clicking outside */}
+              <div 
+                className="absolute inset-0 -z-10" 
+                onClick={() => setIsOpen(false)}
+                aria-hidden="true"
+              />
             </div>
           )}
         </div>
