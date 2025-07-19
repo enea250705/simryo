@@ -43,12 +43,16 @@ declare global {
 }
 
 export function GoogleAnalytics() {
+  // Disable GA on mobile for maximum performance
+  if (typeof window !== 'undefined' && window.innerWidth < 768) {
+    return null;
+  }
+  
   return (
     <>
       <Script
         src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
-        strategy="afterInteractive"
-        defer
+        strategy="lazyOnload"
         onLoad={() => {
           if (typeof window !== 'undefined') {
             window.dataLayer = window.dataLayer || [];
@@ -58,18 +62,11 @@ export function GoogleAnalytics() {
             window.gtag = gtag;
             gtag('js', new Date());
             gtag('config', GA_TRACKING_ID, {
-              // Minimal configuration to reduce JS payload
               transport_type: 'beacon',
               anonymize_ip: true,
               allow_google_signals: false,
               allow_ad_personalization_signals: false,
-              send_page_view: true,
-              // Disable features that add unused JS
-              optimize_id: undefined,
-              linker: undefined,
-              custom_map: undefined,
-              page_load_time: false,
-              site_speed_sample_rate: 1
+              send_page_view: false
             });
           }
         }}

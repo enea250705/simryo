@@ -376,20 +376,23 @@ export default function RootLayout({
         <link rel="dns-prefetch" href="https://static.hotjar.com" />
         <link rel="dns-prefetch" href="https://www.clarity.ms" />
         
+        {/* Critical inline CSS for mobile */}
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
+              @media (max-width: 768px) {
+                * { animation: none !important; transition: none !important; }
+                body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
+                .hero-section { background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); padding: 2rem 1rem; }
+                h1 { font-size: 1.875rem !important; font-weight: 700; line-height: 1.1; }
+                .btn { padding: 0.75rem 1.5rem; border-radius: 0.75rem; font-weight: 600; }
+              }
+            `,
+          }}
+        />
+        
         {/* Critical Resource Preloading for LCP */}
-        <link rel="preload" href="/api/plans/popular" as="fetch" crossOrigin="anonymous" />
-        <link rel="preload" href="/_next/static/css/app/layout.css" as="style" />
-        <link rel="preload" href="/_next/static/css/app/globals.css" as="style" />
-        
-        {/* Preload critical fonts */}
-        <link rel="preload" href="/_next/static/media/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
-        <link rel="preload" href="/_next/static/media/inter-latin-600-normal.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
-        
-        {/* Preload critical above-the-fold images */}
         <link rel="preload" href="/simryologo.png" as="image" fetchPriority="high" />
-        
-        {/* Prefetch non-critical images */}
-        <link rel="prefetch" href="/og-image.jpg" as="image" />
         
         {/* Google Analytics - Optimized for mobile */}
         <GoogleAnalytics />
@@ -472,38 +475,34 @@ export default function RootLayout({
         </ThemeProvider>
         
         
-        {/* Microsoft Clarity */}
-        {process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID && (
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `
-                (function(c,l,a,r,i,t,y){
-                  c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
-                  t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
-                  y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
-                })(window, document, "clarity", "script", "${process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID}");
-              `,
-            }}
-          />
-        )}
-        
-        {/* Hotjar */}
-        {process.env.NEXT_PUBLIC_HOTJAR_ID && (
-          <script
-            dangerouslySetInnerHTML={{
-              __html: `
-                (function(h,o,t,j,a,r){
-                  h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-                  h._hjSettings={hjid:${process.env.NEXT_PUBLIC_HOTJAR_ID},hjsv:6};
-                  a=o.getElementsByTagName('head')[0];
-                  r=o.createElement('script');r.async=1;
-                  r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-                  a.appendChild(r);
-                })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
-              `,
-            }}
-          />
-        )}
+        {/* Disable tracking scripts on mobile for performance */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if (window.innerWidth >= 768) {
+                // Only load tracking on desktop
+                ${process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID ? `
+                  (function(c,l,a,r,i,t,y){
+                    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+                  })(window, document, "clarity", "script", "${process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID}");
+                ` : ''}
+                
+                ${process.env.NEXT_PUBLIC_HOTJAR_ID ? `
+                  (function(h,o,t,j,a,r){
+                    h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+                    h._hjSettings={hjid:${process.env.NEXT_PUBLIC_HOTJAR_ID},hjsv:6};
+                    a=o.getElementsByTagName('head')[0];
+                    r=o.createElement('script');r.async=1;
+                    r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+                    a.appendChild(r);
+                  })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+                ` : ''}
+              }
+            `,
+          }}
+        />
       </body>
     </html>
   )

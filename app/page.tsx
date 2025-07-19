@@ -267,9 +267,29 @@ export default function HomePage() {
     <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
       {/* Hero Section */}
       {isMobile ? (
-        <Suspense fallback={<div className="pt-32 pb-20 flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>}>
-          <MobileOptimizedHero isMobile={isMobile} />
-        </Suspense>
+        <section className="relative overflow-hidden pt-8 pb-12" style={{background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)', minHeight: '400px'}}>
+          <div className="relative mx-auto max-w-7xl px-4">
+            <div className="text-center max-w-4xl mx-auto">
+              <div className="mb-4 inline-flex items-center px-3 py-1 rounded-full text-sm bg-blue-100 text-blue-700 border border-blue-200">
+                Global eSIM Marketplace
+              </div>
+              <h1 className="text-3xl font-bold tracking-tight text-gray-900 mb-4" style={{minHeight: '80px', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
+                Stay Connected
+                <span className="block bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+                  Anywhere
+                </span>
+              </h1>
+              <p className="text-base text-gray-600 mb-6 max-w-3xl mx-auto leading-relaxed">
+                Premium eSIM plans for global travelers. Instant activation, no contracts.
+              </p>
+              <Link href="/plans">
+                <button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 px-6 text-base rounded-xl shadow-lg transition-all duration-200">
+                  Browse Plans →
+                </button>
+              </Link>
+            </div>
+          </div>
+        </section>
       ) : (
         <section className="relative overflow-hidden pt-32 sm:pt-48 pb-20 sm:pb-24 hero-section" aria-labelledby="hero-heading">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-purple-50" />

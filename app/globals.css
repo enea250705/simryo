@@ -490,56 +490,34 @@ a, button, [role="button"], [role="link"], input[type="button"], input[type="sub
   @apply bg-blue-50 border border-blue-200 text-blue-700 p-4 rounded-lg;
 }
 
-/* Mobile-First Optimizations */
-@media (max-width: 640px) {
-  .hero-section {
-    padding-top: 6rem;
-    padding-bottom: 3rem;
-    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-  }
-  
-  .hero-section::before {
-    display: none; /* Remove pattern on mobile for better performance */
-  }
-  
-  .professional-card {
-    margin-bottom: 1rem;
-    will-change: auto; /* Reduce will-change on mobile */
+/* Ultra-aggressive mobile optimizations */
+@media (max-width: 768px) {
+  * {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+    will-change: auto !important;
   }
   
   .professional-card:hover {
-    transform: none; /* Disable hover effects on mobile */
-    transition: none;
+    transform: none !important;
+    box-shadow: none !important;
   }
   
-  /* Mobile-specific optimizations */
+  /* Remove all non-essential visual effects on mobile */
+  .hero-section::before {
+    display: none !important;
+  }
+  
+  /* Minimal critical styles only */
   h1 {
-    font-size: clamp(1.75rem, 8vw, 2.5rem);
-    line-height: 1.1;
+    font-size: 1.875rem !important;
+    line-height: 1.1 !important;
   }
   
   h2 {
-    font-size: clamp(1.5rem, 6vw, 2rem);
-    line-height: 1.2;
-  }
-  
-  /* Optimize buttons for mobile */
-  .btn-primary {
-    min-height: 44px; /* Minimum touch target */
-    font-size: 1rem;
-    padding: 0.75rem 1.5rem;
-  }
-  
-  .btn-secondary {
-    min-height: 44px; /* Minimum touch target */
-    font-size: 1rem;
-    padding: 0.75rem 1.5rem;
-  }
-  
-  /* Reduce motion on mobile */
-  * {
-    animation-duration: 0.3s !important;
-    transition-duration: 0.3s !important;
+    font-size: 1.5rem !important;
+    line-height: 1.2 !important;
   }
 }
 
