@@ -152,18 +152,18 @@ export function Navbar() {
           {/* Logo */}
           <Link href="/" className="flex items-center group">
             <div className="relative">
-              <Image
-                src="/simryologo.png"
-                alt="SIMRYO Logo"
-                width={48}
-                height={48}
-                className="h-12 w-12 object-contain group-hover:scale-105 transition-transform"
-                unoptimized={true}
-                onError={(e) => {
-                    const target = e.target as HTMLImageElement;
-                    target.style.display = 'none';
-                }}
-              />
+                              <Image
+                  src="/simryologo.png"
+                  alt="SIMRYO Logo"
+                  width={80}
+                  height={80}
+                  className="h-20 w-20 object-contain group-hover:scale-105 transition-transform"
+                  unoptimized={true}
+                  onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      target.style.display = 'none';
+                  }}
+                />
             </div>
           </Link>
 
@@ -336,7 +336,7 @@ export function Navbar() {
               variant="ghost"
               size="sm"
               onClick={() => setIsOpen(!isOpen)}
-              className="text-gray-700 hover:text-blue-600 min-h-[44px] min-w-[44px]"
+              className="text-gray-700 hover:text-blue-600 min-h-[44px] min-w-[44px] bg-transparent border-none shadow-none"
               aria-label={isOpen ? "Close menu" : "Open menu"}
               aria-expanded={isOpen}
               aria-controls="mobile-menu"
@@ -350,9 +350,9 @@ export function Navbar() {
                 <Image
                   src="/simryologo.png"
                   alt="SIMRYO Logo"
-                  width={36}
-                  height={36}
-                  className="h-9 w-9 object-contain"
+                  width={60}
+                  height={60}
+                  className="h-16 w-16 object-contain"
                   onError={(e) => {
                     console.error('Mobile logo failed to load:', e);
                     (e.target as HTMLImageElement).style.display = 'none';
@@ -394,11 +394,12 @@ export function Navbar() {
           {isOpen && (
             <div 
               id="mobile-menu"
-              className="absolute top-16 left-0 right-0 bg-white border-b border-gray-200 shadow-lg max-h-[calc(100vh-4rem)] overflow-y-auto"
+              className="absolute top-16 left-0 right-0 bg-white border-b border-gray-200 shadow-lg max-h-[calc(100vh-4rem)] overflow-y-auto z-50"
               role="menu"
               aria-labelledby="mobile-menu-button"
+              style={{ maxHeight: 'calc(100vh - 4rem)' }}
             >
-              <div className="px-4 py-6 space-y-6">
+              <div className="px-4 py-6 space-y-6 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 6rem)' }}>
                 {/* Home Link */}
                 <div>
                   <Link
