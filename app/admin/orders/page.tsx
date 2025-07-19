@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -61,8 +62,15 @@ export default function OrdersPage() {
   const [providerFilter, setProviderFilter] = useState("all")
   const [currentPage, setCurrentPage] = useState(1)
   const [ordersPerPage] = useState(10)
+  const router = useRouter()
 
   useEffect(() => {
+    // Check authentication
+    const token = localStorage.getItem('admin_token')
+    if (!token) {
+      router.push('/admin/login')
+      return
+    }
     loadOrders()
   }, [])
 
@@ -335,10 +343,21 @@ export default function OrdersPage() {
           <h1 className="text-3xl font-bold text-gray-900">Orders Management</h1>
           <p className="text-gray-600">Manage and track all eSIM orders</p>
         </div>
-        <Button onClick={exportOrders} className="bg-emerald-600 hover:bg-emerald-700">
-          <Download className="h-4 w-4 mr-2" />
-          Export CSV
-        </Button>
+        <div className="flex space-x-3">
+          <Button onClick={exportOrders} className="bg-emerald-600 hover:bg-emerald-700">
+            <Download className="h-4 w-4 mr-2" />
+            Export CSV
+          </Button>
+          <Button 
+            onClick={() => {
+              localStorage.removeItem('admin_token')
+              router.push('/admin/login')
+            }}
+            variant="outline"
+          >
+            Logout
+          </Button>
+        </div>
       </div>
 
       {/* Stats Cards */}
