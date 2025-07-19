@@ -24,7 +24,7 @@ export default function MobileOptimizedHero({ isMobile }: MobileOptimizedHeroPro
   }
 
   return (
-    <section className={`relative overflow-hidden ${isMobile ? 'pt-24 pb-12' : 'pt-32 pb-20'} hero-section`}>
+    <section className={`relative overflow-hidden ${isMobile ? 'pt-8 pb-12' : 'pt-12 pb-20'} hero-section`}>
       <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-purple-50" />
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-4xl mx-auto">
