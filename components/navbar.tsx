@@ -151,24 +151,19 @@ export function Navbar() {
         <div className="hidden lg:flex justify-between items-center h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center group">
-            <div className="flex items-center space-x-3">
-              <div className="relative">
-                <Image
-                  src="/simryologo.png"
-                  alt="SIMRYO Logo"
-                  width={32}
-                  height={32}
-                  className="h-8 w-8 object-contain group-hover:scale-105 transition-transform"
-                  unoptimized={true}
-                  onError={(e) => {
-                      const target = e.target as HTMLImageElement;
-                      target.style.display = 'none';
-                  }}
-                />
-              </div>
-                <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                SIMRYO
-              </span>
+            <div className="relative">
+              <Image
+                src="/simryologo.png"
+                alt="SIMRYO Logo"
+                width={48}
+                height={48}
+                className="h-12 w-12 object-contain group-hover:scale-105 transition-transform"
+                unoptimized={true}
+                onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                }}
+              />
             </div>
           </Link>
 
@@ -351,19 +346,18 @@ export function Navbar() {
 
             {/* Mobile Logo */}
             <Link href="/" className="flex items-center">
-              <div className="flex items-center space-x-2">
+              <div className="relative">
                 <Image
                   src="/simryologo.png"
                   alt="SIMRYO Logo"
-                  width={28}
-                  height={28}
-                  className="h-7 w-7 object-contain"
+                  width={36}
+                  height={36}
+                  className="h-9 w-9 object-contain"
                   onError={(e) => {
                     console.error('Mobile logo failed to load:', e);
                     (e.target as HTMLImageElement).style.display = 'none';
                   }}
                 />
-                <span className="text-lg font-bold text-gray-900">SIMRYO</span>
               </div>
             </Link>
 
