@@ -157,24 +157,32 @@ export abstract class BaseProvider {
     // Start with the base price (already in EUR from CSV)
     let finalPrice = price;
     
-    // Apply 10% markup
-    finalPrice *= 1.10;
+    // Apply configured markup percentage (default 10%)
+    const markupPercentage = this.config.markup?.percentage || 10;
+    finalPrice *= (1 + markupPercentage / 100);
     
-    // Add €2 fixed profit
-    finalPrice += 2.00;
+    // Add configured fixed profit (default €2)
+    const fixedProfit = this.config.markup?.fixedAmount || 2.00;
+    finalPrice += fixedProfit;
     
     // Round to 2 decimal places
     return Math.round(finalPrice * 100) / 100;
   }
 
   protected shouldExcludePlan(plan: ProviderPlan): boolean {
-    // Exclude overpriced plans (over €80 after markup)
+    // Exclude overpriced plans (over €60 after markup)
     const finalPrice = this.applyMarkup(plan.price);
-    if (finalPrice > 80) return true;
+    if (finalPrice > 60) return true;
     
     // Exclude plans with unusual durations (check ID for duration indicators)
     if (plan.id.includes('180Days') || plan.id.includes('365Days') || plan.id.includes('1Year') || 
         plan.id.includes('_50_180') || plan.id.includes('_1_365')) return true;
+    
+    // Exclude plans with very long durations (over 90 days)
+    if (plan.days > 90) return true;
+    
+    // Exclude plans with very high data amounts (over 50GB)
+    if (plan.dataInMB > 51200) return true;
     
     // Exclude specific problematic plan IDs/slugs
     const excludedPatterns = [
@@ -186,13 +194,24 @@ export abstract class BaseProvider {
       '_50_180', // Any 50GB 180-day plans
       '_1_365', // Any 1GB 365-day plans
       'GL-139_1_365', // Global 139 1GB 365Days
-      'GL-120_1_365' // Global 120 1GB 365Days
+      'GL-120_1_365', // Global 120 1GB 365Days
+      '_20_180', // Any 20GB 180-day plans
+      '_30_180', // Any 30GB 180-day plans
+      '_40_180', // Any 40GB 180-day plans
+      '_50_30', // Any 50GB 30-day plans (usually overpriced)
+      '_100_', // Any 100GB+ plans
+      '_200_', // Any 200GB+ plans
     ];
     
     // Check if plan ID contains any excluded pattern
     for (const pattern of excludedPatterns) {
       if (plan.id.includes(pattern)) return true;
     }
+    
+    // Exclude plans with unreasonable price per GB (over €15/GB)
+    const gbAmount = plan.dataInMB / 1024;
+    const pricePerGB = finalPrice / gbAmount;
+    if (pricePerGB > 15) return true;
     
     return false;
   }

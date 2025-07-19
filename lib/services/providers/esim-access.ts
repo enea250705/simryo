@@ -288,8 +288,9 @@ export class EsimAccessProvider extends BaseProvider {
       // Map country to region and flag
       const regionInfo = this.getRegionInfo(countryCode, countryName)
 
-      // Apply markup
-      const finalPrice = this.applyMarkup(priceUsd)
+      // Convert USD to EUR first, then apply markup
+      const priceEur = this.convertUsdToEur(priceUsd)
+      const finalPrice = this.applyMarkup(priceEur)
 
       const plan: ProviderPlan = {
         id: `ea-${pkg.packageCode || pkg.slug}`,
@@ -319,7 +320,7 @@ export class EsimAccessProvider extends BaseProvider {
       }
 
       // Log individual plan for debugging
-      console.log(`Transformed plan: ${plan.id} - ${plan.country} ${plan.data} for ${plan.days} days at $${plan.price} (original: $${priceUsd})`)
+      console.log(`Transformed plan: ${plan.id} - ${plan.country} ${plan.data} for ${plan.days} days at €${plan.price} (original: $${priceUsd}, converted: €${priceEur})`)
       
       return plan
     }).filter((plan: ProviderPlan) => {

@@ -54,7 +54,7 @@ export class ProviderManager {
         },
         markup: {
           percentage: 10, // 10% markup exactly as requested
-          fixedAmount: 5.00 // $5.00 fixed fee exactly as requested
+          fixedAmount: 2.00 // €2.00 fixed profit exactly as requested
         }
       }),
       // Enable EsimAccess provider with environment credentials
@@ -71,7 +71,7 @@ export class ProviderManager {
         },
         markup: {
           percentage: 10, // 10% markup as requested
-          fixedAmount: 5.00 // $5.00 fixed fee as requested
+          fixedAmount: 2.00 // €2.00 fixed profit as requested
         }
       })
     ]
