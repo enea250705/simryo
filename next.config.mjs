@@ -48,6 +48,16 @@ const nextConfig = {
     dangerouslyAllowSVG: true,
     contentDispositionType: 'attachment',
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
+    // Mobile-specific optimizations
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+      },
+    ],
+    // Optimize for mobile
+    unoptimized: false,
+    loader: 'default',
   },
   
   // Compression and caching
@@ -190,13 +200,57 @@ const nextConfig = {
       }
     }
     
-    // Basic optimization for production
+    // Enhanced optimization for production with mobile focus
     if (!dev) {
-      // Simple optimization without complex splitting
+      // Mobile-optimized bundle splitting
       config.optimization = {
         ...config.optimization,
         usedExports: true,
         sideEffects: false,
+        splitChunks: {
+          chunks: 'all',
+          maxInitialRequests: 25,
+          minSize: 20000,
+          cacheGroups: {
+            default: {
+              minChunks: 1,
+              priority: -20,
+              reuseExistingChunk: true,
+            },
+            vendor: {
+              test: /[\\/]node_modules[\\/]/,
+              name: 'vendors',
+              priority: -10,
+              reuseExistingChunk: true,
+            },
+            // Separate large libraries for better caching
+            radix: {
+              test: /[\\/]node_modules[\\/]@radix-ui[\\/]/,
+              name: 'radix',
+              priority: 20,
+              reuseExistingChunk: true,
+            },
+            lucide: {
+              test: /[\\/]node_modules[\\/]lucide-react[\\/]/,
+              name: 'lucide',
+              priority: 15,
+              reuseExistingChunk: true,
+            },
+            stripe: {
+              test: /[\\/]node_modules[\\/]@stripe[\\/]/,
+              name: 'stripe',
+              priority: 10,
+              reuseExistingChunk: true,
+            },
+            // Separate React for better caching
+            react: {
+              test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+              name: 'react',
+              priority: 25,
+              reuseExistingChunk: true,
+            },
+          },
+        },
       }
       
       // Remove console logs in production
@@ -209,6 +263,19 @@ const nextConfig = {
                 ...minimizer.options.terserOptions?.compress,
                 drop_console: true,
                 drop_debugger: true,
+                // Mobile-optimized compression
+                passes: 2,
+                pure_getters: true,
+                unsafe: true,
+                unsafe_comps: true,
+                unsafe_Function: true,
+                unsafe_math: true,
+                unsafe_proto: true,
+                unsafe_regexp: true,
+                unsafe_undefined: true,
+              },
+              mangle: {
+                safari10: true,
               },
             }
           }

@@ -3,7 +3,7 @@ export function CriticalCSS() {
     <style
       dangerouslySetInnerHTML={{
         __html: `
-          /* Critical CSS for above-the-fold content - Optimized */
+          /* Critical CSS for above-the-fold content - Mobile Optimized */
           .skip-link {
             position: absolute;
             top: -40px;
@@ -23,7 +23,7 @@ export function CriticalCSS() {
             opacity: 1;
           }
           
-          /* Critical navbar styles */
+          /* Critical navbar styles - Mobile optimized */
           .navbar {
             position: fixed;
             top: 0;
@@ -33,9 +33,12 @@ export function CriticalCSS() {
             backdrop-filter: blur(8px);
             border-bottom: 1px solid rgba(0, 0, 0, 0.1);
             transition: all 0.3s ease;
+            /* Mobile optimization */
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
           }
           
-          /* Critical hero styles */
+          /* Critical hero styles - Mobile optimized */
           .hero-section {
             min-height: 100vh;
             display: flex;
@@ -44,9 +47,12 @@ export function CriticalCSS() {
             background: linear-gradient(135deg, #0066cc 0%, #00a8e8 50%, #ff6b35 100%);
             position: relative;
             overflow: hidden;
+            /* Mobile optimization */
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
           }
           
-          /* Critical button styles */
+          /* Critical button styles - Mobile optimized */
           .btn-primary {
             background: #0066cc;
             color: white;
@@ -56,6 +62,9 @@ export function CriticalCSS() {
             text-decoration: none;
             display: inline-block;
             transition: all 0.3s ease;
+            /* Mobile optimization */
+            -webkit-tap-highlight-color: transparent;
+            touch-action: manipulation;
           }
           
           .btn-primary:hover {
@@ -64,25 +73,31 @@ export function CriticalCSS() {
             box-shadow: 0 8px 25px rgba(0, 102, 204, 0.3);
           }
           
-          /* Critical typography */
+          /* Critical typography - Mobile optimized */
           h1, h2, h3, h4, h5, h6 {
             font-weight: 600;
             line-height: 1.2;
             color: #1e293b;
+            /* Mobile optimization */
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
           }
           
           h1 { font-size: clamp(2rem, 5vw, 4rem); }
           h2 { font-size: clamp(1.5rem, 4vw, 3rem); }
           h3 { font-size: clamp(1.25rem, 3vw, 2rem); }
           
-          /* Critical layout */
+          /* Critical layout - Mobile optimized */
           .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 16px;
+            /* Mobile optimization */
+            -webkit-transform: translateZ(0);
+            transform: translateZ(0);
           }
           
-          /* Critical responsive */
+          /* Mobile-first responsive */
           @media (max-width: 768px) {
             .container {
               padding: 0 12px;
@@ -91,9 +106,20 @@ export function CriticalCSS() {
             .hero-section {
               min-height: 80vh;
             }
+            
+            /* Mobile-specific optimizations */
+            .navbar {
+              backdrop-filter: blur(4px);
+            }
+            
+            /* Reduce animations on mobile for better performance */
+            .btn-primary:hover {
+              transform: none;
+              box-shadow: none;
+            }
           }
           
-          /* Essential Tailwind utilities only */
+          /* Essential Tailwind utilities - Mobile optimized */
           .flex { display: flex; }
           .hidden { display: none; }
           .block { display: block; }
@@ -147,7 +173,7 @@ export function CriticalCSS() {
           .antialiased { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
           .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
           
-          /* Critical responsive utilities */
+          /* Mobile-optimized responsive utilities */
           @media (min-width: 640px) {
             .sm\\:px-6 { padding-left: 1.5rem; padding-right: 1.5rem; }
             .sm\\:text-4xl { font-size: 2.25rem; line-height: 2.5rem; }
@@ -174,6 +200,25 @@ export function CriticalCSS() {
             .lg\\:text-7xl { font-size: 4.5rem; line-height: 1; }
             .lg\\:py-24 { padding-top: 6rem; padding-bottom: 6rem; }
             .lg\\:px-12 { padding-left: 3rem; padding-right: 3rem; }
+          }
+          
+          /* Mobile performance optimizations */
+          @media (max-width: 768px) {
+            /* Reduce transitions on mobile */
+            .transition-all {
+              transition-property: none;
+            }
+            
+            /* Optimize for mobile touch */
+            .btn-primary {
+              min-height: 44px;
+              min-width: 44px;
+            }
+            
+            /* Reduce shadows on mobile for better performance */
+            .shadow-lg {
+              box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            }
           }
         `
       }}
