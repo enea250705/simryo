@@ -181,7 +181,7 @@ const nextConfig = {
   
   // Webpack optimizations
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-    // Add fallbacks for client-side polyfills
+    // Add fallbacks for client-side polyfills - only for client-side
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
@@ -200,8 +200,8 @@ const nextConfig = {
       }
     }
     
-    // Enhanced optimization for production with mobile focus
-    if (!dev) {
+    // Enhanced optimization for production with mobile focus - only for client-side
+    if (!dev && !isServer) {
       // Mobile-optimized bundle splitting
       config.optimization = {
         ...config.optimization,
