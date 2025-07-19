@@ -164,7 +164,7 @@ export class MayaNetProvider extends BaseProvider {
         dataInMB: dataAmountMB,
         days: validityDays,
         price: this.calculatePrice(price), // Apply our internal markup
-        currency: 'USD',
+        currency: 'EUR',
         network: {
           type: '4G/5G',
           carriers: plan.networks || ['Maya.net Network'], // If networks are provided
@@ -181,13 +181,15 @@ export class MayaNetProvider extends BaseProvider {
     })
 
     // If partnerType is distributor, we need to filter by countryCode after fetching all plan types
+    let filteredPlans = transformedPlans
     if (this.config.partnerType !== 'referral' && filterCountryCode) {
-      return transformedPlans.filter(plan => 
+      filteredPlans = transformedPlans.filter(plan => 
         plan.countryCode.toLowerCase() === filterCountryCode.toLowerCase()
       );
     }
 
-    return transformedPlans
+    // Filter out problematic plans
+    return filteredPlans.filter(plan => !this.shouldExcludePlan(plan))
   }
 
   private convertDataToMB(dataString: string): number {
@@ -415,7 +417,7 @@ export class MayaNetProvider extends BaseProvider {
           dataInMB: this.convertDataToMB(tier.data),
           days: tier.validity,
           price: finalPrice,
-          currency: 'USD',
+          currency: 'EUR',
           network: {
             type: '4G/5G',
             carriers: country.carriers,
@@ -435,7 +437,8 @@ export class MayaNetProvider extends BaseProvider {
       })
     })
 
-    return plans
+    // Filter out problematic plans
+    return plans.filter(plan => !this.shouldExcludePlan(plan))
   }
 
   async purchasePlan(request: PurchaseRequest): Promise<PurchaseResponse> {

@@ -17,8 +17,9 @@ export class SimifyDirectProvider extends BaseProvider {
   async fetchPlans(countryCode?: string): Promise<ProviderPlan[]> {
     try {
       // In production, this would make a real API call to Simify Direct
-      // For now, return mock data
-      return this.getMockPlans(countryCode)
+      // For now, return mock data with filtering
+      const mockPlans = this.getMockPlans(countryCode)
+      return mockPlans.filter(plan => !this.shouldExcludePlan(plan))
     } catch (error) {
       console.error('Failed to fetch plans from Simify Direct:', error)
       return []
@@ -89,7 +90,7 @@ export class SimifyDirectProvider extends BaseProvider {
         dataInMB: 3000,
         days: 30,
         price: 24.99,
-        currency: 'USD',
+        currency: 'EUR',
         network: {
           type: '4G/5G',
           carriers: ['AT&T', 'T-Mobile'],
@@ -111,7 +112,7 @@ export class SimifyDirectProvider extends BaseProvider {
         dataInMB: 8000,
         days: 30,
         price: 34.99,
-        currency: 'USD',
+        currency: 'EUR',
         network: {
           type: '4G/5G',
           carriers: ['AT&T', 'T-Mobile', 'Verizon'],
