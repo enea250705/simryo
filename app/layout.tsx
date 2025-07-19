@@ -14,10 +14,10 @@ import { Toaster } from "@/components/ui/sonner"
 
 const inter = Inter({ 
   subsets: ["latin"],
-  display: 'swap',
+  display: 'optional',
   variable: '--font-inter',
-  preload: true,
-  fallback: ['system-ui', 'sans-serif'],
+  preload: false,
+  fallback: ['-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
 })
 
 export const viewport: Viewport = {
@@ -362,30 +362,37 @@ export default function RootLayout({
           }}
         />
         
-        {/* Preconnect to external domains */}
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        {/* Only critical preconnects */}
         <link rel="preconnect" href="https://api.simryo.com" />
-        <link rel="preconnect" href="https://www.googletagmanager.com" />
-        <link rel="preconnect" href="https://www.google-analytics.com" />
         
-        {/* DNS Prefetch */}
-        <link rel="dns-prefetch" href="https://www.google-analytics.com" />
-        <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
-        <link rel="dns-prefetch" href="https://connect.facebook.net" />
-        <link rel="dns-prefetch" href="https://static.hotjar.com" />
-        <link rel="dns-prefetch" href="https://www.clarity.ms" />
+        {/* Conditional preconnects based on device */}
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            if (window.innerWidth >= 768) {
+              // Desktop-only preconnects
+              document.head.insertAdjacentHTML('beforeend', '<link rel="preconnect" href="https://www.googletagmanager.com">');
+              document.head.insertAdjacentHTML('beforeend', '<link rel="preconnect" href="https://www.google-analytics.com">');
+              document.head.insertAdjacentHTML('beforeend', '<link rel="dns-prefetch" href="https://connect.facebook.net">');
+              document.head.insertAdjacentHTML('beforeend', '<link rel="dns-prefetch" href="https://static.hotjar.com">');
+              document.head.insertAdjacentHTML('beforeend', '<link rel="dns-prefetch" href="https://www.clarity.ms">');
+            }
+          `
+        }} />
         
-        {/* Critical inline CSS for mobile */}
+        {/* Critical above-the-fold CSS only */}
         <style
           dangerouslySetInnerHTML={{
             __html: `
               @media (max-width: 768px) {
-                * { animation: none !important; transition: none !important; }
-                body { font-family: -apple-system, BlinkMacSystemFont, sans-serif; }
-                .hero-section { background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); padding: 2rem 1rem; }
-                h1 { font-size: 1.875rem !important; font-weight: 700; line-height: 1.1; }
-                .btn { padding: 0.75rem 1.5rem; border-radius: 0.75rem; font-weight: 600; }
+                * { animation: none !important; transition: none !important; will-change: auto !important; }
+                body { font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif; margin: 0; padding: 0; }
+                .hero-section { background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); padding: 2rem 1rem; min-height: 400px; }
+                h1 { font-size: 1.875rem !important; font-weight: 700; line-height: 1.1 !important; margin: 0 0 1rem 0; }
+                .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.75rem 1.5rem; border-radius: 0.75rem; font-weight: 600; text-decoration: none; min-height: 44px; }
+                .container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
+                .text-center { text-align: center; }
+                .mb-4 { margin-bottom: 1rem; }
+                .mb-6 { margin-bottom: 1.5rem; }
               }
             `,
           }}
@@ -456,7 +463,7 @@ export default function RootLayout({
         <ThemeProvider
           attribute="class"
           defaultTheme="light"
-          enableSystem
+          enableSystem={false}
           disableTransitionOnChange
         >
           <ErrorBoundary>
@@ -464,11 +471,9 @@ export default function RootLayout({
             <div className="relative min-h-screen bg-background">
         <Navbar />
               <main id="main-content" className="relative">
-                <PageAnimation>{children}</PageAnimation>
+                {children}
               </main>
         <Footer />
-              <Toaster />
-              <WebVitals />
               <GoogleAnalyticsPageView />
             </div>
           </ErrorBoundary>

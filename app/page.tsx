@@ -282,11 +282,9 @@ export default function HomePage() {
               <p className="text-base text-gray-600 mb-6 max-w-3xl mx-auto leading-relaxed">
                 Premium eSIM plans for global travelers. Instant activation, no contracts.
               </p>
-              <Link href="/plans">
-                <button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 px-6 text-base rounded-xl shadow-lg transition-all duration-200">
-                  Browse Plans →
-                </button>
-              </Link>
+              <a href="/plans" className="w-full inline-flex items-center justify-center bg-gradient-to-r from-blue-600 to-purple-600 text-white font-semibold py-3 px-6 text-base rounded-xl shadow-lg text-decoration-none">
+                Browse Plans →
+              </a>
             </div>
           </div>
         </section>
@@ -614,22 +612,46 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Testimonials Section */}
-      <Suspense fallback={<div className="py-16 sm:py-20 bg-white flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>}>
-        <Testimonials />
-      </Suspense>
+      {/* Testimonials Section - Mobile optimized */}
+      {!isMobile ? (
+        <Suspense fallback={<div className="py-16 sm:py-20 bg-white flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>}>
+          <Testimonials />
+        </Suspense>
+      ) : (
+        <section className="py-8 bg-white">
+          <div className="mx-auto max-w-7xl px-4">
+            <div className="text-center">
+              <h2 className="text-2xl font-bold mb-4">Trusted by Travelers</h2>
+              <p className="text-gray-600">Join thousands of satisfied customers worldwide</p>
+            </div>
+          </div>
+        </section>
+      )}
 
-      {/* Travel Tips Section */}
-      <section className="py-16 sm:py-20 bg-gray-50">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <TravelTips />
-        </div>
-      </section>
+      {/* Travel Tips Section - Mobile optimized */}
+      {!isMobile && (
+        <section className="py-16 sm:py-20 bg-gray-50">
+          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <TravelTips />
+          </div>
+        </section>
+      )}
 
-      {/* FAQ Section */}
-      <Suspense fallback={<div className="py-16 sm:py-20 bg-white flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>}>
-        <FAQSection />
-      </Suspense>
+      {/* FAQ Section - Mobile optimized */}
+      {!isMobile ? (
+        <Suspense fallback={<div className="py-16 sm:py-20 bg-white flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>}>
+          <FAQSection />
+        </Suspense>
+      ) : (
+        <section className="py-8 bg-white">
+          <div className="mx-auto max-w-7xl px-4">
+            <div className="text-center">
+              <h2 className="text-2xl font-bold mb-4">Need Help?</h2>
+              <a href="/faq" className="text-blue-600 font-semibold">View FAQ →</a>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* CTA Section */}
       <section className="py-16 sm:py-20 bg-gradient-to-br from-blue-600 to-purple-600">

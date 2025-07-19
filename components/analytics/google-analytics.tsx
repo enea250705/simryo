@@ -46,29 +46,32 @@ export function GoogleAnalytics() {
   return (
     <>
       <Script
-        id="gtag-config"
-        strategy="afterInteractive"
+        id="gtag-check"
+        strategy="lazyOnload"
         dangerouslySetInnerHTML={{
           __html: `
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', '${GA_TRACKING_ID}', {
-              transport_type: 'beacon',
-              anonymize_ip: true,
-              allow_google_signals: false,
-              allow_ad_personalization_signals: false,
-              send_page_view: true,
-              page_load_time: false,
-              custom_parameter_1: window.innerWidth < 768 ? 'mobile' : 'desktop'
-            });
+            // Only load full GA on desktop for performance
+            if (window.innerWidth >= 768) {
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', '${GA_TRACKING_ID}', {
+                transport_type: 'beacon',
+                anonymize_ip: true,
+                allow_google_signals: false,
+                allow_ad_personalization_signals: false,
+                send_page_view: true,
+                page_load_time: false
+              });
+              
+              // Load GA script for desktop only
+              const script = document.createElement('script');
+              script.async = true;
+              script.src = 'https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}';
+              document.head.appendChild(script);
+            }
           `,
         }}
-      />
-      <Script
-        src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
-        strategy="lazyOnload"
-        async
       />
     </>
   )
