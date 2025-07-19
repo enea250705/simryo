@@ -172,19 +172,27 @@ export abstract class BaseProvider {
     const finalPrice = this.applyMarkup(plan.price);
     if (finalPrice > 80) return true;
     
-    // Exclude plans with unusual durations
-    if (plan.name.includes('180Days') || plan.name.includes('365Days') || plan.name.includes('1Year')) return true;
+    // Exclude plans with unusual durations (check ID for duration indicators)
+    if (plan.id.includes('180Days') || plan.id.includes('365Days') || plan.id.includes('1Year') || 
+        plan.id.includes('_50_180') || plan.id.includes('_1_365')) return true;
     
-    // Exclude specific problematic plan slugs
-    const excludedSlugs = [
+    // Exclude specific problematic plan IDs/slugs
+    const excludedPatterns = [
       'PE_10_30', // Peru 10GB €84.15
       'BO_20_30', // Bolivia 20GB €99
       'PE_20_30', // Peru 20GB €98
       'MU_20_30', // Mauritius 20GB €94
-      'AE_50_180' // UAE 50GB 180Days €105
+      'AE_50_180', // UAE 50GB 180Days €105
+      '_50_180', // Any 50GB 180-day plans
+      '_1_365', // Any 1GB 365-day plans
+      'GL-139_1_365', // Global 139 1GB 365Days
+      'GL-120_1_365' // Global 120 1GB 365Days
     ];
     
-    if (excludedSlugs.includes(plan.slug)) return true;
+    // Check if plan ID contains any excluded pattern
+    for (const pattern of excludedPatterns) {
+      if (plan.id.includes(pattern)) return true;
+    }
     
     return false;
   }

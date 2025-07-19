@@ -332,7 +332,7 @@ export class EsimAccessProvider extends BaseProvider {
       
       // Filter out problematic plans
       if (this.shouldExcludePlan(plan)) {
-        console.warn(`Filtered out problematic plan: ${plan.id} - ${plan.name} (Price: €${plan.price})`)
+        console.warn(`Filtered out problematic plan: ${plan.id} - ${plan.country} ${plan.data} (Price: €${plan.price})`)
         return false
       }
       
