@@ -192,18 +192,21 @@ const nextConfig = {
       config.optimization.usedExports = true
       config.optimization.sideEffects = false
       
-      // Remove console logs in production
-      config.optimization.minimizer = config.optimization.minimizer || []
-      config.optimization.minimizer.push(
-        new webpack.optimize.TerserPlugin({
-          terserOptions: {
-            compress: {
-              drop_console: true,
-              drop_debugger: true,
-            },
-          },
+      // Remove console logs in production (simplified approach)
+      if (config.optimization.minimizer) {
+        config.optimization.minimizer.forEach((minimizer) => {
+          if (minimizer.constructor.name === 'TerserPlugin') {
+            minimizer.options.terserOptions = {
+              ...minimizer.options.terserOptions,
+              compress: {
+                ...minimizer.options.terserOptions?.compress,
+                drop_console: true,
+                drop_debugger: true,
+              },
+            }
+          }
         })
-      )
+      }
     }
     
     // Add bundle analyzer in development
