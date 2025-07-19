@@ -120,19 +120,27 @@ export function Navbar() {
   }, [])
 
   const updateCartCount = () => {
-    const cart = JSON.parse(localStorage.getItem('cart') || '[]')
-    const count = cart.reduce((acc: number, item: CartItem) => acc + item.quantity, 0)
-    setCartCount(count)
+    try {
+      const cart = JSON.parse(localStorage.getItem('cart') || '[]')
+      const count = cart.reduce((acc: number, item: CartItem) => acc + (item.quantity || 0), 0)
+      setCartCount(count)
+    } catch (error) {
+      console.warn('Error updating cart count:', error)
+      setCartCount(0)
+    }
   }
   
   useEffect(() => {
     updateCartCount()
     window.addEventListener('cart-updated', updateCartCount)
     
+    // Debug: log cart count
+    console.log('Cart count:', cartCount)
+    
     return () => {
       window.removeEventListener('cart-updated', updateCartCount)
     }
-  }, [])
+  }, [cartCount])
 
 
   const navbarClasses = cn(
@@ -302,11 +310,11 @@ export function Navbar() {
             {/* Cart */}
             <Link href="/cart" className="relative p-2 text-gray-700 hover:text-blue-600 transition-colors">
               <ShoppingCart className="h-6 w-6" />
-              {cartCount > 0 && (
+              {cartCount > 0 ? (
                 <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-red-500 hover:bg-red-600 text-white text-xs">
                   {cartCount}
                 </Badge>
-              )}
+              ) : null}
             </Link>
 
 
@@ -365,11 +373,11 @@ export function Navbar() {
             <div className="flex items-center space-x-2">
               <Link href="/cart" className="relative p-2 text-gray-700 hover:text-blue-600">
                 <ShoppingCart className="h-6 w-6" />
-                {cartCount > 0 && (
+                {cartCount > 0 ? (
                   <Badge className="absolute -top-1 -right-1 h-5 w-5 flex items-center justify-center p-0 bg-red-500 text-white text-xs">
                     {cartCount}
                   </Badge>
-                )}
+                ) : null}
               </Link>
 
               <Link href="/plans">
