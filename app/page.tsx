@@ -198,14 +198,30 @@ export default function HomePage() {
   const [isMobile, setIsMobile] = useState(false)
   const router = useRouter()
 
-  // Mobile detection
+  // Mobile detection - optimized to prevent reflow
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768)
+      // Use requestAnimationFrame to batch layout reads
+      requestAnimationFrame(() => {
+        setIsMobile(window.innerWidth < 768)
+      })
     }
+    
+    // Initial check
     checkMobile()
-    window.addEventListener('resize', checkMobile)
-    return () => window.removeEventListener('resize', checkMobile)
+    
+    // Debounced resize listener to prevent excessive reflows
+    let resizeTimeout: NodeJS.Timeout
+    const handleResize = () => {
+      clearTimeout(resizeTimeout)
+      resizeTimeout = setTimeout(checkMobile, 100)
+    }
+    
+    window.addEventListener('resize', handleResize, { passive: true })
+    return () => {
+      window.removeEventListener('resize', handleResize)
+      clearTimeout(resizeTimeout)
+    }
   }, [])
 
   useEffect(() => {

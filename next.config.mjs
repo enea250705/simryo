@@ -202,15 +202,19 @@ const nextConfig = {
     
     // Enhanced optimization for production with mobile focus - only for client-side
     if (!dev && !isServer) {
-      // Mobile-optimized bundle splitting
+      // Mobile-optimized bundle splitting with better tree shaking
       config.optimization = {
         ...config.optimization,
         usedExports: true,
         sideEffects: false,
+        // Enable tree shaking for better unused code elimination
+        moduleIds: 'deterministic',
+        chunkIds: 'deterministic',
         splitChunks: {
           chunks: 'all',
-          maxInitialRequests: 25,
-          minSize: 20000,
+          maxInitialRequests: 30,
+          minSize: 15000,
+          maxSize: 100000, // Limit chunk size for better mobile loading
           cacheGroups: {
             default: {
               minChunks: 1,
@@ -222,6 +226,7 @@ const nextConfig = {
               name: 'vendors',
               priority: -10,
               reuseExistingChunk: true,
+              chunks: 'all',
             },
             // Separate large libraries for better caching
             radix: {
@@ -229,18 +234,21 @@ const nextConfig = {
               name: 'radix',
               priority: 20,
               reuseExistingChunk: true,
+              chunks: 'all',
             },
             lucide: {
               test: /[\\/]node_modules[\\/]lucide-react[\\/]/,
               name: 'lucide',
               priority: 15,
               reuseExistingChunk: true,
+              chunks: 'all',
             },
             stripe: {
               test: /[\\/]node_modules[\\/]@stripe[\\/]/,
               name: 'stripe',
               priority: 10,
               reuseExistingChunk: true,
+              chunks: 'all',
             },
             // Separate React for better caching
             react: {
@@ -248,12 +256,29 @@ const nextConfig = {
               name: 'react',
               priority: 25,
               reuseExistingChunk: true,
+              chunks: 'all',
+            },
+            // Separate Next.js for better caching
+            next: {
+              test: /[\\/]node_modules[\\/]next[\\/]/,
+              name: 'next',
+              priority: 30,
+              reuseExistingChunk: true,
+              chunks: 'all',
+            },
+            // Separate common utilities
+            utils: {
+              test: /[\\/]node_modules[\\/](clsx|class-variance-authority|tailwind-merge)[\\/]/,
+              name: 'utils',
+              priority: 5,
+              reuseExistingChunk: true,
+              chunks: 'all',
             },
           },
         },
       }
       
-      // Remove console logs in production
+      // Remove console logs and optimize for production
       if (config.optimization.minimizer) {
         config.optimization.minimizer.forEach((minimizer) => {
           if (minimizer.constructor.name === 'TerserPlugin') {
@@ -273,10 +298,21 @@ const nextConfig = {
                 unsafe_proto: true,
                 unsafe_regexp: true,
                 unsafe_undefined: true,
+                // Remove unused code
+                dead_code: true,
+                unused: true,
+                toplevel: true,
               },
               mangle: {
                 safari10: true,
+                // Mangle property names for better compression
+                properties: {
+                  regex: /^_/,
+                },
               },
+              // Remove legacy polyfills for modern browsers
+              ecma: 2020,
+              module: true,
             }
           }
         })

@@ -1,6 +1,7 @@
 'use client'
 
 import Script from 'next/script'
+import { useEffect } from 'react'
 
 const GA_TRACKING_ID = process.env.NEXT_PUBLIC_GA_ID || 'G-XTN13B7FTE'
 
@@ -34,12 +35,12 @@ export function GoogleAnalytics() {
     <>
       <Script
         src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
-        strategy="afterInteractive"
+        strategy="lazyOnload"
         defer
       />
       <Script
         id="google-analytics"
-        strategy="afterInteractive"
+        strategy="lazyOnload"
         defer
         dangerouslySetInnerHTML={{
           __html: `
@@ -49,7 +50,12 @@ export function GoogleAnalytics() {
             gtag('config', '${GA_TRACKING_ID}', {
               page_title: document.title,
               page_location: window.location.href,
-              send_page_view: false
+              send_page_view: false,
+              // Mobile optimization
+              transport_type: 'beacon',
+              anonymize_ip: true,
+              allow_google_signals: false,
+              allow_ad_personalization_signals: false
             });
           `,
         }}
@@ -59,24 +65,25 @@ export function GoogleAnalytics() {
 }
 
 export function GoogleAnalyticsPageView() {
-  return (
-    <Script
-      id="google-analytics-pageview"
-      strategy="afterInteractive"
-      defer
-      dangerouslySetInnerHTML={{
-        __html: `
-          if (typeof gtag !== 'undefined') {
-            gtag('config', '${GA_TRACKING_ID}', {
-              page_title: document.title,
-              page_location: window.location.href,
-              send_page_view: true
-            });
-          }
-        `,
-      }}
-    />
-  )
+  useEffect(() => {
+    // Only send pageview after user interaction to improve performance
+    const handlePageView = () => {
+      if (typeof window !== 'undefined' && window.gtag) {
+        window.gtag('config', GA_TRACKING_ID, {
+          page_title: document.title,
+          page_location: window.location.href,
+          send_page_view: true
+        });
+      }
+    };
+
+    // Send pageview after a small delay to prioritize content loading
+    const timer = setTimeout(handlePageView, 1000);
+    
+    return () => clearTimeout(timer);
+  }, []);
+
+  return null;
 }
 
 // Declare gtag function for TypeScript
