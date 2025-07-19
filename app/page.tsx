@@ -392,13 +392,13 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
-              <div key={index} className="text-center group" role="img" aria-label={`${stat.value} ${stat.label}: ${stat.description}`}>
+              <div key={index} className="text-center group min-h-[200px] flex flex-col justify-center" role="img" aria-label={`${stat.value} ${stat.label}: ${stat.description}`}>
                 <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-2xl mb-4 group-hover:bg-blue-200 transition-colors">
                   <stat.icon className="h-8 w-8 text-blue-600" aria-hidden="true" />
                 </div>
-                <div className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2">{stat.value}</div>
-                <div className="text-lg font-semibold text-gray-700 mb-1">{stat.label}</div>
-                <div className="text-sm text-gray-500">{stat.description}</div>
+                <div className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2 leading-none">{stat.value}</div>
+                <div className="text-lg font-semibold text-gray-700 mb-1 leading-tight">{stat.label}</div>
+                <div className="text-sm text-gray-500 leading-relaxed">{stat.description}</div>
               </div>
             ))}
           </div>

@@ -219,6 +219,58 @@ export function CriticalCSS() {
             .shadow-lg {
               box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
             }
+            
+            /* Prevent layout shift with fixed dimensions */
+            .min-h-\\[200px\\] {
+              min-height: 200px;
+            }
+            
+            /* Optimize font loading for mobile */
+            h1, h2, h3, h4, h5, h6 {
+              font-display: swap;
+            }
+            
+            /* Reduce animation complexity on mobile */
+            .group-hover\\:scale-105 {
+              transform: none;
+            }
+            
+            /* Optimize grid layout for mobile */
+            .grid {
+              display: grid;
+              grid-template-columns: repeat(2, 1fr);
+            }
+            
+            @media (min-width: 1024px) {
+              .grid {
+                grid-template-columns: repeat(4, 1fr);
+              }
+            }
+          }
+          
+          /* Critical mobile optimizations */
+          @media (max-width: 480px) {
+            /* Further reduce mobile complexity */
+            .text-4xl {
+              font-size: 1.875rem;
+              line-height: 2.25rem;
+            }
+            
+            .text-3xl {
+              font-size: 1.5rem;
+              line-height: 2rem;
+            }
+            
+            /* Optimize spacing for mobile */
+            .py-16 {
+              padding-top: 3rem;
+              padding-bottom: 3rem;
+            }
+            
+            .py-20 {
+              padding-top: 4rem;
+              padding-bottom: 4rem;
+            }
           }
         `
       }}

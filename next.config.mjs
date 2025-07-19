@@ -214,7 +214,7 @@ const nextConfig = {
           chunks: 'all',
           maxInitialRequests: 30,
           minSize: 15000,
-          maxSize: 100000, // Limit chunk size for better mobile loading
+          maxSize: 80000, // Smaller chunks for mobile
           cacheGroups: {
             default: {
               minChunks: 1,
@@ -289,7 +289,7 @@ const nextConfig = {
                 drop_console: true,
                 drop_debugger: true,
                 // Mobile-optimized compression
-                passes: 2,
+                passes: 3,
                 pure_getters: true,
                 unsafe: true,
                 unsafe_comps: true,
@@ -302,6 +302,10 @@ const nextConfig = {
                 dead_code: true,
                 unused: true,
                 toplevel: true,
+                // Remove legacy polyfills
+                reduce_vars: true,
+                collapse_vars: true,
+                hoist_vars: true,
               },
               mangle: {
                 safari10: true,
@@ -311,8 +315,16 @@ const nextConfig = {
                 },
               },
               // Remove legacy polyfills for modern browsers
-              ecma: 2020,
+              ecma: 2022,
               module: true,
+              // Target modern browsers only
+              targets: {
+                browsers: [
+                  'last 2 versions',
+                  'not dead',
+                  'not ie 11'
+                ]
+              }
             }
           }
         })
