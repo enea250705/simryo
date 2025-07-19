@@ -43,33 +43,32 @@ declare global {
 }
 
 export function GoogleAnalytics() {
-  // Disable GA on mobile for maximum performance
-  if (typeof window !== 'undefined' && window.innerWidth < 768) {
-    return null;
-  }
-  
   return (
     <>
       <Script
-        src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
-        strategy="lazyOnload"
-        onLoad={() => {
-          if (typeof window !== 'undefined') {
+        id="gtag-config"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{
+          __html: `
             window.dataLayer = window.dataLayer || [];
-            function gtag(...args: any[]) {
-              window.dataLayer.push(arguments);
-            }
-            window.gtag = gtag;
+            function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', GA_TRACKING_ID, {
+            gtag('config', '${GA_TRACKING_ID}', {
               transport_type: 'beacon',
               anonymize_ip: true,
               allow_google_signals: false,
               allow_ad_personalization_signals: false,
-              send_page_view: false
+              send_page_view: true,
+              page_load_time: false,
+              custom_parameter_1: window.innerWidth < 768 ? 'mobile' : 'desktop'
             });
-          }
+          `,
         }}
+      />
+      <Script
+        src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
+        strategy="lazyOnload"
+        async
       />
     </>
   )
@@ -77,21 +76,34 @@ export function GoogleAnalytics() {
 
 export function GoogleAnalyticsPageView() {
   useEffect(() => {
-    // Only send pageview after user interaction to improve performance
-    const handlePageView = () => {
-      if (typeof window !== 'undefined' && window.gtag) {
-        window.gtag('config', GA_TRACKING_ID, {
-          page_title: document.title,
-          page_location: window.location.href,
-          send_page_view: true
-        });
-      }
-    };
-
-    // Send pageview after a small delay to prioritize content loading
-    const timer = setTimeout(handlePageView, 1000);
+    // Lightweight tracking for mobile, full tracking for desktop
+    const isMobile = window.innerWidth < 768;
     
-    return () => clearTimeout(timer);
+    if (isMobile) {
+      // Ultra-lightweight tracking for mobile using Image beacon
+      const trackPageView = () => {
+        const img = new Image();
+        img.src = `https://www.google-analytics.com/collect?v=1&tid=${GA_TRACKING_ID}&cid=${Date.now()}&t=pageview&dp=${encodeURIComponent(window.location.pathname)}&dt=${encodeURIComponent(document.title)}`;
+      };
+      
+      // Delay tracking until after LCP
+      const timer = setTimeout(trackPageView, 2000);
+      return () => clearTimeout(timer);
+    } else {
+      // Full GA for desktop
+      const handlePageView = () => {
+        if (typeof window !== 'undefined' && window.gtag) {
+          window.gtag('config', GA_TRACKING_ID, {
+            page_title: document.title,
+            page_location: window.location.href,
+            send_page_view: true
+          });
+        }
+      };
+
+      const timer = setTimeout(handlePageView, 1000);
+      return () => clearTimeout(timer);
+    }
   }, []);
 
   return null;

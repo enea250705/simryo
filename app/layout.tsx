@@ -475,12 +475,13 @@ export default function RootLayout({
         </ThemeProvider>
         
         
-        {/* Disable tracking scripts on mobile for performance */}
+        {/* Performance-optimized tracking */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              if (window.innerWidth >= 768) {
-                // Only load tracking on desktop
+              // Delay all tracking until after page load for mobile performance
+              const isMobile = window.innerWidth < 768;
+              const loadTracking = () => {
                 ${process.env.NEXT_PUBLIC_CLARITY_PROJECT_ID ? `
                   (function(c,l,a,r,i,t,y){
                     c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -490,15 +491,24 @@ export default function RootLayout({
                 ` : ''}
                 
                 ${process.env.NEXT_PUBLIC_HOTJAR_ID ? `
-                  (function(h,o,t,j,a,r){
-                    h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-                    h._hjSettings={hjid:${process.env.NEXT_PUBLIC_HOTJAR_ID},hjsv:6};
-                    a=o.getElementsByTagName('head')[0];
-                    r=o.createElement('script');r.async=1;
-                    r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
-                    a.appendChild(r);
-                  })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+                  if (!isMobile) {
+                    (function(h,o,t,j,a,r){
+                      h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+                      h._hjSettings={hjid:${process.env.NEXT_PUBLIC_HOTJAR_ID},hjsv:6};
+                      a=o.getElementsByTagName('head')[0];
+                      r=o.createElement('script');r.async=1;
+                      r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+                      a.appendChild(r);
+                    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+                  }
                 ` : ''}
+              };
+              
+              // Load immediately on desktop, delay on mobile
+              if (isMobile) {
+                setTimeout(loadTracking, 3000);
+              } else {
+                loadTracking();
               }
             `,
           }}
