@@ -127,12 +127,40 @@ export function Navbar() {
   const router = useRouter()
   const isHomePage = pathname === "/"
 
-  // Handle scroll effect
+  // Handle keyboard navigation
   useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 10)
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && isOpen) {
+        setIsOpen(false)
+      }
     }
-    window.addEventListener('scroll', handleScroll)
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleKeyDown)
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = 'unset'
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown)
+      document.body.style.overflow = 'unset'
+    }
+  }, [isOpen])
+
+  // Handle scroll effect with throttling for better performance
+  useEffect(() => {
+    let ticking = false
+    const handleScroll = () => {
+      if (!ticking) {
+        requestAnimationFrame(() => {
+          setIsScrolled(window.scrollY > 10)
+          ticking = false
+        })
+        ticking = true
+      }
+    }
+    window.addEventListener('scroll', handleScroll, { passive: true })
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
@@ -175,6 +203,11 @@ export function Navbar() {
                   height={32}
                   className="h-8 w-8 object-contain group-hover:scale-105 transition-transform"
                   unoptimized={true}
+                  onError={(e) => {
+                    console.warn('Desktop logo failed to load, using fallback');
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                  }}
                 />
                 <div className="absolute -top-1 -right-1 w-3 h-3 bg-orange-500 rounded-full animate-pulse" />
               </div>
@@ -346,6 +379,7 @@ export function Navbar() {
             <Button
               variant="ghost"
               size="sm"
+              id="mobile-menu-button"
               onClick={() => setIsOpen(!isOpen)}
               className="text-gray-700 hover:text-blue-600 min-h-[44px] min-w-[44px]"
               aria-label={isOpen ? "Close menu" : "Open menu"}
@@ -365,8 +399,9 @@ export function Navbar() {
                   height={28}
                   className="h-7 w-7 object-contain"
                   onError={(e) => {
-                    console.error('Mobile logo failed to load:', e);
-                    (e.target as HTMLImageElement).style.display = 'none';
+                    console.warn('Logo failed to load, using fallback');
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
                   }}
                 />
                 <span className="text-lg font-bold text-gray-900">SIMRYO</span>
@@ -400,7 +435,7 @@ export function Navbar() {
           {isOpen && (
             <div 
               id="mobile-menu"
-              className="absolute top-16 left-0 right-0 bg-white border-b border-gray-200 shadow-lg max-h-[calc(100vh-4rem)] overflow-y-auto"
+              className="absolute top-16 left-0 right-0 bg-white border-b border-gray-200 shadow-lg max-h-[calc(100vh-4rem)] overflow-y-auto z-40 animate-in slide-in-from-top-1 duration-200"
               role="menu"
               aria-labelledby="mobile-menu-button"
             >
