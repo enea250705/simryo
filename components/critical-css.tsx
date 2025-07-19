@@ -3,7 +3,7 @@ export function CriticalCSS() {
     <style
       dangerouslySetInnerHTML={{
         __html: `
-          /* Critical CSS for above-the-fold content */
+          /* Critical CSS for above-the-fold content - Optimized */
           .skip-link {
             position: absolute;
             top: -40px;
@@ -64,20 +64,6 @@ export function CriticalCSS() {
             box-shadow: 0 8px 25px rgba(0, 102, 204, 0.3);
           }
           
-          /* Critical card styles */
-          .professional-card {
-            background: white;
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-            transition: all 0.3s ease;
-          }
-          
-          .professional-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
-          }
-          
           /* Critical typography */
           h1, h2, h3, h4, h5, h6 {
             font-weight: 600;
@@ -107,11 +93,10 @@ export function CriticalCSS() {
             }
           }
           
-          /* Critical Tailwind utilities */
+          /* Essential Tailwind utilities only */
           .flex { display: flex; }
           .hidden { display: none; }
           .block { display: block; }
-          .inline-block { display: inline-block; }
           .grid { display: grid; }
           .items-center { align-items: center; }
           .justify-center { justify-content: center; }
@@ -122,7 +107,6 @@ export function CriticalCSS() {
           .bg-white { background-color: white; }
           .bg-blue-600 { background-color: #2563eb; }
           .rounded-lg { border-radius: 0.5rem; }
-          .rounded-xl { border-radius: 0.75rem; }
           .px-4 { padding-left: 1rem; padding-right: 1rem; }
           .py-2 { padding-top: 0.5rem; padding-bottom: 0.5rem; }
           .py-4 { padding-top: 1rem; padding-bottom: 1rem; }
@@ -162,18 +146,6 @@ export function CriticalCSS() {
           .leading-relaxed { line-height: 1.625; }
           .antialiased { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
           .shadow-lg { box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); }
-          .shadow-xl { box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
-          .hover\\:shadow-xl:hover { box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04); }
-          .hover\\:scale-105:hover { transform: scale(1.05); }
-          .hover\\:-translate-y-1:hover { transform: translateY(-0.25rem); }
-          .group:hover .group-hover\\:scale-110 { transform: scale(1.1); }
-          .group:hover .group-hover\\:animate-pulse { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-          
-          /* Critical animations */
-          @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: .5; }
-          }
           
           /* Critical responsive utilities */
           @media (min-width: 640px) {
@@ -198,12 +170,12 @@ export function CriticalCSS() {
           @media (min-width: 1024px) {
             .lg\\:flex { display: flex; }
             .lg\\:hidden { display: none; }
-            .lg\\:grid-cols-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-            .lg\\:px-8 { padding-left: 2rem; padding-right: 2rem; }
-            .lg\\:text-5xl { font-size: 3rem; line-height: 1; }
             .lg\\:text-6xl { font-size: 3.75rem; line-height: 1; }
+            .lg\\:text-7xl { font-size: 4.5rem; line-height: 1; }
+            .lg\\:py-24 { padding-top: 6rem; padding-bottom: 6rem; }
+            .lg\\:px-12 { padding-left: 3rem; padding-right: 3rem; }
           }
-        `,
+        `
       }}
     />
   )

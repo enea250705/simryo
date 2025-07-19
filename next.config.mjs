@@ -10,37 +10,37 @@ const require = createRequire(import.meta.url)
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Temporarily disable experimental features to fix build
-  // experimental: {
-  //   optimizePackageImports: [
-  //     '@radix-ui/react-accordion',
-  //     '@radix-ui/react-alert-dialog',
-  //     '@radix-ui/react-avatar',
-  //     '@radix-ui/react-dialog',
-  //     '@radix-ui/react-dropdown-menu',
-  //     '@radix-ui/react-label',
-  //     '@radix-ui/react-select',
-  //     '@radix-ui/react-separator',
-  //     '@radix-ui/react-slot',
-  //     '@radix-ui/react-tabs',
-  //     '@radix-ui/react-toast',
-  //     'lucide-react',
-  //     '@stripe/react-stripe-js',
-  //     'sonner'
-  //   ],
-  //   // Optimize CSS loading for better SEO performance
-  //   optimizeCss: true,
-  //   // Enable modern JavaScript features
-  //   esmExternals: 'loose',
-  //   // Optimize bundle splitting
-  //   bundlePagesRouterDependencies: true,
-  //   // Server-side optimizations
-  //   serverComponentsExternalPackages: ['@prisma/client'],
-  //   // Enable streaming SSR
-  //   serverActions: {
-  //     bodySizeLimit: '2mb',
-  //   },
-  // },
+  // Performance optimizations
+  experimental: {
+    optimizePackageImports: [
+      '@radix-ui/react-accordion',
+      '@radix-ui/react-alert-dialog',
+      '@radix-ui/react-avatar',
+      '@radix-ui/react-dialog',
+      '@radix-ui/react-dropdown-menu',
+      '@radix-ui/react-label',
+      '@radix-ui/react-select',
+      '@radix-ui/react-separator',
+      '@radix-ui/react-slot',
+      '@radix-ui/react-tabs',
+      '@radix-ui/react-toast',
+      'lucide-react',
+      '@stripe/react-stripe-js',
+      'sonner'
+    ],
+    // Optimize CSS loading for better SEO performance
+    optimizeCss: true,
+    // Enable modern JavaScript features
+    esmExternals: 'loose',
+    // Optimize bundle splitting
+    bundlePagesRouterDependencies: true,
+    // Server-side optimizations
+    serverComponentsExternalPackages: ['@prisma/client'],
+    // Enable streaming SSR
+    serverActions: {
+      bodySizeLimit: '2mb',
+    },
+  },
   
   // Moved from experimental as per Next.js warnings
   serverExternalPackages: ['@prisma/client', 'bcryptjs', '@stripe/stripe-js'],
@@ -142,6 +142,35 @@ const nextConfig = {
             value: 'public, max-age=3600, stale-while-revalidate=86400'
           }
         ]
+      },
+      // Optimize image caching
+      {
+        source: '/simryologo.png',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable'
+          }
+        ]
+      },
+      {
+        source: '/_next/image(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable'
+          }
+        ]
+      },
+      // Optimize CSS caching
+      {
+        source: '/_next/static/css/(.*)',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable'
+          }
+        ]
       }
     ]
   },
@@ -167,13 +196,44 @@ const nextConfig = {
       }
     }
     
-    // Simplified optimization for production
+    // Optimize bundle size for production
     if (!dev) {
-      // Basic optimization without complex splitting
+      // Enhanced optimization with modern browser targeting
       config.optimization = {
         ...config.optimization,
         usedExports: true,
         sideEffects: false,
+        splitChunks: {
+          chunks: 'all',
+          cacheGroups: {
+            vendor: {
+              test: /[\\/]node_modules[\\/]/,
+              name: 'vendors',
+              priority: 10,
+              reuseExistingChunk: true,
+            },
+            common: {
+              name: 'common',
+              minChunks: 2,
+              priority: 5,
+              reuseExistingChunk: true,
+            },
+            // Separate Radix UI components
+            radix: {
+              test: /[\\/]node_modules[\\/]@radix-ui[\\/]/,
+              name: 'radix',
+              priority: 20,
+              reuseExistingChunk: true,
+            },
+            // Separate Lucide icons
+            lucide: {
+              test: /[\\/]node_modules[\\/]lucide-react[\\/]/,
+              name: 'lucide',
+              priority: 15,
+              reuseExistingChunk: true,
+            },
+          },
+        },
       }
       
       // Remove console logs in production
@@ -186,7 +246,11 @@ const nextConfig = {
                 ...minimizer.options.terserOptions?.compress,
                 drop_console: true,
                 drop_debugger: true,
+                // Target modern browsers to reduce polyfills
+                ecma: 2020,
               },
+              // Target modern browsers
+              ecma: 2020,
             }
           }
         })
