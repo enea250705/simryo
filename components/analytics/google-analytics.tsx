@@ -46,30 +46,25 @@ export function GoogleAnalytics() {
   return (
     <>
       <Script
-        id="gtag-check"
+        src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
+        strategy="lazyOnload"
+        defer
+      />
+      <Script
+        id="gtag-init"
         strategy="lazyOnload"
         dangerouslySetInnerHTML={{
           __html: `
-            // Only load full GA on desktop for performance
-            if (window.innerWidth >= 768) {
-              window.dataLayer = window.dataLayer || [];
-              function gtag(){dataLayer.push(arguments);}
-              gtag('js', new Date());
-              gtag('config', '${GA_TRACKING_ID}', {
-                transport_type: 'beacon',
-                anonymize_ip: true,
-                allow_google_signals: false,
-                allow_ad_personalization_signals: false,
-                send_page_view: true,
-                page_load_time: false
-              });
-              
-              // Load GA script for desktop only
-              const script = document.createElement('script');
-              script.async = true;
-              script.src = 'https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}';
-              document.head.appendChild(script);
-            }
+            window.dataLayer = window.dataLayer || [];
+            function gtag(){dataLayer.push(arguments);}
+            gtag('js', new Date());
+            gtag('config', '${GA_TRACKING_ID}', {
+              transport_type: 'beacon',
+              anonymize_ip: true,
+              allow_google_signals: false,
+              allow_ad_personalization_signals: false,
+              send_page_view: false
+            });
           `,
         }}
       />
@@ -79,34 +74,18 @@ export function GoogleAnalytics() {
 
 export function GoogleAnalyticsPageView() {
   useEffect(() => {
-    // Lightweight tracking for mobile, full tracking for desktop
-    const isMobile = window.innerWidth < 768;
-    
-    if (isMobile) {
-      // Ultra-lightweight tracking for mobile using Image beacon
-      const trackPageView = () => {
-        const img = new Image();
-        img.src = `https://www.google-analytics.com/collect?v=1&tid=${GA_TRACKING_ID}&cid=${Date.now()}&t=pageview&dp=${encodeURIComponent(window.location.pathname)}&dt=${encodeURIComponent(document.title)}`;
-      };
-      
-      // Delay tracking until after LCP
-      const timer = setTimeout(trackPageView, 2000);
-      return () => clearTimeout(timer);
-    } else {
-      // Full GA for desktop
-      const handlePageView = () => {
-        if (typeof window !== 'undefined' && window.gtag) {
-          window.gtag('config', GA_TRACKING_ID, {
-            page_title: document.title,
-            page_location: window.location.href,
-            send_page_view: true
-          });
-        }
-      };
+    const handlePageView = () => {
+      if (typeof window !== 'undefined' && window.gtag) {
+        window.gtag('config', GA_TRACKING_ID, {
+          page_title: document.title,
+          page_location: window.location.href,
+          send_page_view: true
+        });
+      }
+    };
 
-      const timer = setTimeout(handlePageView, 1000);
-      return () => clearTimeout(timer);
-    }
+    const timer = setTimeout(handlePageView, 1000);
+    return () => clearTimeout(timer);
   }, []);
 
   return null;
