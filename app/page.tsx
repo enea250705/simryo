@@ -517,10 +517,10 @@ export default function HomePage() {
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="text-2xl font-bold text-gray-900">
-                          ${plan.price}
+                          €{plan.price}
                           {plan.promoApplied && (
                             <span className="text-sm text-gray-500 line-through ml-2">
-                              ${plan.promoApplied.originalPrice}
+                              €{plan.promoApplied.originalPrice}
                             </span>
                           )}
                         </div>
@@ -531,7 +531,7 @@ export default function HomePage() {
                       <div className="text-right">
                         <div className="text-sm text-gray-500">Per GB</div>
                         <div className="text-lg font-semibold text-gray-900">
-                          ${(plan.price / (plan.dataInMB / 1024)).toFixed(2)}
+                          €{(plan.price / (plan.dataInMB / 1024)).toFixed(2)}
                         </div>
                       </div>
                     </div>
