@@ -166,7 +166,8 @@ export function Navbar() {
                   width={80}
                   height={80}
                   className="h-20 w-20 object-contain group-hover:scale-105 transition-transform"
-                  unoptimized={true}
+                  priority={true}
+                  fetchPriority="high"
                   onError={(e) => {
                       const target = e.target as HTMLImageElement;
                       target.style.display = 'none';

@@ -31,6 +31,10 @@ const nextConfig = {
     ],
     // Optimize CSS loading for better SEO performance
     optimizeCss: true,
+    // Enable modern JavaScript features
+    esmExternals: 'loose',
+    // Optimize bundle splitting
+    bundlePagesRouterDependencies: true,
   },
   
   // Moved from experimental as per Next.js warnings
@@ -134,9 +138,6 @@ const nextConfig = {
   
   // Webpack optimizations
   webpack: (config, { buildId, dev, isServer, defaultLoaders, webpack }) => {
-    // Return early to avoid any modifications that might break the build
-    return config
-    
     // Optimize bundle size only in production
     if (!dev) {
       config.optimization = {
@@ -158,9 +159,27 @@ const nextConfig = {
               priority: 5,
               reuseExistingChunk: true,
             },
+            // Separate Radix UI components
+            radix: {
+              test: /[\\/]node_modules[\\/]@radix-ui[\\/]/,
+              name: 'radix',
+              priority: 20,
+              reuseExistingChunk: true,
+            },
+            // Separate Lucide icons
+            lucide: {
+              test: /[\\/]node_modules[\\/]lucide-react[\\/]/,
+              name: 'lucide',
+              priority: 15,
+              reuseExistingChunk: true,
+            },
           },
         },
       }
+      
+      // Enable tree shaking
+      config.optimization.usedExports = true
+      config.optimization.sideEffects = false
     }
     
     // Add bundle analyzer in development
