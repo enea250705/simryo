@@ -10,37 +10,37 @@ const require = createRequire(import.meta.url)
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Performance optimizations
-  experimental: {
-    optimizePackageImports: [
-      '@radix-ui/react-accordion',
-      '@radix-ui/react-alert-dialog',
-      '@radix-ui/react-avatar',
-      '@radix-ui/react-dialog',
-      '@radix-ui/react-dropdown-menu',
-      '@radix-ui/react-label',
-      '@radix-ui/react-select',
-      '@radix-ui/react-separator',
-      '@radix-ui/react-slot',
-      '@radix-ui/react-tabs',
-      '@radix-ui/react-toast',
-      'lucide-react',
-      '@stripe/react-stripe-js',
-      'sonner'
-    ],
-    // Optimize CSS loading for better SEO performance
-    optimizeCss: true,
-    // Enable modern JavaScript features
-    esmExternals: 'loose',
-    // Optimize bundle splitting
-    bundlePagesRouterDependencies: true,
-    // Server-side optimizations
-    serverComponentsExternalPackages: ['@prisma/client'],
-    // Enable streaming SSR
-    serverActions: {
-      bodySizeLimit: '2mb',
-    },
-  },
+  // Temporarily disable experimental features to fix build
+  // experimental: {
+  //   optimizePackageImports: [
+  //     '@radix-ui/react-accordion',
+  //     '@radix-ui/react-alert-dialog',
+  //     '@radix-ui/react-avatar',
+  //     '@radix-ui/react-dialog',
+  //     '@radix-ui/react-dropdown-menu',
+  //     '@radix-ui/react-label',
+  //     '@radix-ui/react-select',
+  //     '@radix-ui/react-separator',
+  //     '@radix-ui/react-slot',
+  //     '@radix-ui/react-tabs',
+  //     '@radix-ui/react-toast',
+  //     'lucide-react',
+  //     '@stripe/react-stripe-js',
+  //     'sonner'
+  //   ],
+  //   // Optimize CSS loading for better SEO performance
+  //   optimizeCss: true,
+  //   // Enable modern JavaScript features
+  //   esmExternals: 'loose',
+  //   // Optimize bundle splitting
+  //   bundlePagesRouterDependencies: true,
+  //   // Server-side optimizations
+  //   serverComponentsExternalPackages: ['@prisma/client'],
+  //   // Enable streaming SSR
+  //   serverActions: {
+  //     bodySizeLimit: '2mb',
+  //   },
+  // },
   
   // Moved from experimental as per Next.js warnings
   serverExternalPackages: ['@prisma/client', 'bcryptjs', '@stripe/stripe-js'],
@@ -167,50 +167,16 @@ const nextConfig = {
       }
     }
     
-    // Optimize bundle size only in production
+    // Simplified optimization for production
     if (!dev) {
+      // Basic optimization without complex splitting
       config.optimization = {
         ...config.optimization,
         usedExports: true,
         sideEffects: false,
-        splitChunks: {
-          chunks: 'all',
-          cacheGroups: {
-            vendor: {
-              test: /[\\/]node_modules[\\/]/,
-              name: 'vendors',
-              priority: 10,
-              reuseExistingChunk: true,
-            },
-            common: {
-              name: 'common',
-              minChunks: 2,
-              priority: 5,
-              reuseExistingChunk: true,
-            },
-            // Separate Radix UI components
-            radix: {
-              test: /[\\/]node_modules[\\/]@radix-ui[\\/]/,
-              name: 'radix',
-              priority: 20,
-              reuseExistingChunk: true,
-            },
-            // Separate Lucide icons
-            lucide: {
-              test: /[\\/]node_modules[\\/]lucide-react[\\/]/,
-              name: 'lucide',
-              priority: 15,
-              reuseExistingChunk: true,
-            },
-          },
-        },
       }
       
-      // Enable tree shaking
-      config.optimization.usedExports = true
-      config.optimization.sideEffects = false
-      
-      // Remove console logs in production (simplified approach)
+      // Remove console logs in production
       if (config.optimization.minimizer) {
         config.optimization.minimizer.forEach((minimizer) => {
           if (minimizer.constructor.name === 'TerserPlugin') {
@@ -225,18 +191,6 @@ const nextConfig = {
           }
         })
       }
-    }
-    
-    // Add bundle analyzer in development
-    if (dev && process.env.ANALYZE === 'true') {
-      const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
-      config.plugins.push(
-        new BundleAnalyzerPlugin({
-          analyzerMode: 'server',
-          analyzerPort: isServer ? 8888 : 8889,
-          openAnalyzer: true,
-        })
-      )
     }
     
     return config
