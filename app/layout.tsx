@@ -9,7 +9,6 @@ import { ErrorBoundary } from "@/components/error-boundary"
 import dynamic from "next/dynamic"
 import { ThemeProvider } from "@/components/theme-provider"
 import { WebVitals } from "@/components/web-vitals"
-import { GoogleAnalytics, GoogleAnalyticsPageView } from "@/components/analytics/google-analytics"
 import { Toaster } from "@/components/ui/sonner"
 
 const inter = Inter({ 
@@ -401,8 +400,10 @@ export default function RootLayout({
         {/* Critical Resource Preloading for LCP */}
         <link rel="preload" href="/simryologo.png" as="image" fetchPriority="high" />
         
-        {/* Google Analytics - Optimized for mobile */}
-        <GoogleAnalytics />
+        {/* Google Analytics - Desktop only */}
+        <script dangerouslySetInnerHTML={{
+          __html: `if (window.innerWidth >= 768) { document.head.insertAdjacentHTML('beforeend', '<script async src="https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID || 'G-XTN13B7FTE'}"></script>'); }`
+        }} />
         
         {/* Security Headers */}
         <meta httpEquiv="X-Content-Type-Options" content="nosniff" />
@@ -474,7 +475,6 @@ export default function RootLayout({
                 {children}
               </main>
         <Footer />
-              <GoogleAnalyticsPageView />
             </div>
           </ErrorBoundary>
         </ThemeProvider>
