@@ -287,14 +287,14 @@ export default function HomePage() {
                 <Camera className="h-8 w-8 text-green-600" />
               </div>
             </div>
-            <h1 id="hero-heading" className="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight text-gray-900 mb-6">
+            <h1 id="hero-heading" className="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight text-gray-900 mb-6 critical-text">
               Travel Data Made
               <span className="block gradient-hero-text">
                 Simple
               </span>
             </h1>
             
-            <p className="text-xl sm:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-xl sm:text-2xl text-gray-600 mb-8 max-w-3xl mx-auto leading-relaxed critical-text">
               Get connected in 190+ countries instantly. No roaming fees, no contracts, no hassle.
               <br />
               <span className="font-semibold text-blue-600">Just tap, download, and go!</span>
@@ -387,18 +387,18 @@ export default function HomePage() {
       </section>
       )}
 
-      {/* Stats Section */}
+      {/* Stats Section - Fixed CLS with explicit dimensions */}
       <section className="py-16 sm:py-20 bg-white" aria-labelledby="stats-heading">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
-              <div key={index} className="text-center group min-h-[200px] flex flex-col justify-center" role="img" aria-label={`${stat.value} ${stat.label}: ${stat.description}`}>
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-2xl mb-4 group-hover:bg-blue-200 transition-colors">
+              <div key={index} className="text-center group h-[200px] flex flex-col justify-center items-center" role="img" aria-label={`${stat.value} ${stat.label}: ${stat.description}`}>
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-100 rounded-2xl mb-4 group-hover:bg-blue-200 transition-colors flex-shrink-0">
                   <stat.icon className="h-8 w-8 text-blue-600" aria-hidden="true" />
                 </div>
-                <div className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2 leading-none">{stat.value}</div>
-                <div className="text-lg font-semibold text-gray-700 mb-1 leading-tight">{stat.label}</div>
-                <div className="text-sm text-gray-500 leading-relaxed">{stat.description}</div>
+                <div className="text-3xl sm:text-4xl font-bold text-gray-900 mb-2 leading-none h-[2.5rem] flex items-center">{stat.value}</div>
+                <div className="text-lg font-semibold text-gray-700 mb-1 leading-tight h-[1.75rem] flex items-center">{stat.label}</div>
+                <div className="text-sm text-gray-500 leading-relaxed text-center max-w-[200px]">{stat.description}</div>
               </div>
             ))}
           </div>

@@ -47,45 +47,30 @@ export function GoogleAnalytics() {
     <>
       <Script
         src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}
-        strategy="lazyOnload"
+        strategy="afterInteractive"
         defer
         onLoad={() => {
-          // Only initialize after user interaction or scroll
           if (typeof window !== 'undefined') {
-            const initGA = () => {
-              window.dataLayer = window.dataLayer || [];
-              function gtag(...args: any[]) {
-                window.dataLayer.push(arguments);
-              }
-              gtag('js', new Date());
-              gtag('config', GA_TRACKING_ID, {
-                page_title: document.title,
-                page_location: window.location.href,
-                // Mobile optimization
-                transport_type: 'beacon',
-                anonymize_ip: true,
-                allow_google_signals: false,
-                allow_ad_personalization_signals: false,
-                // Reduce tracking overhead
-                send_page_view: false,
-                page_load_time: false,
-                custom_map: {
-                  'custom_parameter_1': 'dimension1'
-                }
-              });
-            };
-
-            // Initialize GA after user interaction
-            const handleInteraction = () => {
-              initGA();
-              document.removeEventListener('scroll', handleInteraction);
-              document.removeEventListener('click', handleInteraction);
-              document.removeEventListener('touchstart', handleInteraction);
-            };
-
-            document.addEventListener('scroll', handleInteraction, { passive: true, once: true });
-            document.addEventListener('click', handleInteraction, { passive: true, once: true });
-            document.addEventListener('touchstart', handleInteraction, { passive: true, once: true });
+            window.dataLayer = window.dataLayer || [];
+            function gtag(...args: any[]) {
+              window.dataLayer.push(arguments);
+            }
+            window.gtag = gtag;
+            gtag('js', new Date());
+            gtag('config', GA_TRACKING_ID, {
+              // Minimal configuration to reduce JS payload
+              transport_type: 'beacon',
+              anonymize_ip: true,
+              allow_google_signals: false,
+              allow_ad_personalization_signals: false,
+              send_page_view: true,
+              // Disable features that add unused JS
+              optimize_id: undefined,
+              linker: undefined,
+              custom_map: undefined,
+              page_load_time: false,
+              site_speed_sample_rate: 1
+            });
           }
         }}
       />

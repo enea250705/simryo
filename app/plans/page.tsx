@@ -273,28 +273,28 @@ function PlansPageContent() {
               <p className="text-gray-600">Search by country, region, or let us help you find the perfect plan</p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              <div className="relative lg:col-span-2">
+            <div className="relative lg:col-span-2">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400" />
-                <Input
-                  type="search"
-                  placeholder="Search by country or region..."
+              <Input
+                type="search"
+                placeholder="Search by country or region..."
                   className="w-full pl-12 h-14 border-2 border-gray-200 focus:border-blue-500 focus:ring-blue-500 rounded-xl text-lg"
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                />
-              </div>
-              <Select value={selectedRegion} onValueChange={setSelectedRegion}>
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+            <Select value={selectedRegion} onValueChange={setSelectedRegion}>
                 <SelectTrigger className="w-full h-14 border-2 border-gray-200 rounded-xl text-lg">
-                  <SelectValue placeholder="Filter by region" />
-                </SelectTrigger>
-                <SelectContent>
-                  {regions.map(region => (
-                    <SelectItem key={region} value={region}>
-                      {region === 'all' ? 'All Regions' : region}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                <SelectValue placeholder="Filter by region" />
+              </SelectTrigger>
+              <SelectContent>
+                {regions.map(region => (
+                  <SelectItem key={region} value={region}>
+                    {region === 'all' ? 'All Regions' : region}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             </div>
           </div>
         </div>
@@ -317,7 +317,7 @@ function PlansPageContent() {
                             <span className="text-white text-sm font-bold">{country.allPlans.length}</span>
                           </div>
                         </div>
-                        <div>
+                      <div>
                           <h2 className="text-3xl font-bold mb-2">{country.country}</h2>
                           <div className="flex items-center gap-4 text-blue-100">
                             <div className="flex items-center gap-2">
@@ -336,11 +336,11 @@ function PlansPageContent() {
                       </Link>
                     </div>
                   </div>
-                  
+
                   <div className="p-8">
 
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                      {country.plans.map((plan, index) => (
+                    {country.plans.map((plan, index) => (
                         <Card key={plan.id} className={`group relative transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 ${
                           plan.featured 
                             ? 'ring-2 ring-emerald-400 bg-gradient-to-br from-emerald-50 to-teal-50 shadow-lg' 
@@ -389,7 +389,7 @@ function PlansPageContent() {
                                 <span className="font-medium">{plan.network.type}</span>
                               </div>
                             </div>
-                          </CardHeader>
+                        </CardHeader>
 
                           <CardContent className="pt-0">
                             {/* Features */}
@@ -446,15 +446,15 @@ function PlansPageContent() {
                                   ) : (
                                     <>
                                       <ArrowRight className="h-5 w-5 mr-2" />
-                                      View Details
+                                View Details
                                     </>
                                   )}
-                                </Button>
-                              </Link>
-                            </div>
-                          </CardContent>
-                        </Card>
-                      ))}
+                              </Button>
+                            </Link>
+                          </div>
+                        </CardContent>
+                      </Card>
+                    ))}
                     </div>
                   </div>
                 </div>
@@ -475,8 +475,8 @@ function PlansPageContent() {
                   className="bg-emerald-600 hover:bg-emerald-700"
                 >
                   <RefreshCw className="h-4 w-4 mr-2" />
-                  Clear Filters
-                </Button>
+                Clear Filters
+              </Button>
                 <Button variant="outline" onClick={() => setSearchTerm('')}>
                   Browse All Countries
                 </Button>

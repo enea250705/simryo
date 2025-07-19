@@ -366,21 +366,32 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://api.simryo.com" />
+        <link rel="preconnect" href="https://www.googletagmanager.com" />
+        <link rel="preconnect" href="https://www.google-analytics.com" />
         
         {/* DNS Prefetch */}
         <link rel="dns-prefetch" href="https://www.google-analytics.com" />
         <link rel="dns-prefetch" href="https://www.googletagmanager.com" />
+        <link rel="dns-prefetch" href="https://connect.facebook.net" />
+        <link rel="dns-prefetch" href="https://static.hotjar.com" />
+        <link rel="dns-prefetch" href="https://www.clarity.ms" />
         
-        {/* Critical Resource Preloading */}
+        {/* Critical Resource Preloading for LCP */}
         <link rel="preload" href="/api/plans/popular" as="fetch" crossOrigin="anonymous" />
         <link rel="preload" href="/_next/static/css/app/layout.css" as="style" />
         <link rel="preload" href="/_next/static/css/app/globals.css" as="style" />
         
-        {/* Preload critical images */}
-        <link rel="preload" href="/simryologo.png" as="image" />
-        <link rel="preload" href="/og-image.jpg" as="image" />
+        {/* Preload critical fonts */}
+        <link rel="preload" href="/_next/static/media/inter-latin-400-normal.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
+        <link rel="preload" href="/_next/static/media/inter-latin-600-normal.woff2" as="font" type="font/woff2" crossOrigin="anonymous" />
         
-        {/* Google Analytics */}
+        {/* Preload critical above-the-fold images */}
+        <link rel="preload" href="/simryologo.png" as="image" fetchPriority="high" />
+        
+        {/* Prefetch non-critical images */}
+        <link rel="prefetch" href="/og-image.jpg" as="image" />
+        
+        {/* Google Analytics - Optimized for mobile */}
         <GoogleAnalytics />
         
         {/* Security Headers */}

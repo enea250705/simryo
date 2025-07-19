@@ -24,17 +24,16 @@ export default function MobileOptimizedHero({ isMobile }: MobileOptimizedHeroPro
   }
 
   return (
-    <section className={`relative overflow-hidden ${isMobile ? 'pt-8 pb-12' : 'pt-12 pb-20'} hero-section`}>
-      <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-purple-50" />
+    <section className={`relative overflow-hidden ${isMobile ? 'pt-8 pb-12' : 'pt-12 pb-20'} hero-optimized`} style={{background: 'linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%)'}}>
       <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-4xl mx-auto">
-          <Badge className="mb-4 bg-blue-100 text-blue-700 hover:bg-blue-200 border-blue-200">
+          <Badge className="mb-4 bg-blue-100 text-blue-700 border-blue-200" style={{display: 'inline-flex', alignItems: 'center', height: '32px'}}>
             Global eSIM Marketplace
           </Badge>
           
-          <h1 className={`font-bold tracking-tight text-gray-900 mb-4 ${
+          <h1 className={`font-bold tracking-tight text-gray-900 mb-4 critical-text ${
             isMobile ? 'text-3xl' : 'text-4xl sm:text-5xl lg:text-6xl'
-          }`}>
+          }`} style={{minHeight: isMobile ? '80px' : '120px', display: 'flex', flexDirection: 'column', justifyContent: 'center'}}>
             Stay Connected
             <span className="block gradient-text">
               Anywhere
