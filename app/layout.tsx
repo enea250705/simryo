@@ -379,24 +379,79 @@ export default function RootLayout({
           `
         }} />
         
-        {/* Critical above-the-fold CSS only */}
+        {/* Critical above-the-fold CSS - comprehensive */}
         <style
           dangerouslySetInnerHTML={{
             __html: `
+              /* Reset and base styles */
+              * { box-sizing: border-box; margin: 0; padding: 0; }
+              body { font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif; line-height: 1.6; color: #111827; }
+              
+              /* Critical layout */
+              .min-h-screen { min-height: 100vh; }
+              .bg-gradient-to-br { background: linear-gradient(135deg, #f9fafb 0%, #ffffff 50%, #eff6ff 100%); }
+              .relative { position: relative; }
+              .absolute { position: absolute; }
+              .inset-0 { top: 0; right: 0; bottom: 0; left: 0; }
+              
+              /* Hero section critical styles */
+              .hero-section { position: relative; overflow: hidden; padding: 8rem 0 5rem; background: linear-gradient(135deg, #eff6ff 0%, #ffffff 50%, #f3e8ff 100%); }
+              .hero-section::before { content: ""; position: absolute; inset: 0; background: linear-gradient(135deg, #eff6ff 0%, #ffffff 50%, #f3e8ff 100%); }
+              
+              /* Typography */
+              h1 { font-size: 3rem; font-weight: 700; line-height: 1.1; margin-bottom: 1.5rem; text-align: center; }
+              h2 { font-size: 2rem; font-weight: 600; line-height: 1.2; margin-bottom: 1rem; }
+              p { font-size: 1.25rem; line-height: 1.6; margin-bottom: 2rem; text-align: center; color: #4b5563; }
+              
+              /* Layout utilities */
+              .mx-auto { margin-left: auto; margin-right: auto; }
+              .max-w-7xl { max-width: 80rem; }
+              .max-w-4xl { max-width: 56rem; }
+              .text-center { text-align: center; }
+              .px-4 { padding-left: 1rem; padding-right: 1rem; }
+              .py-16 { padding-top: 4rem; padding-bottom: 4rem; }
+              .mb-4 { margin-bottom: 1rem; }
+              .mb-6 { margin-bottom: 1.5rem; }
+              .mb-8 { margin-bottom: 2rem; }
+              
+              /* Stats section - fix CLS */
+              .stats-container { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+              .stat-item { text-align: center; height: 200px; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+              .stat-value { font-size: 2.25rem; font-weight: 700; color: #111827; margin-bottom: 0.5rem; height: 2.5rem; display: flex; align-items: center; }
+              .stat-label { font-size: 1.125rem; font-weight: 600; color: #374151; margin-bottom: 0.25rem; height: 1.75rem; display: flex; align-items: center; }
+              .stat-description { font-size: 0.875rem; color: #6b7280; text-align: center; max-width: 200px; }
+              
+              /* Mobile optimizations */
               @media (max-width: 768px) {
-                * { animation: none !important; transition: none !important; will-change: auto !important; }
-                body { font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif; margin: 0; padding: 0; }
-                .hero-section { background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%); padding: 2rem 1rem; min-height: 400px; }
-                h1 { font-size: 1.875rem !important; font-weight: 700; line-height: 1.1 !important; margin: 0 0 1rem 0; }
-                .btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.75rem 1.5rem; border-radius: 0.75rem; font-weight: 600; text-decoration: none; min-height: 44px; }
-                .container { max-width: 1200px; margin: 0 auto; padding: 0 1rem; }
-                .text-center { text-align: center; }
-                .mb-4 { margin-bottom: 1rem; }
-                .mb-6 { margin-bottom: 1.5rem; }
+                h1 { font-size: 1.875rem; padding: 0 1rem; }
+                p { font-size: 1rem; padding: 0 1rem; }
+                .hero-section { padding: 2rem 0 3rem; }
+                .py-16 { padding-top: 2rem; padding-bottom: 2rem; }
+                .stats-container { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+                .stat-item { height: 150px; }
+                .stat-value { font-size: 1.5rem; }
+                .stat-label { font-size: 1rem; }
+              }
+              
+              @media (min-width: 1024px) {
+                .stats-container { grid-template-columns: repeat(4, 1fr); }
               }
             `,
           }}
         />
+        
+        {/* Defer non-critical CSS */}
+        <script dangerouslySetInnerHTML={{
+          __html: `
+            // Load non-critical CSS after page load
+            window.addEventListener('load', function() {
+              const link = document.createElement('link');
+              link.rel = 'stylesheet';
+              link.href = './globals.css';
+              document.head.appendChild(link);
+            });
+          `
+        }} />
         
         {/* Critical Resource Preloading for LCP */}
         <link rel="preload" href="/simryologo.png" as="image" fetchPriority="high" />
