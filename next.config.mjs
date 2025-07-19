@@ -6,8 +6,7 @@ const __filename = fileURLToPath(import.meta.url)
 const __dirname = dirname(__filename)
 const require = createRequire(import.meta.url)
 
-// Load global polyfill
-require('./global-polyfill.js');
+// Global polyfill removed to fix build issues
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
