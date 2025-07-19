@@ -10,7 +10,7 @@ const require = createRequire(import.meta.url)
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // Performance optimizations
+  // Performance optimizations - only stable features
   experimental: {
     optimizePackageImports: [
       '@radix-ui/react-accordion',
@@ -30,12 +30,6 @@ const nextConfig = {
     ],
     // Optimize CSS loading for better SEO performance
     optimizeCss: true,
-    // Enable modern JavaScript features
-    esmExternals: 'loose',
-    // Optimize bundle splitting
-    bundlePagesRouterDependencies: true,
-    // Server-side optimizations
-    serverComponentsExternalPackages: ['@prisma/client'],
     // Enable streaming SSR
     serverActions: {
       bodySizeLimit: '2mb',
@@ -196,44 +190,13 @@ const nextConfig = {
       }
     }
     
-    // Optimize bundle size for production
+    // Basic optimization for production
     if (!dev) {
-      // Enhanced optimization with modern browser targeting
+      // Simple optimization without complex splitting
       config.optimization = {
         ...config.optimization,
         usedExports: true,
         sideEffects: false,
-        splitChunks: {
-          chunks: 'all',
-          cacheGroups: {
-            vendor: {
-              test: /[\\/]node_modules[\\/]/,
-              name: 'vendors',
-              priority: 10,
-              reuseExistingChunk: true,
-            },
-            common: {
-              name: 'common',
-              minChunks: 2,
-              priority: 5,
-              reuseExistingChunk: true,
-            },
-            // Separate Radix UI components
-            radix: {
-              test: /[\\/]node_modules[\\/]@radix-ui[\\/]/,
-              name: 'radix',
-              priority: 20,
-              reuseExistingChunk: true,
-            },
-            // Separate Lucide icons
-            lucide: {
-              test: /[\\/]node_modules[\\/]lucide-react[\\/]/,
-              name: 'lucide',
-              priority: 15,
-              reuseExistingChunk: true,
-            },
-          },
-        },
       }
       
       // Remove console logs in production
@@ -246,11 +209,7 @@ const nextConfig = {
                 ...minimizer.options.terserOptions?.compress,
                 drop_console: true,
                 drop_debugger: true,
-                // Target modern browsers to reduce polyfills
-                ecma: 2020,
               },
-              // Target modern browsers
-              ecma: 2020,
             }
           }
         })
