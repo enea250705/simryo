@@ -23,7 +23,7 @@ const esimAccessProvider = new EsimAccessProvider({
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const { orderItems, customerInfo } = body
+    const { orderItems, customerInfo, paymentIntentId } = body
     
     if (!orderItems || !Array.isArray(orderItems)) {
       return NextResponse.json(
@@ -70,6 +70,7 @@ export async function POST(request: NextRequest) {
           try {
             const order = await prisma.order.create({
               data: {
+                id: paymentIntentId || `order_${Date.now()}_${i}`,
                 customerEmail: customerInfo.email,
                 customerName: customerInfo.name,
                 customerPhone: customerInfo.phone,
@@ -116,11 +117,17 @@ export async function POST(request: NextRequest) {
         } else {
           // Handle failed purchase - fail entire transaction
           console.error('eSIM provisioning failed:', purchaseResponse.error)
+          
+          // Log detailed error information
+          console.error('Full purchase response:', JSON.stringify(purchaseResponse, null, 2))
+          console.error('Request details:', { planId, customerInfo })
+          
           return NextResponse.json({
             success: false,
             error: purchaseResponse.error || 'eSIM provisioning failed',
-            message: 'Failed to provision eSIM. Please try again or contact support.',
-            orderId: purchaseResponse.orderId || `failed_${Date.now()}_${i}`
+            message: `Failed to provision eSIM. Error: ${purchaseResponse.error}. Please contact support with this error code: ERR_${Date.now()}`,
+            orderId: purchaseResponse.orderId || `failed_${Date.now()}_${i}`,
+            details: purchaseResponse.error
           }, { status: 400 })
         }
       } catch (error) {
@@ -136,23 +143,44 @@ export async function POST(request: NextRequest) {
       }
     }
 
-    // Send email with eSIM details
+    // Send admin notification email for manual processing
     try {
-      const emailResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/send-esim-email`, {
+      const adminEmailResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/send-admin-order`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          email: customerInfo.email,
-          name: customerInfo.name,
-          orderItems: results
+          customerInfo,
+          orderItems,
+          paymentIntentId
         })
       })
       
-      if (!emailResponse.ok) {
-        console.error('Failed to send email:', await emailResponse.text())
+      if (!adminEmailResponse.ok) {
+        console.error('Failed to send admin notification:', await adminEmailResponse.text())
+      } else {
+        console.log('Admin notification sent successfully')
       }
     } catch (emailError) {
-      console.error('Email sending error:', emailError)
+      console.error('Admin notification error:', emailError)
+    }
+
+    // Send customer confirmation email (without eSIM details)
+    try {
+      const customerEmailResponse = await fetch(`${process.env.NEXT_PUBLIC_APP_URL}/api/send-customer-confirmation`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          customerInfo,
+          orderItems: results,
+          paymentIntentId
+        })
+      })
+      
+      if (!customerEmailResponse.ok) {
+        console.error('Failed to send customer confirmation:', await customerEmailResponse.text())
+      }
+    } catch (emailError) {
+      console.error('Customer confirmation error:', emailError)
     }
 
     return NextResponse.json({

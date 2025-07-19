@@ -45,109 +45,68 @@ export class EsimAccessProvider extends BaseProvider {
         return realPlans
       }
       
-      // If API returns empty results, return mock data as fallback for production
+      // If API returns empty results, log warning and return empty array
       console.warn('eSIM Access API returned no plans for country:', countryCode)
-      return this.getMockPlans(countryCode)
+      return []
     } catch (error) {
       console.error('eSIM Access API call failed:', error)
       
-      // In production, log error but return mock data as fallback to ensure the app works
-      if (process.env.NODE_ENV === 'production') {
-        console.error('eSIM Access API failed in production, returning fallback plans')
-        return this.getMockPlans(countryCode)
-      }
-      
-      // Only return mock data in development if API key is not configured
-      const hasApiKey = process.env.ESIM_ACCESS_API_KEY && 
-                       process.env.ESIM_ACCESS_API_KEY !== 'your-esim-access-api-key' &&
-                       process.env.ESIM_ACCESS_API_KEY !== ''
-      
-      if (!hasApiKey) {
-        console.warn('No eSIM Access API key configured, returning mock data for development')
-        return this.getMockPlans(countryCode)
-      }
-      
-      // If API key is configured but call failed, return empty array
+      // No fallbacks - if API fails, return empty array
+      console.error('eSIM Access API failed, no plans available')
       return []
     }
   }
 
   async purchasePlan(request: PurchaseRequest): Promise<PurchaseResponse> {
     try {
-      console.log('Processing eSIM Access purchase:', request)
+      console.log('Processing manual eSIM delivery order:', request)
       
-      // Extract plan details from the request
-      const planId = request.planId.replace('ea-', '') // Remove our prefix
+      // For manual delivery, we don't need to actually provision the eSIM
+      // Just create a pending order that will be fulfilled manually
       
-      const headers = {
-        'RT-AccessCode': this.config.apiKey,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      }
-
-      // Use the correct purchase endpoint based on API docs
-      const url = `${this.config.baseUrl}/open/order/profile`
-      const requestBody = {
-        packageCode: planId,
-        quantity: 1,
-        transactionId: `simryo-${Date.now()}` // Unique transaction ID
-      }
-
-      console.log('eSIM Access Purchase Request:', {
-        url,
-        method: 'POST',
-        headers: { ...headers, 'RT-AccessCode': '[REDACTED]' },
-        body: requestBody
+      const orderId = `MANUAL-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`
+      
+      console.log('Manual order created:', {
+        orderId,
+        planId: request.planId,
+        customerEmail: request.customerEmail,
+        customerName: request.customerName
       })
 
-      const response = await fetch(url, {
-        method: 'POST',
-        headers,
-        body: JSON.stringify(requestBody),
-        signal: AbortSignal.timeout(30000) // 30 second timeout for purchase
-      })
-
-      console.log('eSIM Access Purchase Response Status:', response.status, response.statusText)
-
-      if (!response.ok) {
-        const errorText = await response.text()
-        console.error('eSIM Access Purchase Error Response:', errorText)
-        throw new Error(`eSIM Access purchase failed: ${response.status} ${response.statusText}`)
-      }
-
-      const data = await response.json()
-      console.log('eSIM Access Purchase Response:', JSON.stringify(data, null, 2))
-
-      if (!data.success) {
-        throw new Error(`eSIM Access purchase error: ${data.errorMsg || data.errorCode || 'Unknown error'}`)
-      }
-
-      // Transform the response to our format
-      const orderData = data.obj
-      const esimData = orderData.esimList && orderData.esimList[0] // Get first eSIM from the order
-
+      // Return success response for manual processing
       return {
         success: true,
-        orderId: orderData.orderNo || `EA-${Date.now()}`,
-        qrCodeUrl: esimData?.qrCodeUrl || esimData?.qrCode || this.generateMockQRCode(`esimaccess-qr-${planId}`),
-        activationCode: esimData?.activationCode || esimData?.iccid || 'ESIM-ACTIVATION-CODE',
+        orderId: orderId,
+        qrCodeUrl: '', // No QR code - will be sent manually
+        activationCode: '', // No activation code - will be sent manually
         instructions: [
-          'Download the eSIM QR code from the link provided',
-          'Go to your phone Settings > Cellular/Mobile Data',
-          'Tap "Add Cellular Plan" or "Add eSIM"',
-          'Scan the QR code or enter the activation code manually',
-          'Follow the on-screen instructions to complete setup'
+          'Your eSIM order has been confirmed!',
+          'You will receive your eSIM activation details via email within 10-15 minutes.',
+          'Please check your email (including spam folder) for delivery.',
+          'If you don\'t receive it within 15 minutes, please contact our support team.',
+          'Thank you for your purchase!'
         ],
-        estimatedActivationTime: '1-2 minutes',
-        expiresAt: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours from now
+        estimatedActivationTime: '10-15 minutes via email',
+        expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
       }
     } catch (error) {
       console.error('Failed to purchase plan from eSIM Access:', error)
       
-      // ALWAYS return failure - no mock data in production
+      // Log detailed error for debugging
+      console.error('eSIM Access Purchase Error Details:', {
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+        config: {
+          baseUrl: this.config.baseUrl,
+          hasApiKey: !!this.config.apiKey,
+          enabled: this.config.enabled
+        }
+      })
+      
+      // Always return failure - no fallbacks, purchase must fail if eSIM provisioning fails
       return {
         success: false,
-        error: error instanceof Error ? error.message : 'Failed to purchase eSIM from provider',
+        error: error instanceof Error ? error.message : 'eSIM provisioning failed',
         orderId: `EA-FAILED-${Date.now()}`,
         instructions: [],
         estimatedActivationTime: 'N/A',
@@ -224,46 +183,41 @@ export class EsimAccessProvider extends BaseProvider {
       'Accept': 'application/json'
     }
 
-    // Use the correct endpoint for fetching plans
-    const url = `${this.config.baseUrl}/open/package/list`
-    const requestBody = {
-      locationCode: countryCode ? countryCode.toUpperCase() : "",
-      type: "",
-      slug: "",
-      packageCode: "",
-      iccid: ""
+    try {
+      // Try to get package list using the working API endpoint
+      const packagesUrl = `${this.config.baseUrl}/open/package/list`
+      
+      const packagesResponse = await fetch(packagesUrl, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({
+          locationCode: countryCode || "",
+          type: "",
+          slug: "",
+          packageCode: "",
+          iccid: ""
+        }),
+        signal: AbortSignal.timeout(10000)
+      })
+
+      if (!packagesResponse.ok) {
+        throw new Error(`Failed to fetch packages: ${packagesResponse.status}`)
+      }
+
+      const packagesData = await packagesResponse.json()
+      console.log('eSIM Access packages response:', JSON.stringify(packagesData, null, 2))
+      
+      if (packagesData.success && packagesData.obj?.packageList) {
+        return this.transformEsimAccessResponse(packagesData)
+      } else {
+        console.warn('No packages found in eSIM Access response')
+        return []
+      }
+      
+    } catch (error) {
+      console.error('Failed to fetch eSIM Access packages:', error)
+      throw error
     }
-
-    console.log('eSIM Access Request:', {
-      url,
-      method: 'POST',
-      headers: { ...headers, 'RT-AccessCode': '[REDACTED]' },
-      body: requestBody
-    })
-
-    const response = await fetch(url, {
-      method: 'POST',
-      headers,
-      body: JSON.stringify(requestBody),
-      signal: AbortSignal.timeout(20000)
-    })
-
-    console.log('eSIM Access Response Status:', response.status, response.statusText)
-
-    if (!response.ok) {
-      const errorText = await response.text()
-      console.error('eSIM Access API Error Response:', errorText)
-      throw new Error(`eSIM Access API error: ${response.status} ${response.statusText}`)
-    }
-
-    const data = await response.json()
-    console.log('eSIM Access API Response:', JSON.stringify(data, null, 2))
-    
-    if (!data.success) {
-        throw new Error(`eSIM Access API error: ${data.errorMsg || data.errorCode || 'Unknown error'}`)
-    }
-    
-    return this.transformEsimAccessResponse(data)
   }
 
   private transformEsimAccessResponse(data: any): ProviderPlan[] {
@@ -468,58 +422,4 @@ export class EsimAccessProvider extends BaseProvider {
     return regionMap[countryCode.toUpperCase()] || { region: 'Other', flag: '🌍' }
   }
 
-  private getMockPlans(countryCode?: string): ProviderPlan[] {
-    // Original mock plans for development/testing
-    return [
-      {
-        id: 'ea-us-1',
-        country: 'United States',
-        countryCode: 'US',
-        region: 'North America',
-        flag: '🇺🇸',
-        data: '5GB',
-        dataInMB: 5000,
-        days: 30,
-        price: 29.99,
-        currency: 'USD',
-        network: {
-          type: '4G/5G',
-          carriers: ['AT&T', 'T-Mobile'],
-          coverage: 'Nationwide'
-        },
-        features: [
-          'Data only',
-          'No contract required',
-          'Instant activation',
-          'Multi-carrier support'
-        ],
-        inStock: true
-      },
-      {
-        id: 'ea-us-2',
-        country: 'United States',
-        countryCode: 'US',
-        region: 'North America',
-        flag: '🇺🇸',
-        data: '10GB',
-        dataInMB: 10000,
-        days: 30,
-        price: 39.99,
-        currency: 'USD',
-        network: {
-          type: '4G/5G',
-          carriers: ['AT&T', 'T-Mobile', 'Verizon'],
-          coverage: 'Nationwide'
-        },
-        features: [
-          'Data only',
-          'No contract required',
-          'Instant activation',
-          'Multi-carrier support',
-          'Premium support'
-        ],
-        inStock: true
-      }
-    ].filter(plan => !countryCode || plan.countryCode === countryCode)
-  }
 } 

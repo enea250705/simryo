@@ -70,7 +70,11 @@ export function CheckoutForm({ orderItems, onSuccessfulPurchase }: CheckoutFormP
         const response = await fetch('/api/purchase', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ orderItems, customerInfo }),
+          body: JSON.stringify({ 
+            orderItems, 
+            customerInfo, 
+            paymentIntentId: paymentIntent.id 
+          }),
         })
 
         if (!response.ok) {
