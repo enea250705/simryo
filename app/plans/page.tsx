@@ -252,7 +252,7 @@ function PlansPageContent() {
             <Globe className="h-10 w-10 text-white" />
           </div>
           <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl lg:text-6xl mb-4">
-            Find Your Perfect 
+            Find Your Perfect{' '}
             <span className="bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               eSIM Plan
             </span>
@@ -412,21 +412,21 @@ function PlansPageContent() {
                             <div className="mb-6">
                               <div className="text-center mb-4">
                                 <div className="flex items-baseline justify-center gap-2">
-                                  <span className="text-4xl font-bold text-gray-900">${plan.price.toFixed(2)}</span>
+                                  <span className="text-4xl font-bold text-gray-900">€{plan.price.toFixed(2)}</span>
                                   <span className="text-lg text-gray-500">{plan.currency}</span>
                                 </div>
                                 {plan.promoApplied && (
                                   <div className="flex items-center justify-center gap-2 mt-2">
                                     <span className="text-sm text-red-500 line-through">
-                                      ${plan.promoApplied.originalPrice.toFixed(2)}
+                                      €{plan.promoApplied.originalPrice.toFixed(2)}
                                     </span>
                                     <Badge variant="destructive" className="text-xs">
-                                      Save ${(plan.promoApplied.originalPrice - plan.price).toFixed(2)}
+                                      Save €{(plan.promoApplied.originalPrice - plan.price).toFixed(2)}
                                     </Badge>
                                   </div>
                                 )}
                                 <div className="text-sm text-gray-500 mt-2">
-                                  ~${(plan.price / plan.days).toFixed(2)} per day
+                                  ~€{(plan.price / plan.days).toFixed(2)} per day
                                 </div>
                               </div>
 

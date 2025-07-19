@@ -15,8 +15,8 @@ const esimAccessProvider = new EsimAccessProvider({
     requestsPerHour: 300
   },
   markup: {
-    percentage: 0,
-    fixedAmount: 0
+    percentage: 10,
+    fixedAmount: 2
   }
 })
 
@@ -75,7 +75,7 @@ export async function POST(request: NextRequest) {
                 customerName: customerInfo.name,
                 customerPhone: customerInfo.phone,
                 amount: item.plan.price * item.quantity,
-                currency: 'USD',
+                currency: 'EUR',
                 quantity: item.quantity,
                 status: 'PAID'
               }

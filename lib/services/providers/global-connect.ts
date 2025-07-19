@@ -17,8 +17,9 @@ export class GlobalConnectProvider extends BaseProvider {
   async fetchPlans(countryCode?: string): Promise<ProviderPlan[]> {
     try {
       // In production, this would make a real API call to Global Connect
-      // For now, return mock data
-      return this.getMockPlans(countryCode)
+      // For now, return mock data with filtering
+      const mockPlans = this.getMockPlans(countryCode)
+      return mockPlans.filter(plan => !this.shouldExcludePlan(plan))
     } catch (error) {
       console.error('Failed to fetch plans from Global Connect:', error)
       return []
@@ -89,7 +90,7 @@ export class GlobalConnectProvider extends BaseProvider {
         dataInMB: 4000,
         days: 30,
         price: 27.99,
-        currency: 'USD',
+        currency: 'EUR',
         network: {
           type: '4G/5G',
           carriers: ['AT&T', 'T-Mobile'],
@@ -111,7 +112,7 @@ export class GlobalConnectProvider extends BaseProvider {
         dataInMB: 12000,
         days: 30,
         price: 44.99,
-        currency: 'USD',
+        currency: 'EUR',
         network: {
           type: '4G/5G',
           carriers: ['AT&T', 'T-Mobile', 'Verizon'],

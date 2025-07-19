@@ -42,7 +42,10 @@
       "Bash(timeout 60 npm run build)",
       "Bash(pkill:*)",
       "Bash(taskkill:*)",
-      "Bash(npm start)"
+      "Bash(npm start)",
+      "mcp__ide__executeCode",
+      "Bash(python3:*)",
+      "Bash(awk:*)"
     ],
     "deny": []
   }

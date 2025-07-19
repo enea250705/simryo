@@ -147,23 +147,46 @@ export abstract class BaseProvider {
     return { ...this.config }
   }
 
+  protected convertUsdToEur(usdPrice: number): number {
+    // USD to EUR conversion rate (approximately 1 USD = 0.92 EUR)
+    const conversionRate = 0.92;
+    return Math.round(usdPrice * conversionRate * 100) / 100;
+  }
+
   protected applyMarkup(price: number): number {
-    if (!this.config.markup) return price;
-    
+    // Start with the base price (already in EUR from CSV)
     let finalPrice = price;
     
-    // Apply percentage markup
-    if (this.config.markup.percentage) {
-      finalPrice *= (1 + this.config.markup.percentage / 100);
-    }
+    // Apply 10% markup
+    finalPrice *= 1.10;
     
-    // Add fixed amount if specified
-    if (this.config.markup.fixedAmount) {
-      finalPrice += this.config.markup.fixedAmount;
-    }
+    // Add €2 fixed profit
+    finalPrice += 2.00;
     
-    // Round to 2 decimal places for currency
+    // Round to 2 decimal places
     return Math.round(finalPrice * 100) / 100;
+  }
+
+  protected shouldExcludePlan(plan: ProviderPlan): boolean {
+    // Exclude overpriced plans (over €80 after markup)
+    const finalPrice = this.applyMarkup(plan.price);
+    if (finalPrice > 80) return true;
+    
+    // Exclude plans with unusual durations
+    if (plan.name.includes('180Days') || plan.name.includes('365Days') || plan.name.includes('1Year')) return true;
+    
+    // Exclude specific problematic plan slugs
+    const excludedSlugs = [
+      'PE_10_30', // Peru 10GB €84.15
+      'BO_20_30', // Bolivia 20GB €99
+      'PE_20_30', // Peru 20GB €98
+      'MU_20_30', // Mauritius 20GB €94
+      'AE_50_180' // UAE 50GB 180Days €105
+    ];
+    
+    if (excludedSlugs.includes(plan.slug)) return true;
+    
+    return false;
   }
 
   protected transformPlan(plan: ProviderPlan): ProviderPlan {

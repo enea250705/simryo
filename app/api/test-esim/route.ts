@@ -16,8 +16,8 @@ export async function GET() {
         requestsPerHour: 300
       },
       markup: {
-        percentage: 0,
-        fixedAmount: 0
+        percentage: 10,
+        fixedAmount: 2
       }
     })
 

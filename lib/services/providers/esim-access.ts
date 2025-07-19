@@ -301,7 +301,7 @@ export class EsimAccessProvider extends BaseProvider {
         dataInMB,
         days: validityDays,
         price: finalPrice,
-        currency: 'USD',
+        currency: 'EUR',
         network: {
           type: networkType,
           carriers,
@@ -327,8 +327,16 @@ export class EsimAccessProvider extends BaseProvider {
       const isValid = plan.dataInMB > 0 && plan.days > 0 && plan.price > 0
       if (!isValid) {
         console.warn(`Filtered out invalid plan: ${plan.id}`)
+        return false
       }
-      return isValid
+      
+      // Filter out problematic plans
+      if (this.shouldExcludePlan(plan)) {
+        console.warn(`Filtered out problematic plan: ${plan.id} - ${plan.name} (Price: €${plan.price})`)
+        return false
+      }
+      
+      return true
     })
   }
 
