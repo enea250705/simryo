@@ -35,6 +35,12 @@ const nextConfig = {
     esmExternals: 'loose',
     // Optimize bundle splitting
     bundlePagesRouterDependencies: true,
+    // Server-side optimizations
+    serverComponentsExternalPackages: ['@prisma/client'],
+    // Enable streaming SSR
+    serverActions: {
+      bodySizeLimit: '2mb',
+    },
   },
   
   // Moved from experimental as per Next.js warnings
@@ -103,6 +109,11 @@ const nextConfig = {
           {
             key: 'Permissions-Policy',
             value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()'
+          },
+          // Performance headers
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=3600, stale-while-revalidate=86400'
           }
         ]
       },
@@ -180,6 +191,19 @@ const nextConfig = {
       // Enable tree shaking
       config.optimization.usedExports = true
       config.optimization.sideEffects = false
+      
+      // Remove console logs in production
+      config.optimization.minimizer = config.optimization.minimizer || []
+      config.optimization.minimizer.push(
+        new webpack.optimize.TerserPlugin({
+          terserOptions: {
+            compress: {
+              drop_console: true,
+              drop_debugger: true,
+            },
+          },
+        })
+      )
     }
     
     // Add bundle analyzer in development
