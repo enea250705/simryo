@@ -144,6 +144,49 @@ export function Navbar() {
     }
   }, [cartCount])
 
+  // Prevent body scroll when mobile menu is open
+  useEffect(() => {
+    if (isOpen) {
+      // Save current scroll position
+      const scrollY = window.scrollY
+      document.body.style.position = 'fixed'
+      document.body.style.top = `-${scrollY}px`
+      document.body.style.width = '100%'
+    } else {
+      // Restore scroll position
+      const scrollY = document.body.style.top
+      document.body.style.position = ''
+      document.body.style.top = ''
+      document.body.style.width = ''
+      if (scrollY) {
+        window.scrollTo(0, parseInt(scrollY || '0', 10) * -1)
+      }
+    }
+
+    // Cleanup on unmount
+    return () => {
+      document.body.style.position = ''
+      document.body.style.top = ''
+      document.body.style.width = ''
+    }
+  }, [isOpen])
+
+  // Handle escape key to close mobile menu
+  useEffect(() => {
+    const handleEscape = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isOpen) {
+        setIsOpen(false)
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleEscape)
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleEscape)
+    }
+  }, [isOpen])
 
   const navbarClasses = cn(
     "fixed w-full z-50 transition-all duration-300 top-0",
@@ -404,14 +447,27 @@ export function Navbar() {
 
           {/* Mobile Menu */}
           {isOpen && (
-            <div 
-              id="mobile-menu"
-              className="absolute top-16 left-0 right-0 bg-gradient-to-b from-white to-gray-50 backdrop-blur-lg border-b border-gray-200/20 shadow-2xl max-h-[calc(100vh-4rem)] overflow-y-auto z-50"
-              role="menu"
-              aria-labelledby="mobile-menu-button"
-              style={{ maxHeight: 'calc(100vh - 4rem)' }}
-            >
-              <div className="px-6 py-8 space-y-8 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 6rem)' }}>
+            <>
+              {/* Mobile Menu Backdrop */}
+              <div 
+                className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40"
+                onClick={() => setIsOpen(false)}
+                aria-hidden="true"
+              />
+              
+              {/* Mobile Menu Container */}
+              <div 
+                id="mobile-menu"
+                className="fixed top-16 left-0 right-0 bottom-0 bg-gradient-to-b from-white to-gray-50 z-50 flex flex-col"
+                role="menu"
+                aria-labelledby="mobile-menu-button"
+              >
+                {/* Scrollable Content */}
+                <div className="flex-1 overflow-y-auto px-6 py-8 space-y-8"
+                     style={{ 
+                       overscrollBehavior: 'contain',
+                       WebkitOverflowScrolling: 'touch'
+                     }}>
                 {/* Home Link */}
                 <div>
                   <Link
@@ -492,7 +548,7 @@ export function Navbar() {
                   </p>
                 </div>
               </div>
-            </div>
+            </>
           )}
         </div>
       </div>
