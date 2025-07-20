@@ -195,7 +195,7 @@ export function Navbar() {
       : "bg-white/80 backdrop-blur-md border-b border-gray-100"
   )
 
-  const isActive = (path: string) => pathname === path
+  const isActive = (path) => pathname === path
 
   return (
     <nav className={navbarClasses}>
