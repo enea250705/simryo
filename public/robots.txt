@@ -5,21 +5,28 @@ User-agent: *
 Allow: /
 
 # Allow all important pages
+Allow: /
 Allow: /plans
 Allow: /plans/*
+Allow: /blog
+Allow: /blog/*
 Allow: /benefits
 Allow: /support
 Allow: /setup
 Allow: /contact
 Allow: /faq
-Allow: /blog
-Allow: /blog/*
 Allow: /about
 Allow: /privacy
 Allow: /terms
 Allow: /coverage
 Allow: /pricing
 Allow: /how-it-works
+
+# Prioritize blog indexing
+Allow: /blog/ultimate-guide-best-esim-international-travel-2025
+Allow: /blog/esim-technology-explained-complete-guide-2025
+Allow: /blog/digital-nomad-global-connectivity-esim-guide
+Allow: /blog/best-esim-europe-travel-2025
 
 # Disallow admin and private areas
 Disallow: /admin

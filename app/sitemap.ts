@@ -120,22 +120,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
   ]
 
-  // Supporting blog posts
+  // Focus on only the top performing blog posts for better indexing
   const supportingBlogPosts = [
-    'country-specific-esim-guides-usa-canada-mexico',
     'esim-vs-physical-sim-comprehensive-comparison',
-    'esim-troubleshooting-common-issues-solutions',
-    'best-unlimited-data-esim-plans-worldwide',
-    'esim-business-travel-guide-enterprise-solutions',
-    'cheapest-esim-plans-budget-travel-guide',
+    'cheapest-esim-plans-budget-travel-guide', 
     'esim-security-privacy-guide-2025',
-    'cruise-ship-connectivity-esim-guide',
-    '5g-esim-coverage-speed-guide',
-    'student-study-abroad-esim-guide',
-    'esim-vs-pocket-wifi-comparison-guide',
-    'best-esim-apps-management-guide',
-    'family-travel-esim-group-plans',
-    'emergency-communication-esim-guide',
+    'best-unlimited-data-esim-plans-worldwide',
   ].map(slug => ({
     url: `${baseUrl}/blog/${slug}`,
     lastModified: currentDate,
