@@ -12,6 +12,7 @@ import { toast } from 'sonner'
 import type { EnhancedPlan } from "../page" // Simplified import
 import { CurrencySelector } from "@/components/currency-selector"
 import { useCurrency } from "@/lib/contexts/currency-context"
+import { shouldKeepPlan, filterAllowedPlans } from "@/lib/utils/plan-filter"
 
 // Define Country type locally as it's specific to this page's structure now
 interface Country {
@@ -97,42 +98,20 @@ export default function CountryPage() {
       if (result.success && result.data && result.data.length > 0) {
         const plans = result.data
 
-        // Filter out unreasonable plans
-        const reasonablePlans = plans.filter((plan: EnhancedPlan) => {
-          const gbAmount = plan.dataInMB / 1024
-          const pricePerGB = plan.price / gbAmount
-          const pricePerDay = plan.price / plan.days
-
-          // Sanity checks for reasonable plans
-          const isReasonable = (
-            // Price per GB shouldn't be more than $15
-            pricePerGB <= 15 &&
-            // Price per day shouldn't be more than $5
-            pricePerDay <= 5 &&
-            // Minimum data amount should be at least 500MB
-            plan.dataInMB >= 500 &&
-            // Maximum price cap at $200
-            plan.price <= 200 &&
-            // Minimum price should be at least $3
-            plan.price >= 3 &&
-            // Days should be between 1 and 365
-            plan.days >= 1 && plan.days <= 365 &&
-            // Data amount shouldn't be ridiculously high (max 100GB)
-            plan.dataInMB <= 102400
-          )
-
-          if (!isReasonable) {
-            console.log(`Filtered out unreasonable plan:`, {
-              data: `${gbAmount.toFixed(1)}GB`,
-              price: plan.price,
-              days: plan.days,
-              pricePerGB: pricePerGB.toFixed(2),
-              pricePerDay: pricePerDay.toFixed(2)
-            })
-          }
-
-          return isReasonable
-        })
+        // Apply specific plan filtering (1GB/7days, 3GB/15days, 3GB/30days, 5GB/30days, 10GB/30days, 20GB/30days, 50GB/30days)
+        console.log(`🔍 Applying plan filtering to ${plans.length} plans for ${countryName}...`)
+        const reasonablePlans = filterAllowedPlans(plans.filter((plan: EnhancedPlan) => plan.inStock))
+        console.log(`📊 Plan filtering results for ${countryName}: ${reasonablePlans.length}/${plans.length} plans kept`)
+        
+        if (reasonablePlans.length === 0) {
+          console.log(`⚠️ No plans match the allowed combinations for ${countryName}`)
+        } else {
+          console.log(`✅ Allowed plans for ${countryName}:`, reasonablePlans.map(p => ({
+            data: `${Math.round(p.dataInMB / 1024)}GB`,
+            days: `${p.days} days`,
+            price: `€${p.price}`
+          })))
+        }
 
         // Deduplicate plans with similar data amounts and prices
         const uniquePlans = reasonablePlans.reduce((acc: EnhancedPlan[], plan: EnhancedPlan) => {
