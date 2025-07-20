@@ -16,9 +16,17 @@ export async function GET(request: NextRequest) {
     let plans
     if (popular) {
       plans = await providerManager.getPopularPlans(limit || 10)
-    } else {
+    } else if (countryCode) {
+      // For specific country, use detailed filtering
       plans = await providerManager.getAllPlans({
         countryCode,
+        sortBy,
+        sortOrder,
+        maxResults: limit
+      })
+    } else {
+      // For main plans page, use light filtering to show all countries
+      plans = await providerManager.getAllCountriesWithPlans({
         sortBy,
         sortOrder,
         maxResults: limit

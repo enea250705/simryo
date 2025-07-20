@@ -91,6 +91,75 @@ export class ProviderManager {
     console.log(`🚀 Provider Manager initialized with ${this.providers.size} active providers`)
   }
 
+  public async getAllCountriesWithPlans(options: PlanAggregationOptions = {}): Promise<EnhancedPlan[]> {
+    if (!this.initialized) {
+      throw new Error('Provider Manager not initialized')
+    }
+
+    const allPlans: EnhancedPlan[] = []
+
+    // Fetch plans from all enabled providers in parallel
+    const providerPromises = Array.from(this.providers.entries()).map(async ([providerId, provider]) => {
+      try {
+        console.log(`🔄 Fetching plans from ${provider.getDisplayName()}...`)
+        const plans = await provider.fetchPlans()
+        
+        // Ensure plans is an array
+        if (!Array.isArray(plans)) {
+          console.warn(`⚠️ Invalid plans response from ${provider.getDisplayName()}: not an array`)
+          return []
+        }
+
+        // Apply basic quality filters only (no aggressive filtering for overview)
+        const basicFiltered = plans.filter(plan => 
+          plan.inStock && 
+          plan.price > 0 && 
+          plan.dataInMB > 0 && 
+          plan.days > 0 &&
+          plan.days <= 90 &&
+          plan.dataInMB >= 100 &&
+          (plan.price / (plan.dataInMB / 1024)) <= 10 // Max $10/GB for overview
+        )
+
+        const enhancedPlans = basicFiltered.map(plan => ({
+          ...plan,
+          providerId,
+          providerDisplayName: provider.getDisplayName(),
+          popularity: this.calculatePopularity(plan),
+          lastUpdated: new Date(),
+          featured: this.isFeaturedPlan(plan, provider.getDisplayName())
+        }))
+
+        return enhancedPlans
+      } catch (error) {
+        console.error(`❌ Error fetching plans from ${provider.getDisplayName()}:`, error)
+        return []
+      }
+    })
+
+    const providerResults = await Promise.all(providerPromises)
+    providerResults.forEach(plans => allPlans.push(...plans))
+
+    // Light deduplication - keep best price per country/data combination
+    const countryPlanMap = new Map<string, EnhancedPlan>()
+    allPlans.forEach(plan => {
+      const key = `${plan.country}-${Math.round(plan.dataInMB / 1024)}GB`
+      const existing = countryPlanMap.get(key)
+      if (!existing || plan.price < existing.price) {
+        countryPlanMap.set(key, plan)
+      }
+    })
+
+    const deduplicatedPlans = Array.from(countryPlanMap.values())
+
+    // Sort by popularity/price
+    if (options.sortBy) {
+      return this.sortPlans(deduplicatedPlans, options.sortBy, options.sortOrder || 'asc')
+    }
+
+    return deduplicatedPlans.slice(0, options.maxResults)
+  }
+
   public async getAllPlans(options: PlanAggregationOptions = {}, userId?: string): Promise<EnhancedPlan[]> {
     if (!this.initialized) {
       throw new Error('Provider Manager not initialized')
