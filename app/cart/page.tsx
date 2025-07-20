@@ -15,6 +15,7 @@ import {
 import Link from "next/link"
 import { toast } from "sonner"
 import { CartErrorBoundary } from "@/components/cart-error-boundary"
+import { useCurrency } from "@/lib/contexts/currency-context"
 
 interface CartItem {
   countryId: number
@@ -34,6 +35,7 @@ interface CartItem {
 }
 
 function CartContent() {
+  const { formatPrice, convertPrice, currency } = useCurrency()
   const router = useRouter()
   const [cartItems, setCartItems] = useState<CartItem[]>([])
   const [isLoading, setIsLoading] = useState(true)
@@ -226,7 +228,7 @@ function CartContent() {
                           </div>
                         </div>
                         <div className="text-lg font-bold text-emerald-600">
-                          ${item.planData.price.toFixed(2)} each
+                          {formatPrice(convertPrice(item.planData.price, 'EUR', currency))} each
                         </div>
                       </div>
                       
@@ -274,14 +276,14 @@ function CartContent() {
                 <CardContent className="space-y-4">
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Subtotal</span>
-                    <span className="font-semibold">${getTotalValue().toFixed(2)}</span>
+                    <span className="font-semibold">{formatPrice(convertPrice(getTotalValue(), 'EUR', currency))}</span>
                   </div>
                   
                   <Separator />
                   
                   <div className="flex justify-between text-lg font-bold">
                     <span>Total</span>
-                    <span className="text-emerald-600">${getTotalValue().toFixed(2)}</span>
+                    <span className="text-emerald-600">{formatPrice(convertPrice(getTotalValue(), 'EUR', currency))}</span>
                   </div>
 
                   <Button 

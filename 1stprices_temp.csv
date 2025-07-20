@@ -1,0 +1,381 @@
+Name,Price,Location,Slug,Speed,Location Network List
+Spain 3GB 30Days,1.8,ES,ES_3_30,3G/4G/5G,Vodafone 5G
+Spain 5GB 30Days,2.7,ES,ES_5_30,3G/4G/5G,Vodafone 5G
+Europe 3GB 30Days,7.3,"NO,RS,DE,RU,BE,FI,PT,BG,DK,LT,LU,LV,HR,UA,FR,HU,SE,SI,SK,GB,IE,MK,GG,EE,GI,IM,CH,MT,IS,IT,GR,ES,AT,CY,AX,CZ,JE,PL,RO,LI,NL,TR",EU-42_3_30,3G/4G/5G,Nova 5G
+Europe 5GB 30Days,11,"NO,RS,DE,RU,BE,FI,PT,BG,DK,LT,LU,LV,HR,UA,FR,HU,SE,SI,SK,GB,IE,MK,GG,EE,GI,IM,CH,MT,IS,IT,GR,ES,AT,CY,AX,CZ,JE,PL,RO,LI,NL,TR",EU-42_5_30,3G/4G/5G,Nova 5G
+Hong Kong 3GB 30Days,1.8,HK,HK_3_30,3G/4G/5G,csl 5G
+Hong Kong 5GB 30Days,2.7,HK,HK_5_30,3G/4G/5G,csl 5G
+Macao 3GB 30Days,1.8,MO,MO_3_30,3G/4G/5G,CTM 5G
+Macao 5GB 30Days,2.7,MO,MO_5_30,3G/4G/5G,CTM 5G
+Thailand 3GB 30Days,1.8,TH,TH_3_30,3G/4G/5G,AIS 5G
+Thailand 5GB 30Days,2.7,TH,TH_5_30,3G/4G/5G,AIS 5G
+Netherlands 3GB 30Days,2.3,NL,NL_3_30,3G/4G/5G,Vodafone 5G
+Netherlands 5GB 30Days,3.4,NL,NL_5_30,3G/4G/5G,Vodafone 5G
+Israel 3GB 30Days,3.8,IL,IL_3_30,3G/4G/5G,Cellcom 5G
+Turkey 3GB 30Days,1.42,TR,TR_3_30,3G/4G/5G,Türk Telekom 5G
+Jordan 3GB 30Days,4.7,JO,JO_3_30,3G/4G/5G,Zain 5G
+Kuwait 3GB 30Days,5.9,KW,KW_3_30,3G/4G,Ooredoo 4G
+Oman 3GB 30Days,14.4,OM,OM_3_30,3G/4G,Omantel 4G
+Qatar 3GB 30Days,9.1,QA,QA_3_30,3G/4G/5G,Vodafone 5G
+Armenia 3GB 30Days,14.4,AM,AM_3_30,3G/4G,MTS 4G
+United Arab Emirates 3GB 30Days,5,AE,AE_3_30,3G/4G/5G,Etisalat 5G
+Azerbaijan 3GB 30Days,17.9,AZ,AZ_3_30,3G/4G/5G,Bakcell 5G
+Georgia 3GB 30Days,3.8,GE,GE_3_30,3G/4G,Cellfie 4G
+Bahrain 3GB 30Days,11.4,BH,BH_3_30,3G/4G/5G,Zain 5G
+Saudi Arabia 3GB 30Days,6.4,SA,SA_3_30,3G/4G/5G,Mobily 5G
+Austria 3GB 30Days,2.3,AT,AT_3_30,3G/4G/5G,Hutchison 5G
+Belgium 3GB 30Days,2.3,BE,BE_3_30,3G/4G/5G,Base 5G
+Bulgaria 3GB 30Days,2.3,BG,BG_3_30,3G/4G/5G,Vivacom 5G
+Croatia 3GB 30Days,2.3,HR,HR_3_30,3G/4G/5G,Tele2 5G
+Cyprus 3GB 30Days,2.3,CY,CY_3_30,3G/4G/5G,Vodafone 5G
+Czech Republic 3GB 30Days,2.3,CZ,CZ_3_30,3G/4G/5G,Vodafone 5G
+Denmark 3GB 30Days,2.3,DK,DK_3_30,3G/4G/5G,3 5G
+Estonia 3GB 30Days,2.3,EE,EE_3_30,3G/4G/5G,Telia 5G
+Finland 3GB 30Days,1.8,FI,FI_3_30,3G/4G/5G,Elisa 5G
+France 3GB 30Days,1.8,FR,FR_3_30,3G/4G/5G,SFR 5G
+Germany 3GB 30Days,1.8,DE,DE_3_30,3G/4G/5G,Vodafone 5G
+Greece 3GB 30Days,2.3,GR,GR_3_30,3G/4G/5G,Vodafone 5G
+Hungary 3GB 30Days,2.3,HU,HU_3_30,3G/4G/5G,Telenor Hungary 5G
+Iceland 3GB 30Days,3.25,IS,IS_3_30,3G/4G/5G,Nova 5G
+Ireland 3GB 30Days,2.3,IE,IE_3_30,3G/4G/5G,Vodafone 5G
+Italy 3GB 30Days,1.8,IT,IT_3_30,3G/4G/5G,Iliad 5G
+Latvia 3GB 30Days,2.3,LV,LV_3_30,3G/4G/5G,Tele2 5G
+Lithuania 3GB 30Days,2.3,LT,LT_3_30,3G/4G/5G,Telia 5G
+Luxembourg 3GB 30Days,2.3,LU,LU_3_30,3G/4G/5G,POST 5G
+Malta 3GB 30Days,3.8,MT,MT_3_30,3G/4G/5G,GO 5G
+Poland 3GB 30Days,1.8,PL,PL_3_30,3G/4G/5G,Orange 5G
+Portugal 3GB 30Days,2.3,PT,PT_3_30,3G/4G/5G,NOS 5G
+Romania 3GB 30Days,1.8,RO,RO_3_30,3G/4G/5G,Vodafone 5G
+Slovakia 3GB 30Days,2.3,SK,SK_3_30,3G/4G/5G,Orange 5G
+Slovenia 3GB 30Days,2.3,SI,SI_3_30,3G/4G/5G,Mobitel 5G
+Sweden 3GB 30Days,2.3,SE,SE_3_30,3G/4G/5G,3 5G
+Switzerland 3GB 30Days,1.8,CH,CH_3_30,3G/4G/5G,Sunrise 5G
+Ukraine 3GB 30Days,1.8,UA,UA_3_30,3G/4G,Kyivstar 4G
+United Kingdom 3GB 30Days,1.8,GB,GB_3_30,3G/4G/5G,Vodafone 5G
+Aland Islands 3GB 30Days,4.7,AX,AX_3_30,3G/4G/5G,AMT 5G
+Isle of Man 3GB 30Days,3,IM,IM_3_30,3G/4G/5G,Pronto GSM 5G
+Jersey 3GB 30Days,1.8,JE,JE_3_30,3G/4G/5G,JT 5G
+Russia 3GB 30Days,7.3,RU,RU_3_30,3G/4G,Beeline 4G
+Guernsey 3GB 30Days,11.4,GG,GG_3_30,3G/4G,Sure 4G
+Liechtenstein 3GB 30Days,3.8,LI,LI_3_30,3G/4G/5G,FL1 5G
+Norway 3GB 30Days,1.8,NO,NO_3_30,3G/4G/5G,Telia 5G
+Serbia 3GB 30Days,7.3,RS,RS_3_30,3G/4G,VIP 4G
+Gibraltar 3GB 30Days,7.3,GI,GI_3_30,3G/4G/5G,GibTel 5G
+Austria 5GB 30Days,3.4,AT,AT_5_30,3G/4G/5G,Hutchison 5G
+Belgium 5GB 30Days,3.4,BE,BE_5_30,3G/4G/5G,Base 5G
+Bulgaria 5GB 30Days,3.2,BG,BG_5_30,3G/4G/5G,Vivacom 5G
+Croatia 5GB 30Days,3.4,HR,HR_5_30,3G/4G/5G,Tele2 5G
+Cyprus 5GB 30Days,3.4,CY,CY_5_30,3G/4G/5G,Vodafone 5G
+Czech Republic 5GB 30Days,3.4,CZ,CZ_5_30,3G/4G/5G,Vodafone 5G
+Denmark 5GB 30Days,3.4,DK,DK_5_30,3G/4G/5G,3 5G
+Estonia 5GB 30Days,3.4,EE,EE_5_30,3G/4G/5G,Telia 5G
+Finland 5GB 30Days,2.7,FI,FI_5_30,3G/4G/5G,Elisa 5G
+France 5GB 30Days,2.7,FR,FR_5_30,3G/4G/5G,SFR 5G
+Germany 5GB 30Days,2.7,DE,DE_5_30,3G/4G/5G,Vodafone 5G
+Greece 5GB 30Days,3.4,GR,GR_5_30,3G/4G/5G,Vodafone 5G
+Hungary 5GB 30Days,3.4,HU,HU_5_30,3G/4G/5G,Telenor Hungary 5G
+Iceland 5GB 30Days,5.7,IS,IS_5_30,3G/4G/5G,Nova 5G
+Ireland 5GB 30Days,3.4,IE,IE_5_30,3G/4G/5G,Vodafone 5G
+Italy 5GB 30Days,2.7,IT,IT_5_30,3G/4G/5G,Iliad 5G
+Latvia 5GB 30Days,3.4,LV,LV_5_30,3G/4G/5G,Tele2 5G
+Lithuania 5GB 30Days,3.4,LT,LT_5_30,3G/4G/5G,Telia 5G
+Luxembourg 5GB 30Days,3.4,LU,LU_5_30,3G/4G/5G,POST 5G
+Malta 5GB 30Days,5.7,MT,MT_5_30,3G/4G/5G,GO 5G
+Poland 5GB 30Days,2.7,PL,PL_5_30,3G/4G/5G,Orange 5G
+Portugal 5GB 30Days,3.4,PT,PT_5_30,3G/4G/5G,NOS 5G
+Romania 5GB 30Days,2.7,RO,RO_5_30,3G/4G/5G,Vodafone 5G
+Slovakia 5GB 30Days,3.4,SK,SK_5_30,3G/4G/5G,Orange 5G
+Slovenia 5GB 30Days,3.4,SI,SI_5_30,3G/4G/5G,Mobitel 5G
+Sweden 5GB 30Days,3.4,SE,SE_5_30,3G/4G/5G,3 5G
+Switzerland 5GB 30Days,2.7,CH,CH_5_30,3G/4G/5G,Sunrise 5G
+Ukraine 5GB 30Days,2.7,UA,UA_5_30,3G/4G,Kyivstar 4G
+United Kingdom 5GB 30Days,2.7,GB,GB_5_30,3G/4G/5G,Vodafone 5G
+Aland Islands 5GB 30Days,7,AX,AX_5_30,3G/4G/5G,AMT 5G
+Isle of Man 5GB 30Days,4.4,IM,IM_5_30,3G/4G/5G,Pronto GSM 5G
+Jersey 5GB 30Days,2.7,JE,JE_5_30,3G/4G/5G,JT 5G
+Russia 5GB 30Days,11,RU,RU_5_30,3G/4G,Beeline 4G
+Guernsey 5GB 30Days,17.1,GG,GG_5_30,3G/4G,Sure 4G
+Norway 5GB 30Days,2.7,NO,NO_5_30,3G/4G/5G,Telia 5G
+Serbia 5GB 30Days,11,RS,RS_5_30,3G/4G,VIP 4G
+Australia 1GB 7Days,0.7,AU,AU_1_7,3G/4G/5G,Optus 5G
+Australia 3GB 15Days,1.7,AU,AU_3_15,3G/4G/5G,Optus 5G
+Australia 5GB 30Days,2.7,AU,AU_5_30,3G/4G/5G,Optus 5G
+Hong Kong 1GB 7Days,0.7,HK,HK_1_7,3G/4G/5G,csl 5G
+Hong Kong 3GB 15Days,1.7,HK,HK_3_15,3G/4G/5G,csl 5G
+Hong Kong 10GB 30Days,4.7,HK,HK_10_30,3G/4G/5G,csl 5G
+Macao 1GB 7Days,0.7,MO,MO_1_7,3G/4G/5G,CTM 5G
+Macao 3GB 15Days,1.7,MO,MO_3_15,3G/4G/5G,CTM 5G
+Macao 10GB 30Days,4.7,MO,MO_10_30,3G/4G/5G,CTM 5G
+Austria 1GB 7Days,0.9,AT,AT_1_7,3G/4G/5G,Hutchison 5G
+Austria 3GB 15Days,2.2,AT,AT_3_15,3G/4G/5G,Hutchison 5G
+Austria 10GB 30Days,6.1,AT,AT_10_30,3G/4G/5G,Hutchison 5G
+Croatia 1GB 7Days,0.9,HR,HR_1_7,3G/4G/5G,Tele2 5G
+Croatia 3GB 15Days,2.2,HR,HR_3_15,3G/4G/5G,Tele2 5G
+Croatia 10GB 30Days,6.1,HR,HR_10_30,3G/4G/5G,Tele2 5G
+Czech Republic 1GB 7Days,0.9,CZ,CZ_1_7,3G/4G/5G,Vodafone 5G
+Czech Republic 3GB 15Days,2.2,CZ,CZ_3_15,3G/4G/5G,Vodafone 5G
+Czech Republic 10GB 30Days,6.1,CZ,CZ_10_30,3G/4G/5G,Vodafone 5G
+Denmark 1GB 7Days,0.9,DK,DK_1_7,3G/4G/5G,3 5G
+Denmark 3GB 15Days,2.2,DK,DK_3_15,3G/4G/5G,3 5G
+Denmark 10GB 30Days,6.1,DK,DK_10_30,3G/4G/5G,3 5G
+France 1GB 7Days,0.7,FR,FR_1_7,3G/4G/5G,SFR 5G
+France 3GB 15Days,1.7,FR,FR_3_15,3G/4G/5G,SFR 5G
+France 10GB 30Days,4.7,FR,FR_10_30,3G/4G/5G,SFR 5G
+Germany 1GB 7Days,0.7,DE,DE_1_7,3G/4G/5G,Vodafone 5G
+Germany 3GB 15Days,1.7,DE,DE_3_15,3G/4G/5G,Vodafone 5G
+Germany 10GB 30Days,4.7,DE,DE_10_30,3G/4G/5G,Vodafone 5G
+Greece 1GB 7Days,0.9,GR,GR_1_7,3G/4G/5G,Vodafone 5G
+Greece 3GB 15Days,2.2,GR,GR_3_15,3G/4G/5G,Vodafone 5G
+Greece 10GB 30Days,6.1,GR,GR_10_30,3G/4G/5G,Vodafone 5G
+Hungary 1GB 7Days,0.9,HU,HU_1_7,3G/4G/5G,Telenor Hungary 5G
+Hungary 3GB 15Days,2.2,HU,HU_3_15,3G/4G/5G,Telenor Hungary 5G
+Hungary 10GB 30Days,6.1,HU,HU_10_30,3G/4G/5G,Telenor Hungary 5G
+Latvia 1GB 7Days,0.9,LV,LV_1_7,3G/4G/5G,Tele2 5G
+Latvia 3GB 15Days,2.2,LV,LV_3_15,3G/4G/5G,Tele2 5G
+Latvia 10GB 30Days,6.1,LV,LV_10_30,3G/4G/5G,Tele2 5G
+Lithuania 1GB 7Days,0.9,LT,LT_1_7,3G/4G/5G,Telia 5G
+Lithuania 3GB 15Days,2.2,LT,LT_3_15,3G/4G/5G,Telia 5G
+Lithuania 10GB 30Days,9.9,LT,LT_10_30,3G/4G/5G,Telia 5G
+Malta 1GB 7Days,1.5,MT,MT_1_7,3G/4G/5G,GO 5G
+Malta 3GB 15Days,3.7,MT,MT_3_15,3G/4G/5G,GO 5G
+Malta 10GB 30Days,9.9,MT,MT_10_30,3G/4G/5G,GO 5G
+Norway 1GB 7Days,0.7,NO,NO_1_7,3G/4G/5G,Telia 5G
+Norway 3GB 15Days,1.7,NO,NO_3_15,3G/4G/5G,Telia 5G
+Norway 10GB 30Days,4.7,NO,NO_10_30,3G/4G/5G,Telia 5G
+Portugal 1GB 7Days,0.9,PT,PT_1_7,3G/4G/5G,NOS 5G
+Portugal 3GB 15Days,2.2,PT,PT_3_15,3G/4G/5G,NOS 5G
+Portugal 10GB 30Days,6.1,PT,PT_10_30,3G/4G/5G,NOS 5G
+Slovakia 1GB 7Days,0.9,SK,SK_1_7,3G/4G/5G,Orange 5G
+Slovakia 3GB 15Days,2.2,SK,SK_3_15,3G/4G/5G,Orange 5G
+Slovakia 10GB 30Days,6.1,SK,SK_10_30,3G/4G/5G,Orange 5G
+Sweden 1GB 7Days,0.9,SE,SE_1_7,3G/4G/5G,3 5G
+Sweden 3GB 15Days,2.2,SE,SE_3_15,3G/4G/5G,3 5G
+Sweden 10GB 30Days,6.1,SE,SE_10_30,3G/4G/5G,3 5G
+Belgium 1GB 7Days,0.9,BE,BE_1_7,3G/4G/5G,Base 5G
+Belgium 3GB 15Days,2.2,BE,BE_3_15,3G/4G/5G,Base 5G
+Belgium 10GB 30Days,6.1,BE,BE_10_30,3G/4G/5G,Base 5G
+Bulgaria 1GB 7Days,0.9,BG,BG_1_7,3G/4G/5G,Vivacom 5G
+Bulgaria 3GB 15Days,2.2,BG,BG_3_15,3G/4G/5G,Vivacom 5G
+Bulgaria 10GB 30Days,6.1,BG,BG_10_30,3G/4G/5G,Vivacom 5G
+Cyprus 1GB 7Days,0.9,CY,CY_1_7,3G/4G/5G,Vodafone 5G
+Cyprus 3GB 15Days,2.2,CY,CY_3_15,3G/4G/5G,Vodafone 5G
+Cyprus 10GB 30Days,6.1,CY,CY_10_30,3G/4G/5G,Vodafone 5G
+Estonia 1GB 7Days,0.9,EE,EE_1_7,3G/4G/5G,Telia 5G
+Estonia 3GB 15Days,2.2,EE,EE_3_15,3G/4G/5G,Telia 5G
+Estonia 10GB 30Days,6.1,EE,EE_10_30,3G/4G/5G,Telia 5G
+Finland 1GB 7Days,0.7,FI,FI_1_7,3G/4G/5G,Elisa 5G
+Finland 3GB 15Days,1.7,FI,FI_3_15,3G/4G/5G,Elisa 5G
+Finland 10GB 30Days,4.7,FI,FI_10_30,3G/4G/5G,Elisa 5G
+Iceland 1GB 7Days,1.5,IS,IS_1_7,3G/4G/5G,Nova 5G
+Iceland 3GB 15Days,3.1,IS,IS_3_15,3G/4G/5G,Nova 5G
+Iceland 10GB 30Days,9.9,IS,IS_10_30,3G/4G/5G,Nova 5G
+Ireland 1GB 7Days,0.9,IE,IE_1_7,3G/4G/5G,Vodafone 5G
+Ireland 3GB 15Days,2.2,IE,IE_3_15,3G/4G/5G,Vodafone 5G
+Ireland 10GB 30Days,6.1,IE,IE_10_30,3G/4G/5G,Vodafone 5G
+Israel 1GB 7Days,1.5,IL,IL_1_7,3G/4G/5G,Cellcom 5G
+Israel 3GB 15Days,3.7,IL,IL_3_15,3G/4G/5G,Cellcom 5G
+Israel 5GB 30Days,5.7,IL,IL_5_30,3G/4G/5G,Cellcom 5G
+Israel 10GB 30Days,9.9,IL,IL_10_30,3G/4G/5G,Cellcom 5G
+Italy 1GB 7Days,0.7,IT,IT_1_7,3G/4G/5G,Iliad 5G
+Italy 3GB 15Days,1.7,IT,IT_3_15,3G/4G/5G,Iliad 5G
+Italy 10GB 30Days,4.7,IT,IT_10_30,3G/4G/5G,Iliad 5G
+Luxembourg 1GB 7Days,0.9,LU,LU_1_7,3G/4G/5G,POST 5G
+Luxembourg 3GB 15Days,2.2,LU,LU_3_15,3G/4G/5G,POST 5G
+Luxembourg 10GB 30Days,6.1,LU,LU_10_30,3G/4G/5G,POST 5G
+Netherlands 1GB 7Days,0.9,NL,NL_1_7,3G/4G/5G,Vodafone 5G
+Netherlands 3GB 15Days,2.2,NL,NL_3_15,3G/4G/5G,Vodafone 5G
+Netherlands 10GB 30Days,6.1,NL,NL_10_30,3G/4G/5G,Vodafone 5G
+Poland 1GB 7Days,0.7,PL,PL_1_7,3G/4G/5G,Orange 5G
+Poland 3GB 15Days,1.7,PL,PL_3_15,3G/4G/5G,Orange 5G
+Poland 10GB 30Days,5,PL,PL_10_30,3G/4G/5G,Orange 5G
+Romania 1GB 7Days,0.7,RO,RO_1_7,3G/4G/5G,Vodafone 5G
+Romania 3GB 15Days,1.7,RO,RO_3_15,3G/4G/5G,Vodafone 5G
+Romania 10GB 30Days,4.7,RO,RO_10_30,3G/4G/5G,Vodafone 5G
+Slovenia 1GB 7Days,0.9,SI,SI_1_7,3G/4G/5G,Mobitel 5G
+Slovenia 3GB 15Days,2.2,SI,SI_3_15,3G/4G/5G,Mobitel 5G
+Slovenia 10GB 30Days,6.1,SI,SI_10_30,3G/4G/5G,Mobitel 5G
+Spain 1GB 7Days,0.7,ES,ES_1_7,3G/4G/5G,Vodafone 5G
+Spain 3GB 15Days,1.7,ES,ES_3_15,3G/4G/5G,Vodafone 5G
+Switzerland 1GB 7Days,0.7,CH,CH_1_7,3G/4G/5G,Sunrise 5G
+Switzerland 3GB 15Days,1.7,CH,CH_3_15,3G/4G/5G,Sunrise 5G
+Switzerland 10GB 30Days,4.7,CH,CH_10_30,3G/4G/5G,Sunrise 5G
+Ukraine 1GB 7Days,0.7,UA,UA_1_7,3G/4G,Kyivstar 4G
+Ukraine 3GB 15Days,1.7,UA,UA_3_15,3G/4G,Kyivstar 4G
+Ukraine 10GB 30Days,4.7,UA,UA_10_30,3G/4G,Kyivstar 4G
+United Kingdom 1GB 7Days,0.7,GB,GB_1_7,3G/4G/5G,Vodafone 5G
+United Kingdom 3GB 15Days,1.7,GB,GB_3_15,3G/4G/5G,Vodafone 5G
+United Kingdom 10GB 30Days,4.7,GB,GB_10_30,3G/4G/5G,Vodafone 5G
+Aland Islands 1GB 7Days,1.8,AX,AX_1_7,3G/4G/5G,AMT 5G
+Aland Islands 3GB 15Days,4.6,AX,AX_3_15,3G/4G/5G,AMT 5G
+Aland Islands 10GB 30Days,12,AX,AX_10_30,3G/4G/5G,AMT 5G
+Isle of Man 1GB 7Days,1.1,IM,IM_1_7,3G/4G/5G,Pronto GSM 5G
+Isle of Man 3GB 15Days,2.8,IM,IM_3_15,3G/4G/5G,Pronto GSM 5G
+Isle of Man 10GB 30Days,7.6,IM,IM_10_30,3G/4G/5G,Pronto GSM 5G
+Jersey 1GB 7Days,0.7,JE,JE_1_7,3G/4G/5G,JT 5G
+Jersey 3GB 15Days,1.7,JE,JE_3_15,3G/4G/5G,JT 5G
+Jersey 10GB 30Days,5.2,JE,JE_10_30,3G/4G/5G,JT 5G
+Malaysia 1GB 7Days,0.7,MY,MY_1_7,3G/4G/5G,DiGi 5G
+Malaysia 3GB 15Days,1.7,MY,MY_3_15,3G/4G/5G,DiGi 5G
+Malaysia 5GB 30Days,2.7,MY,MY_5_30,3G/4G/5G,DiGi 5G
+Malaysia 10GB 30Days,4.7,MY,MY_10_30,3G/4G/5G,DiGi 5G
+New Zealand 1GB 7Days,1.2,NZ,NZ_1_7,3G/4G,Spark 4G
+New Zealand 3GB 15Days,3.2,NZ,NZ_3_15,3G/4G,Spark 4G
+New Zealand 5GB 30Days,5.2,NZ,NZ_5_30,3G/4G,Spark 4G
+Philippines 1GB 7Days,1.8,PH,PH_1_7,3G/4G/5G,Globe 5G
+Philippines 3GB 15Days,4.6,PH,PH_3_15,3G/4G/5G,Globe 5G
+Philippines 5GB 30Days,7,PH,PH_5_30,3G/4G/5G,Globe 5G
+Philippines 10GB 30Days,12.2,PH,PH_10_30,3G/4G/5G,Globe 5G
+Singapore 1GB 7Days,0.7,SG,SG_1_7,3G/4G/5G,Simba 5G
+Singapore 3GB 15Days,1.7,SG,SG_3_15,3G/4G/5G,Simba 5G
+Singapore 5GB 30Days,2.7,SG,SG_5_30,3G/4G/5G,Simba 5G
+Singapore 10GB 30Days,4.7,SG,SG_10_30,3G/4G/5G,Simba 5G
+Sri Lanka 1GB 7Days,2.2,LK,LK_1_7,3G/4G,Mobitel 4G
+Sri Lanka 3GB 15Days,4.6,LK,LK_3_15,3G/4G,Mobitel 4G
+Sri Lanka 5GB 30Days,7.7,LK,LK_5_30,3G/4G,Mobitel 4G
+Thailand 1GB 7Days,0.7,TH,TH_1_7,3G/4G/5G,AIS 5G
+Thailand 3GB 15Days,1.7,TH,TH_3_15,3G/4G/5G,AIS 5G
+Thailand 10GB 30Days,4.7,TH,TH_10_30,3G/4G/5G,AIS 5G
+Turkey 1GB 7Days,0.46,TR,TR_1_7,3G/4G/5G,Türk Telekom 5G
+Turkey 3GB 15Days,1.39,TR,TR_3_15,3G/4G/5G,Türk Telekom 5G
+Turkey 5GB 30Days,2.3,TR,TR_5_30,3G/4G/5G,Türk Telekom 5G
+Turkey 10GB 30Days,4.2,TR,TR_10_30,3G/4G/5G,Türk Telekom 5G
+Vietnam 1GB 7Days,1.8,VN,VN_1_7,3G/4G,Vinaphone 4G
+Vietnam 3GB 15Days,4.6,VN,VN_3_15,3G/4G,Vinaphone 4G
+Vietnam 5GB 30Days,7,VN,VN_5_30,3G/4G,Vinaphone 4G
+Vietnam 10GB 30Days,12.2,VN,VN_10_30,3G/4G,Vinaphone 4G
+China 1GB 7Days,0.7,CN,CN_1_7,3G/4G/5G,China Mobile 5G
+China 3GB 15Days,1.7,CN,CN_3_15,3G/4G/5G,China Mobile 5G
+China 5GB 30Days,2.7,CN,CN_5_30,3G/4G/5G,China Mobile 5G
+China 10GB 30Days,4.7,CN,CN_10_30,3G/4G/5G,China Mobile 5G
+Indonesia 1GB 7Days,0.7,ID,ID_1_7,3G/4G/5G,Telkomsel 5G
+Indonesia 3GB 15Days,1.7,ID,ID_3_15,3G/4G/5G,Telkomsel 5G
+Indonesia 5GB 30Days,2.7,ID,ID_5_30,3G/4G/5G,Telkomsel 5G
+Indonesia 10GB 30Days,4.7,ID,ID_10_30,3G/4G/5G,Telkomsel 5G
+India 1GB 7Days,2.3,IN,IN_1_7,3G/4G/5G,AirTel 5G
+India 3GB 15Days,5.7,IN,IN_3_15,3G/4G/5G,AirTel 5G
+India 5GB 30Days,8.8,IN,IN_5_30,3G/4G/5G,AirTel 5G
+Japan 1GB 7Days,0.7,JP,JP_1_7,3G/4G,NTT docomo 4G
+Japan 3GB 15Days,1.7,JP,JP_3_15,3G/4G,NTT docomo 4G
+Japan 5GB 30Days,2.7,JP,JP_5_30,3G/4G,NTT docomo 4G
+Japan 10GB 30Days,4.7,JP,JP_10_30,3G/4G,NTT docomo 4G
+Russia 1GB 7Days,2.9,RU,RU_1_7,3G/4G,Beeline 4G
+Russia 3GB 15Days,7.2,RU,RU_3_15,3G/4G,Beeline 4G
+South Korea 1GB 7Days,0.7,KR,KR_1_7,3G/4G/5G,SKTelecom 5G
+South Korea 3GB 15Days,1.7,KR,KR_3_15,3G/4G/5G,SKTelecom 5G
+South Korea 5GB 30Days,2.7,KR,KR_5_30,3G/4G/5G,SKTelecom 5G
+South Korea 10GB 30Days,4.7,KR,KR_10_30,3G/4G/5G,SKTelecom 5G
+Jordan 1GB 7Days,1.8,JO,JO_1_7,3G/4G/5G,Zain 5G
+Jordan 3GB 15Days,4.6,JO,JO_3_15,3G/4G/5G,Zain 5G
+Jordan 5GB 30Days,7,JO,JO_5_30,3G/4G/5G,Zain 5G
+Jordan 10GB 30Days,12.2,JO,JO_10_30,3G/4G/5G,Zain 5G
+Oman 1GB 7Days,5.7,OM,OM_1_7,3G/4G,Omantel 4G
+Oman 3GB 15Days,14.1,OM,OM_3_15,3G/4G,Omantel 4G
+Oman 5GB 30Days,21,OM,OM_5_30,3G/4G,Omantel 4G
+Oman 10GB 30Days,37,OM,OM_10_30,3G/4G,Omantel 4G
+Saudi Arabia 1GB 7Days,2.4,SA,SA_1_7,3G/4G/5G,Mobily 5G
+Saudi Arabia 3GB 15Days,6,SA,SA_3_15,3G/4G/5G,Mobily 5G
+Saudi Arabia 5GB 30Days,10,SA,SA_5_30,3G/4G/5G,Mobily 5G
+Saudi Arabia 10GB 30Days,17.2,SA,SA_10_30,3G/4G/5G,Mobily 5G
+Azerbaijan 1GB 7Days,7.1,AZ,AZ_1_7,3G/4G/5G,Bakcell 5G
+Azerbaijan 3GB 15Days,17.6,AZ,AZ_3_15,3G/4G/5G,Bakcell 5G
+Azerbaijan 5GB 30Days,26,AZ,AZ_5_30,3G/4G/5G,Bakcell 5G
+Azerbaijan 10GB 30Days,46,AZ,AZ_10_30,3G/4G/5G,Bakcell 5G
+Bahrain 1GB 7Days,4.6,BH,BH_1_7,3G/4G/5G,Zain 5G
+Bahrain 3GB 15Days,11.2,BH,BH_3_15,3G/4G/5G,Zain 5G
+Argentina 1GB 7Days,3.6,AR,AR_1_7,3G/4G/5G,Movistar 5G
+Argentina 3GB 15Days,8.9,AR,AR_3_15,3G/4G/5G,Movistar 5G
+Argentina 5GB 30Days,14,AR,AR_5_30,3G/4G/5G,Movistar 5G
+Argentina 10GB 30Days,26,AR,AR_10_30,3G/4G/5G,Movistar 5G
+Bolivia 1GB 7Days,5.7,BO,BO_1_7,3G/4G/5G,Tigo 5G
+Bolivia 3GB 15Days,16.8,BO,BO_3_15,3G/4G/5G,Tigo 5G
+Brazil 1GB 7Days,2.3,BR,BR_1_7,3G/4G/5G,TIM 5G
+Chile 1GB 7Days,5.7,CL,CL_1_7,3G/4G/5G,entel 5G
+Colombia 1GB 7Days,3.3,CO,CO_1_7,3G/4G/5G,movistar 5G
+Costa Rica 1GB 7Days,4.6,CR,CR_1_7,3G/4G/5G,Claro 5G
+Ecuador 1GB 7Days,4.6,EC,EC_1_7,3G/4G/5G,Movistar 5G
+El Salvador 1GB 7Days,5.7,SV,SV_1_7,3G/4G/5G,Digicel 5G
+Guatemala 1GB 7Days,5.7,GT,GT_1_7,3G/4G/5G,Claro 5G
+Honduras 1GB 7Days,4.6,HN,HN_1_7,3G/4G/5G,Tigo 5G
+Nicaragua 1GB 7Days,4.6,NI,NI_1_7,3G/4G,movistar 4G
+Panama 1GB 7Days,4.6,PA,PA_1_7,3G/4G,movistar 4G
+Paraguay 1GB 7Days,4.6,PY,PY_1_7,3G/4G,Tigo 4G
+Peru 1GB 7Days,5.7,PE,PE_1_7,3G/4G/5G,Entel 5G
+Puerto Rico 1GB 7Days,2.9,PR,PR_1_7,3G/4G/5G,AT&T 5G
+Uruguay 1GB 7Days,4.6,UY,UY_1_7,3G/4G/5G,Antel 5G
+Brazil 3GB 15Days,5.7,BR,BR_3_15,3G/4G/5G,TIM 5G
+Chile 3GB 15Days,14.1,CL,CL_3_15,3G/4G/5G,entel 5G
+Colombia 3GB 15Days,8.3,CO,CO_3_15,3G/4G/5G,movistar 5G
+Costa Rica 3GB 15Days,11.2,CR,CR_3_15,3G/4G/5G,Claro 5G
+Ecuador 3GB 15Days,11.2,EC,EC_3_15,3G/4G/5G,Movistar 5G
+El Salvador 3GB 15Days,14.1,SV,SV_3_15,3G/4G/5G,Digicel 5G
+Guatemala 3GB 15Days,14.1,GT,GT_3_15,3G/4G/5G,Claro 5G
+Honduras 3GB 15Days,11.2,HN,HN_3_15,3G/4G/5G,Tigo 5G
+Nicaragua 3GB 15Days,11.2,NI,NI_3_15,3G/4G,movistar 4G
+Panama 3GB 15Days,11.2,PA,PA_3_15,3G/4G,movistar 4G
+Paraguay 3GB 15Days,11.2,PY,PY_3_15,3G/4G,Tigo 4G
+Peru 3GB 15Days,14.1,PE,PE_3_15,3G/4G/5G,Entel 5G
+Puerto Rico 3GB 15Days,7.2,PR,PR_3_15,3G/4G/5G,AT&T 5G
+Uruguay 3GB 15Days,11.2,UY,UY_3_15,3G/4G/5G,Antel 5G
+Brazil 5GB 30Days,9,BR,BR_5_30,3G/4G/5G,TIM 5G
+Chile 5GB 30Days,21,CL,CL_5_30,3G/4G/5G,entel 5G
+Colombia 5GB 30Days,13.7,CO,CO_5_30,3G/4G/5G,movistar 5G
+Costa Rica 5GB 30Days,17.1,CR,CR_5_30,3G/4G/5G,Claro 5G
+Honduras 5GB 30Days,17.5,HN,HN_5_30,3G/4G/5G,Tigo 5G
+Panama 5GB 30Days,18.5,PA,PA_5_30,3G/4G,movistar 4G
+Paraguay 5GB 30Days,17,PY,PY_5_30,3G/4G,Tigo 4G
+Peru 5GB 30Days,49.5,PE,PE_5_30,3G/4G/5G,Entel 5G
+Puerto Rico 5GB 30Days,11,PR,PR_5_30,3G/4G/5G,AT&T 5G
+Brazil 10GB 30Days,17,BR,BR_10_30,3G/4G/5G,TIM 5G
+Chile 10GB 30Days,37,CL,CL_10_30,3G/4G/5G,entel 5G
+Colombia 10GB 30Days,24.5,CO,CO_10_30,3G/4G/5G,movistar 5G
+Costa Rica 10GB 30Days,29,CR,CR_10_30,3G/4G/5G,Claro 5G
+Honduras 10GB 30Days,32,HN,HN_10_30,3G/4G/5G,Tigo 5G
+Panama 10GB 30Days,35,PA,PA_10_30,3G/4G,movistar 4G
+Paraguay 10GB 30Days,32,PY,PY_10_30,3G/4G,Tigo 4G
+Peru 10GB 30Days,84.15,PE,PE_10_30,3G/4G/5G,Entel 5G
+Puerto Rico 10GB 30Days,19,PR,PR_10_30,3G/4G/5G,AT&T 5G
+Reunion 1GB 7Days,2.9,RE,RE_1_7,3G/4G/5G,Orange 5G
+Madagascar 1GB 7Days,4.6,MG,MG_1_7,3G/4G/5G,Airtel 5G
+Malawi 1GB 7Days,5.7,MW,MW_1_7,3G/4G,Airtel 4G
+Botswana 1GB 7Days,7.1,BW,BW_1_7,3G/4G/5G,Orange 5G
+Central African Republic 1GB 7Days,7.1,CF,CF_1_7,3G/4G/5G,Orange 5G
+Chad 1GB 7Days,5.7,TD,TD_1_7,3G/4G,Airtel 4G
+Republic of the Republic of the Congo 1GB 7Days,5.7,CG,CG_1_7,3G/4G,Airtel 4G
+Cote d'Ivoire 1GB 7Days,7.1,CI,CI_1_7,3G/4G/5G,Orange 5G
+Egypt 1GB 7Days,1.8,EG,EG_1_7,3G/4G/5G,Orange 5G
+Gabon 1GB 7Days,4.6,GA,GA_1_7,3G/4G/5G,Airtel 5G
+Kenya 1GB 7Days,5.7,KE,KE_1_7,3G/4G,Airtel 4G
+Liberia 1GB 7Days,5.7,LR,LR_1_7,3G/4G/5G,Lonestar Cell MTN 5G
+Mali 1GB 7Days,7.1,ML,ML_1_7,3G/4G/5G,Orange 5G
+Morocco 1GB 7Days,1.5,MA,MA_1_7,3G/4G/5G,Orange Morocco 5G
+Niger 1GB 7Days,7.1,NE,NE_1_7,3G,Orange 3G
+Nigeria 1GB 7Days,4.6,NG,NG_1_7,3G/4G/5G,MTN 5G
+Senegal 1GB 7Days,7.1,SN,SN_1_7,3G/4G,Orange 4G
+Seychelles 1GB 7Days,4.6,SC,SC_1_7,3G/4G/5G,Airtel 5G
+South Africa 1GB 7Days,2,ZA,ZA_1_7,3G/4G,Vodacom 4G
+Sudan 1GB 7Days,11.2,SD,SD_1_7,3G/4G,MTN 4G
+Eswatini 1GB 7Days,7.1,SZ,SZ_1_7,3G/4G/5G,Swazi Mobile 5G
+Tanzania 1GB 7Days,3.6,TZ,TZ_1_7,3G,Vodafone 3G
+Tunisia 1GB 7Days,1.8,TN,TN_1_7,3G/4G,OOREDOO TN 4G
+Uganda 1GB 7Days,5.7,UG,UG_1_7,3G/4G,Airtel 4G
+Zambia 1GB 7Days,4.6,ZM,ZM_1_7,3G/4G/5G,Airtel 5G
+Reunion 3GB 15Days,7.2,RE,RE_3_15,3G/4G/5G,Orange 5G
+Madagascar 3GB 15Days,11.2,MG,MG_3_15,3G/4G/5G,Airtel 5G
+Malawi 3GB 15Days,14.1,MW,MW_3_15,3G/4G,Airtel 4G
+Botswana 3GB 15Days,17.6,BW,BW_3_15,3G/4G/5G,Orange 5G
+Central African Republic 3GB 15Days,17.6,CF,CF_3_15,3G/4G/5G,Orange 5G
+Chad 3GB 15Days,14.1,TD,TD_3_15,3G/4G,Airtel 4G
+Republic of the Republic of the Congo 3GB 15Days,14.1,CG,CG_3_15,3G/4G,Airtel 4G
+Cote d'Ivoire 3GB 15Days,17.6,CI,CI_3_15,3G/4G/5G,Orange 5G
+Egypt 3GB 15Days,4.6,EG,EG_3_15,3G/4G/5G,Orange 5G
+Gabon 3GB 15Days,11.2,GA,GA_3_15,3G/4G/5G,Airtel 5G
+Kenya 3GB 15Days,14.1,KE,KE_3_15,3G/4G,Airtel 4G
+Liberia 3GB 15Days,14.1,LR,LR_3_15,3G/4G/5G,Lonestar Cell MTN 5G
+Mali 3GB 15Days,17.6,ML,ML_3_15,3G/4G/5G,Orange 5G
+Morocco 3GB 15Days,3.7,MA,MA_3_15,3G/4G/5G,Orange Morocco 5G
+Niger 3GB 15Days,17.6,NE,NE_3_15,3G,Orange 3G
+Nigeria 3GB 15Days,11.2,NG,NG_3_15,3G/4G/5G,MTN 5G
+Senegal 3GB 15Days,17.6,SN,SN_3_15,3G/4G,Orange 4G
+Seychelles 3GB 15Days,11.2,SC,SC_3_15,3G/4G/5G,Airtel 5G
+South Africa 3GB 15Days,6,ZA,ZA_3_15,3G/4G,Vodacom 4G
+Sudan 3GB 15Days,27,SD,SD_3_15,3G/4G,MTN 4G

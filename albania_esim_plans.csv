@@ -1,0 +1,12 @@
+Name,Base Price (EUR),Our Price (EUR),Location,Slug,Speed,Network,Data,Days,Provider,Description
+Albania 1GB 7Days,2.58,4.84,AL,AL_1_7,3G/4G/5G,Vodafone Albania,1GB,7,SIMRYO,Local coverage with high-speed data
+Albania 3GB 15Days,6.80,9.48,AL,AL_3_15,3G/4G/5G,Vodafone Albania,3GB,15,SIMRYO,Perfect for short stays
+Albania 3GB 30Days,7.10,9.81,AL,AL_3_30,3G/4G/5G,Vodafone Albania,3GB,30,SIMRYO,Monthly plan for extended stays
+Albania 5GB 30Days,11.20,14.32,AL,AL_5_30,3G/4G/5G,Vodafone Albania,5GB,30,SIMRYO,Great for medium usage
+Albania 10GB 30Days,21.50,25.65,AL,AL_10_30,3G/4G/5G,Vodafone Albania,10GB,30,SIMRYO,Heavy data usage plan
+Albania 20GB 30Days,40.00,46.00,AL,AL_20_30,3G/4G/5G,Vodafone Albania,20GB,30,SIMRYO,Premium high-data plan
+Balkans 1GB 7Days,2.58,4.84,"AL,RS,BG,ME,HR,GR,MK",BALKANS_1_7,3G/4G/5G,Vivacom Network,1GB,7,SIMRYO,Multi-country Balkans coverage
+Balkans 3GB 15Days,6.80,9.48,"AL,RS,BG,ME,HR,GR,MK",BALKANS_3_15,3G/4G/5G,Vivacom Network,3GB,15,SIMRYO,Regional Balkans plan
+Balkans 3GB 30Days,7.10,9.81,"AL,RS,BG,ME,HR,GR,MK",BALKANS_3_30,3G/4G/5G,Vivacom Network,3GB,30,SIMRYO,Monthly Balkans coverage
+Balkans 5GB 30Days,11.20,14.32,"AL,RS,BG,ME,HR,GR,MK",BALKANS_5_30,3G/4G/5G,Vivacom Network,5GB,30,SIMRYO,Regional high-data plan
+Balkans 10GB 30Days,21.50,25.65,"AL,RS,BG,ME,HR,GR,MK",BALKANS_10_30,3G/4G/5G,Vivacom Network,10GB,30,SIMRYO,Premium Balkans plan

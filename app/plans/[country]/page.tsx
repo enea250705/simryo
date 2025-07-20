@@ -332,6 +332,11 @@ export default function CountryPage() {
     return cart.reduce((total, item) => total + (item.planData.price * item.quantity), 0)
   }
 
+  const getFormattedCartValue = () => {
+    const totalValue = getTotalCartValue()
+    return formatLocalPrice(totalValue)
+  }
+
   // Get display plans (filtered and sorted)
   const getDisplayPlans = () => {
     if (!country?.plans) return []
@@ -405,7 +410,7 @@ export default function CountryPage() {
                 <div className="bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2 flex items-center gap-2 shadow-lg border border-white/30">
                   <ShoppingCart className="h-5 w-5" />
                   <span className="text-sm font-medium">{getTotalCartItems()} items</span>
-                  <span className="text-sm font-bold">${getTotalCartValue().toFixed(2)}</span>
+                  <span className="text-sm font-bold">{getFormattedCartValue()}</span>
                 </div>
               </div>
             )}
