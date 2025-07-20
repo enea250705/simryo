@@ -211,111 +211,114 @@ function CartContent() {
 
 
         {cartItems.length === 0 ? (
-          /* Empty Cart */
-          <div className="relative">
-            <Card className="bg-white/80 backdrop-blur-sm border-2 border-white/50 shadow-2xl rounded-3xl overflow-hidden">
-              <CardContent className="text-center p-16">
-                <div className="relative inline-block mb-8">
-                  <div className="w-32 h-32 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center shadow-inner">
-                    <div className="text-6xl">🛒</div>
+          {/* Empty Cart */}
+          <div className="flex justify-center px-4">
+            <div className="relative w-full max-w-2xl">
+              <Card className="bg-white/90 backdrop-blur-sm border-2 border-white/50 shadow-2xl rounded-2xl sm:rounded-3xl overflow-hidden">
+                <CardContent className="text-center p-8 sm:p-12 lg:p-16">
+                  <div className="relative inline-block mb-6 sm:mb-8">
+                    <div className="w-24 h-24 sm:w-32 sm:h-32 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center shadow-inner">
+                      <div className="text-4xl sm:text-6xl">🛒</div>
+                    </div>
+                    <div className="absolute -bottom-2 -right-2 w-8 h-8 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg">
+                      <span className="text-lg sm:text-2xl">✨</span>
+                    </div>
                   </div>
-                  <div className="absolute -bottom-2 -right-2 w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full flex items-center justify-center shadow-lg">
-                    <span className="text-2xl">✨</span>
+                  <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-3 sm:mb-4">
+                    Your cart is waiting for adventure
+                  </h2>
+                  <p className="text-sm sm:text-base lg:text-lg text-gray-600 mb-6 sm:mb-8 max-w-md mx-auto px-2">
+                    Discover premium eSIM plans for seamless global connectivity. No more roaming fees, no more worries.
+                  </p>
+                  <div className="flex justify-center">
+                    <Link href="/plans" className="w-full sm:w-auto">
+                      <Button className="w-full sm:w-auto bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 hover:from-blue-700 hover:via-purple-700 hover:to-indigo-700 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl sm:rounded-2xl text-base sm:text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
+                        <ShoppingCart className="h-4 w-4 sm:h-5 sm:w-5 mr-2 sm:mr-3" />
+                        Explore eSIM Plans
+                      </Button>
+                    </Link>
                   </div>
-                </div>
-                <h2 className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent mb-4">
-                  Your cart is waiting for adventure
-                </h2>
-                <p className="text-lg text-gray-600 mb-8 max-w-md mx-auto">
-                  Discover premium eSIM plans for seamless global connectivity. No more roaming fees, no more worries.
-                </p>
-                <Link href="/plans">
-                  <Button className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 hover:from-blue-700 hover:via-purple-700 hover:to-indigo-700 text-white px-8 py-4 rounded-2xl text-lg font-semibold shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-1">
-                    <ShoppingCart className="h-5 w-5 mr-3" />
-                    Explore eSIM Plans
-                  </Button>
-                </Link>
-              </CardContent>
-            </Card>
-            
-            {/* Floating Elements */}
-            <div className="absolute -top-6 -left-6 w-12 h-12 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-2xl opacity-20 transform rotate-12"></div>
-            <div className="absolute -bottom-4 -right-4 w-8 h-8 bg-gradient-to-br from-pink-400 to-rose-500 rounded-xl opacity-20 transform -rotate-12"></div>
+                </CardContent>
+              </Card>
+              
+              {/* Floating Elements */}
+              <div className="absolute -top-6 -left-6 w-8 h-8 sm:w-12 sm:h-12 bg-gradient-to-br from-emerald-400 to-teal-500 rounded-2xl opacity-20 transform rotate-12 hidden sm:block"></div>
+              <div className="absolute -bottom-4 -right-4 w-6 h-6 sm:w-8 sm:h-8 bg-gradient-to-br from-pink-400 to-rose-500 rounded-xl opacity-20 transform -rotate-12 hidden sm:block"></div>
+            </div>
           </div>
         ) : (
-          /* Cart Items */
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Cart Items */}
+          <div className="px-4">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 max-w-7xl mx-auto">
             {/* Cart Items List */}
-            <div className="lg:col-span-2 space-y-6">
+            <div className="lg:col-span-2 space-y-4 sm:space-y-6">
               {cartItems.map((item, index) => (
-                <Card key={index} className="bg-white/80 backdrop-blur-sm border-2 border-white/50 shadow-xl rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300 group">
-                  <CardContent className="p-8">
-                    <div className="flex items-center justify-between">
-                      <div className="flex-1">
-                        <div className="flex items-center gap-4 mb-4">
-                          <div className="relative">
-                            <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-purple-100 rounded-2xl flex items-center justify-center shadow-lg">
-                              <span className="text-3xl">{item.flag}</span>
-                            </div>
-                            <div className="absolute -top-2 -right-2 w-6 h-6 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-full flex items-center justify-center">
-                              <span className="text-xs font-bold text-white">{item.quantity}</span>
-                            </div>
+                <Card key={index} className="bg-white/90 backdrop-blur-sm border-2 border-white/50 shadow-xl rounded-xl sm:rounded-2xl overflow-hidden hover:shadow-2xl transition-all duration-300 group">
+                  <CardContent className="p-4 sm:p-6 lg:p-8">
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                      <div className="flex items-center gap-3 sm:gap-4 flex-1 w-full sm:w-auto">
+                        <div className="relative flex-shrink-0">
+                          <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-br from-blue-100 to-purple-100 rounded-xl sm:rounded-2xl flex items-center justify-center shadow-lg">
+                            <span className="text-xl sm:text-3xl">{item.flag}</span>
                           </div>
-                          <div className="flex-1">
-                            <h3 className="text-xl font-bold text-gray-900 mb-1">{item.countryName}</h3>
-                            <div className="flex items-center gap-2 text-gray-600 mb-2">
-                              <span className="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg text-sm font-medium">
-                                {item.planData.data}
-                              </span>
-                              <span className="px-3 py-1 bg-purple-100 text-purple-700 rounded-lg text-sm font-medium">
-                                {item.planData.days} days
-                              </span>
-                            </div>
-                            <div className="text-2xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
-                              {formatPrice(convertPrice(item.planData.price, 'EUR', currency))} each
-                            </div>
+                          <div className="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 w-5 h-5 sm:w-6 sm:h-6 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-full flex items-center justify-center">
+                            <span className="text-xs font-bold text-white">{item.quantity}</span>
+                          </div>
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-1 truncate">{item.countryName}</h3>
+                          <div className="flex flex-wrap items-center gap-2 mb-2">
+                            <span className="px-2 py-1 sm:px-3 sm:py-1 bg-blue-100 text-blue-700 rounded-lg text-xs sm:text-sm font-medium">
+                              {item.planData.data}
+                            </span>
+                            <span className="px-2 py-1 sm:px-3 sm:py-1 bg-purple-100 text-purple-700 rounded-lg text-xs sm:text-sm font-medium">
+                              {item.planData.days} days
+                            </span>
+                          </div>
+                          <div className="text-lg sm:text-2xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
+                            {formatPrice(convertPrice(item.planData.price, 'EUR', currency))} each
                           </div>
                         </div>
                       </div>
                       
-                      <div className="flex flex-col items-end gap-4">
+                      <div className="flex items-center justify-between w-full sm:w-auto sm:flex-col gap-3 sm:gap-4">
                         {/* Quantity Controls */}
-                        <div className="flex items-center gap-3 bg-gray-50 rounded-xl p-2">
+                        <div className="flex items-center gap-2 sm:gap-3 bg-gray-50 rounded-xl p-2">
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-10 w-10 rounded-xl hover:bg-white transition-colors"
+                            className="h-8 w-8 sm:h-10 sm:w-10 rounded-xl hover:bg-white transition-colors"
                             onClick={() => updateQuantity(item.planIndex, item.countryId, item.quantity - 1)}
                           >
-                            <Minus className="h-4 w-4" />
+                            <Minus className="h-3 w-3 sm:h-4 sm:w-4" />
                           </Button>
-                          <span className="w-8 text-center font-bold text-lg">{item.quantity}</span>
+                          <span className="w-6 sm:w-8 text-center font-bold text-sm sm:text-lg">{item.quantity}</span>
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-10 w-10 rounded-xl hover:bg-white transition-colors"
+                            className="h-8 w-8 sm:h-10 sm:w-10 rounded-xl hover:bg-white transition-colors"
                             onClick={() => updateQuantity(item.planIndex, item.countryId, item.quantity + 1)}
                           >
-                            <Plus className="h-4 w-4" />
+                            <Plus className="h-3 w-3 sm:h-4 sm:w-4" />
                           </Button>
                         </div>
 
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="text-red-500 hover:text-red-700 hover:bg-red-50 rounded-xl h-10 w-10 transition-all duration-200"
+                          className="text-red-500 hover:text-red-700 hover:bg-red-50 rounded-xl h-8 w-8 sm:h-10 sm:w-10 transition-all duration-200"
                           onClick={() => removeItem(item.planIndex, item.countryId)}
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Trash2 className="h-3 w-3 sm:h-4 sm:w-4" />
                         </Button>
                       </div>
                     </div>
                     
                     {/* Item Total */}
-                    <div className="mt-4 pt-4 border-t border-gray-200">
+                    <div className="mt-3 sm:mt-4 pt-3 sm:pt-4 border-t border-gray-200">
                       <div className="flex justify-between items-center">
-                        <span className="text-gray-600">Item Total:</span>
-                        <span className="text-xl font-bold text-gray-900">
+                        <span className="text-sm sm:text-base text-gray-600">Item Total:</span>
+                        <span className="text-lg sm:text-xl font-bold text-gray-900">
                           {formatPrice(convertPrice(item.planData.price * item.quantity, 'EUR', currency))}
                         </span>
                       </div>
