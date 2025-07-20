@@ -10,6 +10,8 @@ import Link from "next/link"
 import { useParams, useRouter } from "next/navigation"
 import { toast } from 'sonner'
 import type { EnhancedPlan } from "../page" // Simplified import
+import { CurrencySelector } from "@/components/currency-selector"
+import { useCurrency } from "@/lib/contexts/currency-context"
 
 // Define Country type locally as it's specific to this page's structure now
 interface Country {
@@ -36,6 +38,7 @@ interface CartItem {
 }
 
 export default function CountryPage() {
+  const { formatPrice, convertPrice, currency } = useCurrency()
   const params = useParams()
   const countrySlug = params.country as string
   const router = useRouter()
@@ -209,26 +212,21 @@ export default function CountryPage() {
     }
   }
 
-  // Format price with proper decimals and currency
-  const formatPrice = (price: number) => {
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency: 'USD',
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    }).format(price)
+  // Format price with proper decimals and currency using currency context
+  const formatLocalPrice = (price: number) => {
+    return formatPrice(convertPrice(price, 'EUR', currency))
   }
 
   // Calculate price per GB
   const getPricePerGB = (plan: EnhancedPlan) => {
     const gbAmount = plan.dataInMB / 1024
     const pricePerGB = plan.price / gbAmount
-    return formatPrice(pricePerGB)
+    return formatLocalPrice(pricePerGB)
   }
 
   // Calculate price per day
   const getPricePerDay = (plan: EnhancedPlan) => {
-    return formatPrice(plan.price / plan.days)
+    return formatLocalPrice(plan.price / plan.days)
   }
 
   // Get value score for sorting
@@ -471,7 +469,15 @@ export default function CountryPage() {
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
         <div className="text-center mb-12">
           <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">Choose Your Perfect Plan</h2>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">Select from our premium eSIM data plans for {country.country}. All plans include instant activation and 24/7 support.</p>
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-6">Select from our premium eSIM data plans for {country.country}. All plans include instant activation and 24/7 support.</p>
+          
+          {/* Currency Selector */}
+          <div className="flex justify-center">
+            <div className="flex items-center gap-3">
+              <span className="text-sm font-medium text-gray-700">View prices in:</span>
+              <CurrencySelector variant="compact" />
+            </div>
+          </div>
         </div>
 
         {/* Filters and Sorting */}
@@ -564,7 +570,7 @@ export default function CountryPage() {
                   
                   <div className="text-center">
                     <div className="text-4xl font-bold text-emerald-600 mb-2">
-                      {formatPrice(plan.price)}
+                      {formatLocalPrice(plan.price)}
                     </div>
                     <div className="text-sm text-gray-500 space-y-1">
                       <div className="flex items-center justify-center gap-3">
@@ -711,7 +717,7 @@ export default function CountryPage() {
               
               <div className="text-center bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg">
                 <div className="text-4xl font-bold text-emerald-600 mb-3">
-                  {formatPrice(Math.min(...country.plans.map(p => p.price)))}
+                  {formatLocalPrice(Math.min(...country.plans.map(p => p.price)))}
                 </div>
                 <div className="text-sm font-semibold text-gray-700">Starting Price</div>
                 <div className="text-xs text-gray-500 mt-1">Best value guaranteed</div>

@@ -12,6 +12,8 @@ import Link from "next/link"
 import { toast } from 'sonner'
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 import { analytics } from "@/lib/analytics"
+import { CurrencySelector } from "@/components/currency-selector"
+import { useCurrency } from "@/lib/contexts/currency-context"
 
 // Enhanced Plan interface matching the API response
 export interface EnhancedPlan {
@@ -116,6 +118,7 @@ const apiService = {
 }
 
 function PlansPageContent() {
+  const { formatPrice, convertPrice, currency } = useCurrency()
   const searchParams = useSearchParams()
   const [plans, setPlans] = useState<EnhancedPlan[]>([])
   const [countries, setCountries] = useState<Country[]>([])
@@ -257,11 +260,19 @@ function PlansPageContent() {
               eSIM Plan
             </span>
           </h1>
-          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed mb-6">
             Connect instantly worldwide with premium eSIM plans from trusted providers.
             <br />
             <span className="text-blue-600 font-semibold">✨ Featured plans with instant checkout available!</span>
           </p>
+          
+          {/* Currency Selector */}
+          <div className="flex justify-center">
+            <div className="flex items-center gap-3">
+              <span className="text-sm font-medium text-gray-700">View prices in:</span>
+              <CurrencySelector variant="compact" />
+            </div>
+          </div>
         </div>
 
 
@@ -412,21 +423,21 @@ function PlansPageContent() {
                             <div className="mb-6">
                               <div className="text-center mb-4">
                                 <div className="flex items-baseline justify-center gap-2">
-                                  <span className="text-4xl font-bold text-gray-900">€{plan.price.toFixed(2)}</span>
-                                  <span className="text-lg text-gray-500">{plan.currency}</span>
+                                  <span className="text-4xl font-bold text-gray-900">{formatPrice(convertPrice(plan.price, 'EUR', currency))}</span>
+                                  <span className="text-lg text-gray-500">{currency}</span>
                                 </div>
                                 {plan.promoApplied && (
                                   <div className="flex items-center justify-center gap-2 mt-2">
                                     <span className="text-sm text-red-500 line-through">
-                                      €{plan.promoApplied.originalPrice.toFixed(2)}
+                                      {formatPrice(convertPrice(plan.promoApplied.originalPrice, 'EUR', currency))}
                                     </span>
                                     <Badge variant="destructive" className="text-xs">
-                                      Save €{(plan.promoApplied.originalPrice - plan.price).toFixed(2)}
+                                      Save {formatPrice(convertPrice(plan.promoApplied.originalPrice - plan.price, 'EUR', currency))}
                                     </Badge>
                                   </div>
                                 )}
                                 <div className="text-sm text-gray-500 mt-2">
-                                  ~€{(plan.price / plan.days).toFixed(2)} per day
+                                  ~{formatPrice(convertPrice(plan.price / plan.days, 'EUR', currency))} per day
                                 </div>
                               </div>
 

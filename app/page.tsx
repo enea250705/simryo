@@ -39,6 +39,8 @@ import Link from "next/link"
 import { Separator } from "@/components/ui/separator"
 
 import { TravelTips } from "@/components/travel-tips"
+import { CurrencySelector } from "@/components/currency-selector"
+import { useCurrency } from "@/lib/contexts/currency-context"
 
 // Lazy load heavy components
 const Testimonials = lazy(() => import("@/components/testimonials"))
@@ -191,6 +193,7 @@ const reviewSchema = {
 // Component for testimonials section
 
 export default function HomePage() {
+  const { formatPrice, convertPrice, currency } = useCurrency()
   const [searchQuery, setSearchQuery] = useState("")
   const [popularPlans, setPopularPlans] = useState<Plan[]>([])
   const [loadingPlans, setLoadingPlans] = useState(true)
@@ -486,9 +489,17 @@ export default function HomePage() {
             <h2 id="popular-plans-heading" className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 mb-4">
               Top Travel Destinations
             </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-6">
               Discover our most popular eSIM plans for top travel destinations worldwide
             </p>
+            
+            {/* Currency Selector */}
+            <div className="flex justify-center mb-8">
+              <div className="flex items-center gap-3">
+                <span className="text-sm font-medium text-gray-700">View prices in:</span>
+                <CurrencySelector variant="compact" />
+              </div>
+            </div>
           </div>
 
           {loadingPlans ? (
@@ -533,10 +544,10 @@ export default function HomePage() {
                     <div className="flex items-center justify-between">
                       <div>
                         <div className="text-2xl font-bold text-gray-900">
-                          €{plan.price}
+                          {formatPrice(convertPrice(plan.price, 'EUR', currency))}
                           {plan.promoApplied && (
                             <span className="text-sm text-gray-500 line-through ml-2">
-                              €{plan.promoApplied.originalPrice}
+                              {formatPrice(convertPrice(plan.promoApplied.originalPrice, 'EUR', currency))}
                             </span>
                           )}
                         </div>
@@ -547,7 +558,7 @@ export default function HomePage() {
                       <div className="text-right">
                         <div className="text-sm text-gray-500">Per GB</div>
                         <div className="text-lg font-semibold text-gray-900">
-                          €{(plan.price / (plan.dataInMB / 1024)).toFixed(2)}
+                          {formatPrice(convertPrice(plan.price / (plan.dataInMB / 1024), 'EUR', currency))}
                         </div>
                       </div>
                     </div>
