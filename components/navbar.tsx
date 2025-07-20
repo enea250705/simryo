@@ -595,15 +595,6 @@ export function Navbar() {
                         <User className="h-4 w-4" />
                         <span>My Profile</span>
                       </Link>
-
-                      <Link
-                        href="/login"
-                        onClick={() => setIsOpen(false)}
-                        className="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors"
-                      >
-                        <LogIn className="h-4 w-4" />
-                        <span>Sign In</span>
-                      </Link>
                     </div>
                   </nav>
                 </div>
