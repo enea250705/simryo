@@ -14,9 +14,9 @@ export function shouldKeepPlan(plan: EnhancedPlan): boolean {
   )
   
   if (isChina) {
-    // For China regions, only check if plan has basic validity (in stock, has price, has data)
-    console.log(`🇨🇳 China region detected for plan: "${plan.country}" (${plan.countryCode}) - bypassing ALL filters`)
-    return plan.inStock && plan.price > 0 && dataInMB > 0 && days > 0
+    // For China regions, bypass price and data filters but still enforce minimum reasonable duration
+    console.log(`🇨🇳 China region detected for plan: "${plan.country}" (${plan.countryCode}) - bypassing price/data filters only`)
+    return plan.inStock && plan.price > 0 && dataInMB > 0 && days >= 3 && days <= 90
   }
   
   // Basic quality filters for other countries - remove obviously unreasonable plans
@@ -31,8 +31,9 @@ export function shouldKeepPlan(plan: EnhancedPlan): boolean {
     return false
   }
   
-  // Remove plans with extremely short validity (less than 1 day) or extremely long (more than 90 days)
-  if (days < 1 || days > 90) {
+  // Remove plans with extremely short validity (less than 3 days) or extremely long (more than 90 days)
+  // 1-2 day plans are impractical for travel
+  if (days < 3 || days > 90) {
     return false
   }
   
