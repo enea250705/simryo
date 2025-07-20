@@ -4,7 +4,21 @@ export function shouldKeepPlan(plan: EnhancedPlan): boolean {
   const dataInMB = plan.dataInMB
   const days = plan.days
   
-  // Basic quality filters - remove obviously unreasonable plans
+  // Special exception for China regions - remove ALL filters
+  const chinaRegions = ['china mainland', 'hong kong', 'macao', 'china', 'hongkong']
+  const isChina = chinaRegions.some(region => 
+    plan.country.toLowerCase().includes(region) || 
+    plan.countryCode.toLowerCase().includes('cn') ||
+    plan.countryCode.toLowerCase().includes('hk') ||
+    plan.countryCode.toLowerCase().includes('mo')
+  )
+  
+  if (isChina) {
+    // For China regions, only check if plan has basic validity (in stock, has price, has data)
+    return plan.inStock && plan.price > 0 && dataInMB > 0 && days > 0
+  }
+  
+  // Basic quality filters for other countries - remove obviously unreasonable plans
   if (!plan.inStock || plan.price <= 0 || dataInMB <= 0 || days <= 0) {
     return false
   }
@@ -59,10 +73,53 @@ export function generateMissingPlans(availablePlans: EnhancedPlan[], countryInfo
   const targetDataAmounts = [1, 3, 5, 10, 20] // GB
   const generatedPlans: EnhancedPlan[] = []
   
-  // If no plans available, return empty (we can't generate from nothing)
+  // Check if this is a China region
+  const chinaRegions = ['china mainland', 'hong kong', 'macao', 'china', 'hongkong']
+  const isChina = chinaRegions.some(region => countryInfo.country.toLowerCase().includes(region))
+  
+  // If no plans available, try to generate basic plans for China regions
   if (availablePlans.length === 0) {
-    console.log(`⚠️ Cannot generate plans for ${countryInfo.country}: no base plans available`)
-    return []
+    if (isChina) {
+      console.log(`🇨🇳 Generating basic plans for ${countryInfo.country} (China region with no base plans)`)
+      // Generate basic plans with reasonable pricing for China
+      const basicPlans = [
+        { data: 1, price: 8.99, days: 7 },
+        { data: 3, price: 15.99, days: 15 },
+        { data: 5, price: 24.99, days: 30 },
+        { data: 10, price: 39.99, days: 30 },
+        { data: 20, price: 69.99, days: 30 }
+      ]
+      
+      return basicPlans.map((basicPlan, index) => ({
+        id: `generated-china-${countryInfo.country.toLowerCase().replace(/\s+/g, '-')}-${basicPlan.data}gb`,
+        country: countryInfo.country,
+        countryCode: countryInfo.country.toLowerCase().includes('hong kong') ? 'HK' : 
+                     countryInfo.country.toLowerCase().includes('macao') ? 'MO' : 'CN',
+        region: countryInfo.region,
+        flag: countryInfo.flag,
+        data: `${basicPlan.data}GB`,
+        dataInMB: basicPlan.data * 1024,
+        days: basicPlan.days,
+        price: basicPlan.price,
+        currency: 'EUR',
+        network: {
+          type: '4G/5G',
+          carriers: ['China Mobile', 'China Unicom', 'China Telecom'],
+          coverage: 'National'
+        },
+        features: ['Instant Activation', 'No Contracts', '24/7 Support'],
+        inStock: true,
+        providerId: 'generated-china',
+        providerDisplayName: 'SIMRYO (China)',
+        popularity: 50 + index,
+        lastUpdated: new Date(),
+        featured: index === 1, // Make 3GB featured
+        popular: index === 1
+      } as EnhancedPlan))
+    } else {
+      console.log(`⚠️ Cannot generate plans for ${countryInfo.country}: no base plans available`)
+      return []
+    }
   }
   
   // Get existing data amounts
@@ -146,6 +203,7 @@ export function filterAllowedPlans(plans: EnhancedPlan[], countryInfo?: { countr
   
   if (originalCount - deduplicated.length > 0) {
     console.log(`📊 Filtered out plans with: unreasonable pricing (>$10/GB), extreme durations (<1 or >90 days), tiny data (<100MB), or massive data (>100GB)`)
+    console.log(`🇨🇳 Note: China/Hong Kong/Macao regions bypass all price and data filters`)
   }
   
   return finalPlans
