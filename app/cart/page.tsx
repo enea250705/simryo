@@ -211,7 +211,6 @@ function CartContent() {
 
 
         {cartItems.length === 0 ? (
-          {/* Empty Cart */}
           <div className="flex justify-center px-4">
             <div className="relative w-full max-w-2xl">
               <Card className="bg-white/90 backdrop-blur-sm border-2 border-white/50 shadow-2xl rounded-2xl sm:rounded-3xl overflow-hidden">
@@ -247,7 +246,6 @@ function CartContent() {
             </div>
           </div>
         ) : (
-          {/* Cart Items */}
           <div className="px-4">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 max-w-7xl mx-auto">
             {/* Cart Items List */}
