@@ -45,7 +45,10 @@
       "Bash(npm start)",
       "mcp__ide__executeCode",
       "Bash(python3:*)",
-      "Bash(awk:*)"
+      "Bash(awk:*)",
+      "Bash(tail:*)",
+      "Bash(head:*)",
+      "Bash(sed:*)"
     ],
     "deny": []
   }

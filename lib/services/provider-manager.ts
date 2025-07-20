@@ -134,16 +134,13 @@ export class ProviderManager {
     const providerResults = await Promise.all(providerPromises)
     providerResults.forEach(plans => allPlans.push(...plans))
 
-    // Apply plan filtering to keep only allowed data/duration combinations
+    // Apply plan filtering with deduplication and missing plan generation
     console.log(`🔍 Applying plan filtering to ${allPlans.length} plans...`)
     const allowedPlans = filterAllowedPlans(allPlans)
     const filteringSummary = getFilteringSummary(allPlans, allowedPlans)
     console.log(`📊 Plan filtering results: ${filteringSummary.filteredCount}/${filteringSummary.originalCount} plans kept (${filteringSummary.percentageKept}%), ${filteringSummary.removedCount} plans filtered out`)
-
-    // Deduplicate plans by country + data + days, keeping the cheapest one
-    console.log(`🔄 Deduplicating ${allowedPlans.length} plans...`)
-    const deduplicatedPlans = this.deduplicatePlans(allowedPlans)
-    console.log(`✅ Deduplicated to ${deduplicatedPlans.length} unique plans (removed ${allowedPlans.length - deduplicatedPlans.length} duplicates)`)
+    
+    const deduplicatedPlans = allowedPlans // Already deduplicated in filterAllowedPlans
 
     // Filter out unavailable plans if requested
     let filteredPlans = options.includeUnavailable ? deduplicatedPlans : deduplicatedPlans.filter(plan => plan.inStock)

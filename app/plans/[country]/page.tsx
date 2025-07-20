@@ -98,70 +98,35 @@ export default function CountryPage() {
       if (result.success && result.data && result.data.length > 0) {
         const plans = result.data
 
-        // Apply specific plan filtering (1GB/7days, 3GB/15days, 3GB/30days, 5GB/30days, 10GB/30days, 20GB/30days, 50GB/30days)
+        // Apply plan filtering with deduplication and missing plan generation
         console.log(`🔍 Applying plan filtering to ${plans.length} plans for ${countryName}...`)
-        const reasonablePlans = filterAllowedPlans(plans.filter((plan: EnhancedPlan) => plan.inStock))
-        console.log(`📊 Plan filtering results for ${countryName}: ${reasonablePlans.length}/${plans.length} plans kept`)
+        const countryInfo = {
+          country: plans[0].country,
+          flag: plans[0].flag || '🌍',
+          region: plans[0].region || 'Unknown'
+        }
+        const reasonablePlans = filterAllowedPlans(plans.filter((plan: EnhancedPlan) => plan.inStock), countryInfo)
+        console.log(`📊 Plan filtering results for ${countryName}: ${reasonablePlans.length} total plans (including generated)`)
         
         if (reasonablePlans.length === 0) {
-          console.log(`⚠️ No plans match the allowed combinations for ${countryName}`)
+          console.log(`⚠️ No plans available for ${countryName}`)
         } else {
-          console.log(`✅ Allowed plans for ${countryName}:`, reasonablePlans.map(p => ({
+          console.log(`✅ Final plans for ${countryName}:`, reasonablePlans.map(p => ({
             data: `${Math.round(p.dataInMB / 1024)}GB`,
             days: `${p.days} days`,
-            price: `€${p.price}`
+            price: `€${p.price}`,
+            provider: p.providerDisplayName
           })))
         }
 
-        // Deduplicate plans with similar data amounts and prices
-        const uniquePlans = reasonablePlans.reduce((acc: EnhancedPlan[], plan: EnhancedPlan) => {
-          // Find similar plans (within 10% data and price difference)
-          const similarPlan = acc.find(p => {
-            const dataDiff = Math.abs(p.dataInMB - plan.dataInMB) / p.dataInMB
-            const priceDiff = Math.abs(p.price - plan.price) / p.price
-            return dataDiff < 0.1 && priceDiff < 0.1 && p.days === plan.days
-          })
+        // Sort plans by data amount and mark best values
+        const sortedPlans = reasonablePlans.sort((a, b) => {
+          const aGB = a.dataInMB / 1024
+          const bGB = b.dataInMB / 1024
+          return aGB - bGB
+        })
 
-          // If no similar plan exists or this plan is better value, add it
-          if (!similarPlan || (plan.price / plan.dataInMB < similarPlan.price / similarPlan.dataInMB)) {
-            if (similarPlan) {
-              // Remove the similar plan if this one is better value
-              const index = acc.indexOf(similarPlan)
-              acc.splice(index, 1)
-            }
-            acc.push(plan)
-          }
-          return acc
-        }, [])
-
-        // Group plans by duration for better comparison
-        const durationGroups = {
-          short: uniquePlans.filter((p: EnhancedPlan) => p.days <= 7),
-          medium: uniquePlans.filter((p: EnhancedPlan) => p.days > 7 && p.days <= 30),
-          long: uniquePlans.filter((p: EnhancedPlan) => p.days > 30)
-        }
-
-        // Sort each group by value (price per GB per day)
-        const sortByValue = (plans: EnhancedPlan[]) => {
-          return plans.sort((a, b) => {
-            const aValue = (a.price / (a.dataInMB / 1024)) / a.days
-            const bValue = (b.price / (b.dataInMB / 1024)) / b.days
-            return aValue - bValue
-          })
-        }
-
-        const sortedPlans = [
-          ...sortByValue(durationGroups.short),
-          ...sortByValue(durationGroups.medium),
-          ...sortByValue(durationGroups.long)
-        ]
-
-        // Mark the best value plan in each duration group
-        if (durationGroups.short.length > 0) durationGroups.short[0].popular = true
-        if (durationGroups.medium.length > 0) durationGroups.medium[0].popular = true
-        if (durationGroups.long.length > 0) durationGroups.long[0].popular = true
-        
-        // Mark the overall best value plan
+        // Mark the best value plan overall
         if (sortedPlans.length > 0) {
           const bestOverallPlan = sortedPlans.reduce((best, current) => {
             const bestValue = (best.price / (best.dataInMB / 1024)) / best.days

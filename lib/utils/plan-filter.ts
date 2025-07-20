@@ -9,10 +9,10 @@ export function shouldKeepPlan(plan: EnhancedPlan): boolean {
     return false
   }
   
-  // Remove plans with unreasonable pricing (more than $2 per GB), except for 1GB plans
+  // Remove plans with unreasonable pricing (more than $5 per GB)
   const dataInGB = dataInMB / 1024
   const pricePerGB = plan.price / dataInGB
-  if (pricePerGB > 2 && dataInGB > 1.2) { // Allow 1GB plans to have higher per-GB pricing
+  if (pricePerGB > 5) {
     return false
   }
   
@@ -26,31 +26,110 @@ export function shouldKeepPlan(plan: EnhancedPlan): boolean {
     return false
   }
   
-  // Prefer common duration patterns but don't be too restrictive
-  const preferredDurations = [1, 3, 5, 7, 10, 14, 15, 21, 30, 60, 90]
-  const hasReasonableDuration = preferredDurations.some(duration => Math.abs(days - duration) <= 2)
-  
-  // Prefer standard data amounts but allow flexibility
-  const hasReasonableData = dataInGB >= 0.1 && dataInGB <= 100
-  
-  return hasReasonableDuration && hasReasonableData
+  return true
 }
 
-export function filterAllowedPlans(plans: EnhancedPlan[]): EnhancedPlan[] {
-  const filteredPlans = plans.filter(shouldKeepPlan)
+export function deduplicatePlans(plans: EnhancedPlan[]): EnhancedPlan[] {
+  const planMap = new Map<string, EnhancedPlan>()
+  
+  plans.forEach(plan => {
+    const dataInGB = Math.round(plan.dataInMB / 1024)
+    const key = `${dataInGB}GB`
+    
+    const existingPlan = planMap.get(key)
+    
+    if (!existingPlan) {
+      // No plan for this data amount yet, add it
+      planMap.set(key, plan)
+    } else {
+      // Plan exists, prefer the one with shorter duration (15 days over 30 days)
+      if (plan.days < existingPlan.days) {
+        planMap.set(key, plan)
+      } else if (plan.days === existingPlan.days && plan.price < existingPlan.price) {
+        // Same duration, prefer cheaper price
+        planMap.set(key, plan)
+      }
+    }
+  })
+  
+  return Array.from(planMap.values())
+}
+
+export function generateMissingPlans(availablePlans: EnhancedPlan[], countryInfo: { country: string, flag: string, region: string }): EnhancedPlan[] {
+  const targetDataAmounts = [1, 3, 5, 10, 20] // GB
+  const generatedPlans: EnhancedPlan[] = []
+  
+  // Get existing data amounts
+  const existingDataAmounts = availablePlans.map(plan => Math.round(plan.dataInMB / 1024))
+  
+  targetDataAmounts.forEach(targetGB => {
+    if (!existingDataAmounts.includes(targetGB)) {
+      // Find the closest available plan to base pricing on
+      const closestPlan = availablePlans.reduce((closest, plan) => {
+        const planGB = plan.dataInMB / 1024
+        const targetDiff = Math.abs(planGB - targetGB)
+        const closestDiff = Math.abs((closest.dataInMB / 1024) - targetGB)
+        return targetDiff < closestDiff ? plan : closest
+      })
+      
+      if (closestPlan) {
+        // Calculate price based on closest plan's per-GB rate
+        const basePricePerGB = closestPlan.price / (closestPlan.dataInMB / 1024)
+        const newPrice = Math.round(basePricePerGB * targetGB * 100) / 100
+        
+        // Prefer 15 days for 3GB, 30 days for others
+        const preferredDuration = targetGB === 3 ? 15 : 30
+        
+        const generatedPlan: EnhancedPlan = {
+          ...closestPlan,
+          id: `generated-${countryInfo.country.toLowerCase()}-${targetGB}gb`,
+          data: `${targetGB}GB`,
+          dataInMB: targetGB * 1024,
+          days: preferredDuration,
+          price: newPrice,
+          providerDisplayName: `${closestPlan.providerDisplayName} (Converted)`,
+          popular: false,
+          featured: false
+        }
+        
+        generatedPlans.push(generatedPlan)
+      }
+    }
+  })
+  
+  return generatedPlans
+}
+
+export function filterAllowedPlans(plans: EnhancedPlan[], countryInfo?: { country: string, flag: string, region: string }): EnhancedPlan[] {
+  // Step 1: Filter out unreasonable plans
+  const qualityFiltered = plans.filter(shouldKeepPlan)
+  
+  // Step 2: Deduplicate plans (prefer shorter duration)
+  const deduplicated = deduplicatePlans(qualityFiltered)
+  
+  // Step 3: Generate missing standard plans if country info provided
+  let finalPlans = deduplicated
+  if (countryInfo && deduplicated.length > 0) {
+    const generated = generateMissingPlans(deduplicated, countryInfo)
+    finalPlans = [...deduplicated, ...generated].sort((a, b) => {
+      const aGB = a.dataInMB / 1024
+      const bGB = b.dataInMB / 1024
+      return aGB - bGB
+    })
+  }
   
   // Log filtering summary
   const originalCount = plans.length
-  const filteredCount = filteredPlans.length
-  const removedCount = originalCount - filteredCount
+  const filteredCount = finalPlans.length
+  const generatedCount = finalPlans.length - deduplicated.length
   
-  console.log(`🔍 Plan filtering summary: Kept ${filteredCount}/${originalCount} plans (${removedCount} filtered out)`)
+  console.log(`🔍 Plan filtering summary: Kept ${deduplicated.length}/${originalCount} plans, generated ${generatedCount} missing plans`)
   
-  if (removedCount > 0) {
-    console.log(`📊 Filtered out plans with: unreasonable pricing (>$2/GB for plans >1.2GB), extreme durations (<1 or >90 days), tiny data (<100MB), or massive data (>100GB)`)
+  if (originalCount - deduplicated.length > 0) {
+    console.log(`📊 Filtered out plans with: unreasonable pricing (>$5/GB), extreme durations (<1 or >90 days), tiny data (<100MB), or massive data (>100GB)`)
   }
   
-  return filteredPlans
+  return finalPlans
 }
 
 export function getFilteringSummary(originalPlans: EnhancedPlan[], filteredPlans: EnhancedPlan[]) {
