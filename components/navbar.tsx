@@ -30,7 +30,9 @@ import {
   CreditCard,
   Gift,
   Sparkles,
-  User
+  User,
+  Mail,
+  LogIn
 } from "lucide-react"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
@@ -381,7 +383,7 @@ export function Navbar() {
           </div>
         </div>
 
-        {/* Mobile Navigation */}
+                {/* Mobile Navigation */}
         <div className="lg:hidden">
           <div className="flex items-center justify-between h-16">
             {/* Mobile Menu Button */}
@@ -443,34 +445,20 @@ export function Navbar() {
             </div>
           </div>
 
-          {/* Mobile Menu */}
-          <div className={`lg:hidden fixed inset-0 z-50 transition-all duration-300 ${
-            isOpen ? 'visible opacity-100' : 'invisible opacity-0'
-          }`}>
-            {/* Backdrop */}
-            <div 
-              className="absolute inset-0 bg-black/50"
-              onClick={() => setIsOpen(false)}
-            />
-            
-            {/* Menu Panel */}
-            <div className={`absolute top-0 left-0 h-full w-80 bg-white shadow-2xl transform transition-transform duration-300 ease-out ${
-              isOpen ? 'translate-x-0' : '-translate-x-full'
-            }`}>
-              {/* Close Button */}
-              <div className="absolute top-4 right-4 z-10">
-                <button
-                  onClick={() => setIsOpen(false)}
-                  className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
-                >
-                  <X className="h-5 w-5 text-gray-600" />
-                </button>
-              </div>
-
-              {/* Menu Content */}
-              <div className="h-full flex flex-col">
-                {/* Logo Section */}
-                <div className="px-6 pt-8 pb-6">
+          {/* Mobile Menu Overlay */}
+          {isOpen && (
+            <div className="fixed inset-0 z-50 lg:hidden">
+              {/* Backdrop */}
+              <div 
+                className="absolute inset-0 bg-black/60 backdrop-blur-sm"
+                onClick={() => setIsOpen(false)}
+                aria-hidden="true"
+              />
+              
+              {/* Menu Container */}
+              <div className="absolute top-0 left-0 h-full w-full max-w-sm bg-white shadow-2xl">
+                {/* Header */}
+                <div className="flex items-center justify-between p-6 border-b border-gray-100">
                   <Link href="/" onClick={() => setIsOpen(false)} className="flex items-center space-x-3">
                     <Image
                       src="/simryologo.png"
@@ -484,114 +472,157 @@ export function Navbar() {
                       <p className="text-sm text-gray-500">Global eSIM</p>
                     </div>
                   </Link>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={() => setIsOpen(false)}
+                    className="p-2 rounded-full hover:bg-gray-100"
+                  >
+                    <X className="h-5 w-5 text-gray-600" />
+                  </Button>
                 </div>
 
-                {/* Navigation Links */}
-                <div className="flex-1 px-6 overflow-y-auto">
-                  <nav className="space-y-2">
-                    {/* Main Links */}
-                    <Link
-                      href="/"
-                      onClick={() => setIsOpen(false)}
-                      className="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                    >
-                      <Globe className="h-5 w-5" />
-                      <span className="font-medium">Home</span>
-                    </Link>
+                {/* Menu Content */}
+                <div className="flex-1 overflow-y-auto">
+                  <nav className="p-6 space-y-6">
+                    {/* Main Navigation */}
+                    <div className="space-y-2">
+                      <Link
+                        href="/"
+                        onClick={() => setIsOpen(false)}
+                        className="flex items-center space-x-4 p-4 rounded-xl bg-gradient-to-r from-blue-50 to-purple-50 hover:from-blue-100 hover:to-purple-100 transition-all duration-200 group"
+                      >
+                        <div className="p-2 rounded-lg bg-blue-100 group-hover:bg-blue-200 transition-colors">
+                          <Globe className="h-5 w-5 text-blue-600" />
+                        </div>
+                        <div>
+                          <span className="font-semibold text-gray-900">Home</span>
+                          <p className="text-sm text-gray-600">Welcome to SIMRYO</p>
+                        </div>
+                      </Link>
 
-                    <Link
-                      href="/plans"
-                      onClick={() => setIsOpen(false)}
-                      className="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                    >
-                      <MapPin className="h-5 w-5" />
-                      <span className="font-medium">Travel Plans</span>
-                      <Badge className="ml-auto bg-blue-100 text-blue-700 text-xs">Popular</Badge>
-                    </Link>
+                      <Link
+                        href="/plans"
+                        onClick={() => setIsOpen(false)}
+                        className="flex items-center space-x-4 p-4 rounded-xl bg-gradient-to-r from-emerald-50 to-teal-50 hover:from-emerald-100 hover:to-teal-100 transition-all duration-200 group"
+                      >
+                        <div className="p-2 rounded-lg bg-emerald-100 group-hover:bg-emerald-200 transition-colors">
+                          <MapPin className="h-5 w-5 text-emerald-600" />
+                        </div>
+                        <div className="flex-1">
+                          <span className="font-semibold text-gray-900">Travel Plans</span>
+                          <p className="text-sm text-gray-600">190+ countries coverage</p>
+                        </div>
+                        <Badge className="bg-emerald-500 text-white text-xs">Popular</Badge>
+                      </Link>
 
-                    <Link
-                      href="/pricing"
-                      onClick={() => setIsOpen(false)}
-                      className="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                    >
-                      <CreditCard className="h-5 w-5" />
-                      <span className="font-medium">Pricing</span>
-                    </Link>
+                      <Link
+                        href="/pricing"
+                        onClick={() => setIsOpen(false)}
+                        className="flex items-center space-x-4 p-4 rounded-xl bg-gradient-to-r from-purple-50 to-pink-50 hover:from-purple-100 hover:to-pink-100 transition-all duration-200 group"
+                      >
+                        <div className="p-2 rounded-lg bg-purple-100 group-hover:bg-purple-200 transition-colors">
+                          <CreditCard className="h-5 w-5 text-purple-600" />
+                        </div>
+                        <div>
+                          <span className="font-semibold text-gray-900">Pricing</span>
+                          <p className="text-sm text-gray-600">Transparent rates</p>
+                        </div>
+                      </Link>
 
-                    <Link
-                      href="/setup"
-                      onClick={() => setIsOpen(false)}
-                      className="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
-                    >
-                      <Settings className="h-5 w-5" />
-                      <span className="font-medium">How it Works</span>
-                    </Link>
-
-                    {/* Divider */}
-                    <div className="my-4 border-t border-gray-200"></div>
+                      <Link
+                        href="/setup"
+                        onClick={() => setIsOpen(false)}
+                        className="flex items-center space-x-4 p-4 rounded-xl bg-gradient-to-r from-orange-50 to-red-50 hover:from-orange-100 hover:to-red-100 transition-all duration-200 group"
+                      >
+                        <div className="p-2 rounded-lg bg-orange-100 group-hover:bg-orange-200 transition-colors">
+                          <Settings className="h-5 w-5 text-orange-600" />
+                        </div>
+                        <div>
+                          <span className="font-semibold text-gray-900">How it Works</span>
+                          <p className="text-sm text-gray-600">Quick setup guide</p>
+                        </div>
+                      </Link>
+                    </div>
 
                     {/* Support Section */}
-                    <div className="space-y-1">
-                      <p className="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">Support</p>
+                    <div className="space-y-2">
+                      <h3 className="text-lg font-bold text-gray-900 mb-3 flex items-center">
+                        <MessageCircle className="h-5 w-5 mr-2 text-blue-600" />
+                        Support
+                      </h3>
                       
                       <Link
                         href="/support"
                         onClick={() => setIsOpen(false)}
-                        className="flex items-center space-x-3 px-4 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-800 transition-colors"
+                        className="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors"
                       >
-                        <MessageCircle className="h-4 w-4" />
+                        <HelpCircle className="h-4 w-4" />
                         <span>Help Center</span>
                       </Link>
 
                       <Link
                         href="/faq"
                         onClick={() => setIsOpen(false)}
-                        className="flex items-center space-x-3 px-4 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-800 transition-colors"
+                        className="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors"
                       >
-                        <HelpCircle className="h-4 w-4" />
+                        <MessageCircle className="h-4 w-4" />
                         <span>FAQ</span>
                       </Link>
 
                       <Link
                         href="/contact"
                         onClick={() => setIsOpen(false)}
-                        className="flex items-center space-x-3 px-4 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-800 transition-colors"
+                        className="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors"
                       >
-                        <MessageCircle className="h-4 w-4" />
-                        <span>Contact</span>
+                        <Mail className="h-4 w-4" />
+                        <span>Contact Us</span>
                       </Link>
                     </div>
 
-                    {/* Divider */}
-                    <div className="my-4 border-t border-gray-200"></div>
-
                     {/* Account Section */}
-                    <div className="space-y-1">
-                      <p className="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">Account</p>
+                    <div className="space-y-2">
+                      <h3 className="text-lg font-bold text-gray-900 mb-3 flex items-center">
+                        <User className="h-5 w-5 mr-2 text-blue-600" />
+                        Account
+                      </h3>
                       
                       <Link
                         href="/profile"
                         onClick={() => setIsOpen(false)}
-                        className="flex items-center space-x-3 px-4 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-800 transition-colors"
+                        className="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors"
                       >
                         <User className="h-4 w-4" />
-                        <span>Profile</span>
+                        <span>My Profile</span>
+                      </Link>
+
+                      <Link
+                        href="/login"
+                        onClick={() => setIsOpen(false)}
+                        className="flex items-center space-x-3 p-3 rounded-lg text-gray-700 hover:bg-gray-50 hover:text-blue-600 transition-colors"
+                      >
+                        <LogIn className="h-4 w-4" />
+                        <span>Sign In</span>
                       </Link>
                     </div>
                   </nav>
                 </div>
 
                 {/* Bottom CTA */}
-                <div className="p-6 bg-gray-50 border-t border-gray-200">
+                <div className="p-6 bg-gradient-to-r from-blue-50 to-purple-50 border-t border-gray-100">
                   <Link href="/plans" onClick={() => setIsOpen(false)}>
-                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg shadow-sm transition-colors">
-                      Get Your eSIM
+                    <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-4 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
+                      <Sparkles className="h-5 w-5 mr-2" />
+                      Get Your eSIM Now
                     </Button>
                   </Link>
+                  <p className="text-center text-sm text-gray-600 mt-3">
+                    Instant activation • 190+ countries
+                  </p>
                 </div>
               </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </nav>
