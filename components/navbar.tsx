@@ -36,9 +36,6 @@ import { cn } from "@/lib/utils"
 import { analytics } from "@/lib/analytics"
 import { CurrencySelector } from "@/components/currency-selector"
 
-interface CartItem {
-  quantity: number
-}
 
 const navigationItems = [
   {
@@ -124,7 +121,7 @@ export function Navbar() {
   const updateCartCount = () => {
     try {
       const cart = JSON.parse(localStorage.getItem('cart') || '[]')
-      const count = cart.reduce((acc: number, item: CartItem) => acc + (item.quantity || 0), 0)
+      const count = cart.reduce((acc, item) => acc + (item.quantity || 0), 0)
       setCartCount(count)
     } catch (error) {
       console.warn('Error updating cart count:', error)
