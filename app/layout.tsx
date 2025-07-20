@@ -125,15 +125,16 @@ export const metadata: Metadata = {
       'zh-CN': 'https://simryo.com/zh-cn',
     },
   },
-  verification: {
-    google: 'your-google-verification-code',
-    yandex: 'your-yandex-verification-code',
-    yahoo: 'your-yahoo-verification-code',
-    other: {
-      'msvalidate.01': 'your-bing-verification-code',
-      'facebook-domain-verification': 'your-facebook-verification-code',
-    },
-  },
+  // Remove placeholder verification codes - add real ones when available
+  // verification: {
+  //   google: 'your-google-verification-code',
+  //   yandex: 'your-yandex-verification-code', 
+  //   yahoo: 'your-yahoo-verification-code',
+  //   other: {
+  //     'msvalidate.01': 'your-bing-verification-code',
+  //     'facebook-domain-verification': 'your-facebook-verification-code',
+  //   },
+  // },
   appleWebApp: {
     capable: true,
     title: 'SIMRYO',

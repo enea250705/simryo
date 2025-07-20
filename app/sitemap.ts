@@ -143,31 +143,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.85,
   }))
 
-  // Country-specific plan pages (high-value landing pages)
+  // Only include country pages that actually exist and have plans
   const countryPages = [
-    // Europe
-    'germany', 'france', 'italy', 'spain', 'uk', 'netherlands', 'switzerland',
-    'austria', 'belgium', 'portugal', 'greece', 'poland', 'czech-republic',
-    'hungary', 'croatia', 'norway', 'sweden', 'denmark', 'finland',
-    
-    // North America
-    'usa', 'canada', 'mexico',
-    
-    // Asia
-    'japan', 'south-korea', 'singapore', 'thailand', 'vietnam', 'indonesia',
-    'philippines', 'malaysia', 'china', 'hong-kong', 'taiwan', 'india',
-    
-    // Oceania
-    'australia', 'new-zealand',
-    
-    // Middle East
-    'uae', 'saudi-arabia', 'qatar', 'israel', 'turkey',
-    
-    // Africa
-    'south-africa', 'egypt', 'morocco', 'kenya', 'tanzania',
-    
-    // South America
-    'brazil', 'argentina', 'chile', 'peru', 'colombia',
+    // Countries with confirmed plans (remove others to avoid 404s)
+    'hong-kong',
+    'japan', 
+    'south-korea',
+    'usa',
+    'thailand',
+    'singapore',
   ].map(country => ({
     url: `${baseUrl}/plans/${country}`,
     lastModified: currentDate,
@@ -175,60 +159,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.8,
   }))
 
-  // Regional plan pages
-  const regionalPages = [
-    'europe',
-    'asia',
-    'north-america',
-    'south-america',
-    'middle-east',
-    'africa',
-    'oceania',
-    'global',
-  ].map(region => ({
-    url: `${baseUrl}/plans/${region}`,
-    lastModified: currentDate,
-    changeFrequency: 'daily' as const,
-    priority: 0.85,
-  }))
+  // Remove non-existent regional and plan pages to avoid 404s
+  // const regionalPages = []
+  // const planPages = []
 
-  // Plan-specific pages (for popular plans)
-  const planPages = [
-    // Europe plans
-    'plans/europe/eu-unlimited',
-    'plans/europe/schengen-basic',
-    'plans/europe/uk-ireland',
-    
-    // Global plans
-    'plans/global/world-traveler',
-    'plans/global/business-pro',
-    'plans/global/student-special',
-    
-    // Regional plans
-    'plans/asia/asia-pacific',
-    'plans/north-america/usa-canada',
-    'plans/middle-east/gulf-states',
-  ].map(planPath => ({
-    url: `${baseUrl}/${planPath}`,
-    lastModified: currentDate,
-    changeFrequency: 'daily' as const,
-    priority: 0.7,
-  }))
-
-  // Admin pages (lower priority)
-  const adminPages = [
-    'admin',
-    'admin/analytics',
-    'admin/customers', 
-    'admin/orders',
-    'admin/providers',
-    'admin/settings',
-  ].map(adminPath => ({
-    url: `${baseUrl}/${adminPath}`,
-    lastModified: currentDate,
-    changeFrequency: 'weekly' as const,
-    priority: 0.3,
-  }))
+  // Admin pages removed - should not be indexed
 
   // Special pages
   const specialPages = [
@@ -251,9 +186,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...majorBlogPosts,
     ...supportingBlogPosts,
     ...countryPages,
-    ...regionalPages,
-    ...planPages,
+    // ...regionalPages, // Removed - pages don't exist
+    // ...planPages, // Removed - pages don't exist
     ...specialPages,
-    ...adminPages,
+    // ...adminPages, // Removed - shouldn't be indexed
   ]
 } 

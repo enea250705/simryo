@@ -42,9 +42,6 @@ Disallow: /dev/*
 Disallow: /_next/
 Disallow: /.*
 
-# Allow specific API endpoints for SEO
-Allow: /api/plans/popular
-Allow: /api/plans/*/route
 
 # Disallow search result pages with query parameters
 Disallow: /*?q=*
@@ -93,13 +90,7 @@ User-agent: DotBot
 Disallow: /
 
 # Sitemap location
-Sitemap: https://simryo.com/sitemap.xml
-Sitemap: https://simryo.com/sitemap-pages.xml
-Sitemap: https://simryo.com/sitemap-plans.xml
-Sitemap: https://simryo.com/sitemap-blog.xml
-
-# Additional sitemap formats
-Sitemap: https://simryo.com/rss.xml 
+Sitemap: https://simryo.com/sitemap.xml 
  
  
  
