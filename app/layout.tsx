@@ -8,6 +8,7 @@ import { PageAnimation } from "@/components/page-animation"
 import { ErrorBoundary } from "@/components/error-boundary"
 import dynamic from "next/dynamic"
 import { ThemeProvider } from "@/components/theme-provider"
+import { CurrencyProvider } from "@/lib/contexts/currency-context"
 import { WebVitals } from "@/components/web-vitals"
 import { GoogleAnalytics, GoogleAnalyticsPageView } from "@/components/analytics/google-analytics"
 import { Toaster } from "@/components/ui/sonner"
@@ -445,19 +446,21 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <ErrorBoundary>
-            <a href="#main-content" className="skip-link">Skip to main content</a>
-            <div className="relative min-h-screen bg-background">
-        <Navbar />
-              <main id="main-content" className="relative">
-                <PageAnimation>{children}</PageAnimation>
-              </main>
-        <Footer />
-              <Toaster />
-              <WebVitals />
-              <GoogleAnalyticsPageView />
-            </div>
-          </ErrorBoundary>
+          <CurrencyProvider>
+            <ErrorBoundary>
+              <a href="#main-content" className="skip-link">Skip to main content</a>
+              <div className="relative min-h-screen bg-background">
+          <Navbar />
+                <main id="main-content" className="relative">
+                  <PageAnimation>{children}</PageAnimation>
+                </main>
+          <Footer />
+                <Toaster />
+                <WebVitals />
+                <GoogleAnalyticsPageView />
+              </div>
+            </ErrorBoundary>
+          </CurrencyProvider>
         </ThemeProvider>
         
         

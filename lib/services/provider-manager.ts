@@ -6,6 +6,7 @@ import { GlobalConnectProvider } from './providers/global-connect'
 import { MayaNetProvider } from './providers/maya-net'
 import { PromotionManager } from './promotion-manager'
 import { getCountryCode } from '../country-mapping'
+import { filterAllowedPlans, getFilteringSummary } from '../utils/plan-filter'
 
 export interface EnhancedPlan extends ProviderPlan {
   providerId: string
@@ -133,8 +134,14 @@ export class ProviderManager {
     const providerResults = await Promise.all(providerPromises)
     providerResults.forEach(plans => allPlans.push(...plans))
 
+    // Apply plan filtering to keep only allowed data/duration combinations
+    console.log(`🔍 Applying plan filtering to ${allPlans.length} plans...`)
+    const allowedPlans = filterAllowedPlans(allPlans)
+    const filteringSummary = getFilteringSummary(allPlans, allowedPlans)
+    console.log(`📊 Plan filtering results: ${filteringSummary.filteredCount}/${filteringSummary.originalCount} plans kept (${filteringSummary.percentageKept}%), ${filteringSummary.removedCount} plans filtered out`)
+
     // Filter out unavailable plans if requested
-    let filteredPlans = options.includeUnavailable ? allPlans : allPlans.filter(plan => plan.inStock)
+    let filteredPlans = options.includeUnavailable ? allowedPlans : allowedPlans.filter(plan => plan.inStock)
 
     // Sort plans
     if (options.sortBy) {

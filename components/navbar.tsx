@@ -33,6 +33,7 @@ import {
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
 import { analytics } from "@/lib/analytics"
+import { CurrencySelector } from "@/components/currency-selector"
 
 interface CartItem {
   quantity: number
@@ -308,6 +309,9 @@ export function Navbar() {
 
           {/* Right Side Actions */}
           <div className="flex items-center space-x-4">
+            {/* Currency Selector */}
+            <CurrencySelector variant="compact" />
+
             {/* Cart */}
             <Link href="/cart" className="relative p-2 text-gray-700 hover:text-blue-600 transition-colors">
               <ShoppingCart className="h-6 w-6" />
@@ -372,6 +376,8 @@ export function Navbar() {
 
             {/* Mobile Right Actions */}
             <div className="flex items-center space-x-2">
+              <CurrencySelector variant="minimal" />
+              
               <Link href="/cart" className="relative p-2 text-gray-700 hover:text-blue-600">
                 <ShoppingCart className="h-6 w-6" />
                 {cartCount > 0 ? (
