@@ -556,6 +556,16 @@ export default function CountryPage() {
                     <div className="text-4xl font-bold text-emerald-600 mb-2">
                       {formatLocalPrice(plan.price)}
                     </div>
+                    {plan.promoApplied && (
+                      <div className="flex items-center justify-center gap-2 mb-2">
+                        <span className="text-sm text-red-500 line-through">
+                          {formatLocalPrice(plan.promoApplied.originalPrice)}
+                        </span>
+                        <Badge variant="destructive" className="text-xs">
+                          15% OFF
+                        </Badge>
+                      </div>
+                    )}
                     <div className="text-sm text-gray-500 space-y-1">
                       <div className="flex items-center justify-center gap-3">
                         <span className="inline-flex items-center">

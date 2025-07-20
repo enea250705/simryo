@@ -291,6 +291,10 @@ export class EsimAccessProvider extends BaseProvider {
       // Convert USD to EUR first, then apply markup
       const priceEur = this.convertUsdToEur(priceUsd)
       const finalPrice = this.applyMarkup(priceEur)
+      
+      // Create promotion: current price becomes "15% off" price
+      const originalPriceForPromo = finalPrice / 0.85 // Calculate what original price would be for 15% discount
+      const savings = originalPriceForPromo - finalPrice
 
       const plan: ProviderPlan = {
         id: `ea-${pkg.packageCode || pkg.slug}`,
@@ -316,7 +320,11 @@ export class EsimAccessProvider extends BaseProvider {
           ...(pkg.favorite ? ['Popular choice'] : [])
         ],
         inStock: true, // eSIM Access doesn't provide stock status, assume available
-        promoApplied: undefined
+        promoApplied: {
+          id: 'summer-sale-2024',
+          originalPrice: originalPriceForPromo,
+          savings: savings
+        }
       }
 
       // Log individual plan for debugging

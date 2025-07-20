@@ -432,7 +432,7 @@ function PlansPageContent() {
                                       {formatPrice(convertPrice(plan.promoApplied.originalPrice, 'EUR', currency))}
                                     </span>
                                     <Badge variant="destructive" className="text-xs">
-                                      Save {formatPrice(convertPrice(plan.promoApplied.originalPrice - plan.price, 'EUR', currency))}
+                                      15% OFF
                                     </Badge>
                                   </div>
                                 )}
