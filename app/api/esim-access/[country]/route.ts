@@ -97,8 +97,7 @@ export async function POST(
     const provisionResult = await providerManager.purchasePlan(plan.providerId, {
       planId,
       customerEmail: userEmail,
-      customerName: userId, // Using userId as name for now
-      metadata: { userId, platform: 'simryo' }
+      customerName: userId // Using userId as name for now
     })
 
     if (!provisionResult.success) {
