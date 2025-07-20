@@ -14,6 +14,7 @@ export interface EnhancedPlan extends ProviderPlan {
   popularity: number
   lastUpdated: Date
   featured?: boolean
+  popular?: boolean
   promoApplied?: {
     id: string
     originalPrice: number
