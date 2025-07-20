@@ -7,12 +7,12 @@ import { ProviderManager } from '@/lib/services/provider-manager'
 function convertSlugToCountryIdentifier(slug: string): string {
   // Special mapping for known problematic slugs
   const slugMapping: Record<string, string> = {
-    'china-mainland': 'China Mainland',
-    'hong-kong': 'Hong Kong', 
-    'macao': 'Macao',
-    'south-korea': 'South Korea',
-    'united-states': 'United States',
-    'united-kingdom': 'United Kingdom'
+    'china-mainland': 'CN',
+    'hong-kong': 'HK', 
+    'macao': 'MO',
+    'south-korea': 'KR',
+    'united-states': 'US',
+    'united-kingdom': 'GB'
   }
   
   // If we have a specific mapping, use it
