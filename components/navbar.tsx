@@ -443,111 +443,153 @@ export function Navbar() {
           </div>
 
           {/* Mobile Menu */}
-          {isOpen && (
-            <React.Fragment>
-              {/* Mobile Menu Backdrop */}
-              <div 
-                className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40"
-                onClick={() => setIsOpen(false)}
-                aria-hidden="true"
-              />
-              
-              {/* Mobile Menu Container */}
-              <div 
-                id="mobile-menu"
-                className="fixed top-16 left-0 right-0 bottom-0 bg-gradient-to-b from-white to-gray-50 z-50 flex flex-col"
-                role="menu"
-                aria-labelledby="mobile-menu-button"
-              >
-                {/* Scrollable Content */}
-                <div className="flex-1 overflow-y-auto px-6 py-8 space-y-8"
-                     style={{ 
-                       overscrollBehavior: 'contain',
-                       WebkitOverflowScrolling: 'touch'
-                     }}>
-                {/* Home Link */}
-                <div>
-                  <Link
-                    href="/"
-                    className="flex items-center space-x-4 p-4 rounded-xl hover:bg-white/80 hover:shadow-md text-gray-700 hover:text-blue-600 min-h-[56px] transition-all duration-200 group"
-                    onClick={() => setIsOpen(false)}
-                    role="menuitem"
-                    aria-label="Go to home page"
-                  >
-                    <div className="p-2 rounded-lg bg-blue-50 group-hover:bg-blue-100 transition-colors">
-                      <Globe className="h-5 w-5 text-blue-600" aria-hidden="true" />
-                    </div>
-                    <span className="text-base font-medium">Home</span>
-                  </Link>
-                </div>
-
-                {/* Plans Section */}
-                <div>
-                  <h3 className="text-lg font-bold text-gray-900 mb-4 px-2">✈️ Travel Plans</h3>
-                  <div className="space-y-3">
-                    {navigationItems.map((item) => (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        className="flex items-center space-x-4 p-4 rounded-xl hover:bg-white/80 hover:shadow-md text-gray-700 hover:text-blue-600 transition-all duration-200 group"
-                        onClick={() => setIsOpen(false)}
-                      >
-                        <div className="p-2 rounded-lg bg-gradient-to-br from-blue-50 to-purple-50 group-hover:from-blue-100 group-hover:to-purple-100 transition-all">
-                          <item.icon className="h-5 w-5 text-blue-600" />
-                        </div>
-                        <div>
-                          <span className="text-base font-medium block">{item.title}</span>
-                          <span className="text-sm text-gray-500">{item.description}</span>
-                        </div>
-                        {item.featured && (
-                          <Badge variant="secondary" className="ml-auto text-xs bg-gradient-to-r from-blue-500 to-purple-500 text-white">
-                            Popular
-                          </Badge>
-                        )}
-                      </Link>
-                    ))}
+          <div className={`fixed inset-0 z-50 ${isOpen ? 'visible' : 'invisible'}`}>
+            {/* Backdrop */}
+            <div 
+              className={`fixed inset-0 bg-black/60 backdrop-blur-sm transition-all duration-300 ${
+                isOpen ? 'opacity-100' : 'opacity-0'
+              }`}
+              onClick={() => setIsOpen(false)}
+              aria-hidden="true"
+            />
+            
+            {/* Slide-in Menu */}
+            <div className={`fixed top-0 right-0 h-full w-[320px] bg-white shadow-2xl transition-transform duration-300 ease-out ${
+              isOpen ? 'translate-x-0' : 'translate-x-full'
+            }`}>
+              {/* Header */}
+              <div className="relative bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-600 text-white p-6">
+                <button
+                  onClick={() => setIsOpen(false)}
+                  className="absolute top-4 right-4 p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
+                  aria-label="Close menu"
+                >
+                  <X className="h-5 w-5" />
+                </button>
+                
+                <div className="flex items-center space-x-3 mt-2">
+                  <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                    <Globe className="h-6 w-6" />
                   </div>
-                </div>
-
-                {/* Support Section */}
-                <div>
-                  <h3 className="text-lg font-bold text-gray-900 mb-4 px-2">🛠️ Support</h3>
-                  <div className="space-y-3">
-                    {supportItems.map((item) => (
-                      <Link
-                        key={item.href}
-                        href={item.href}
-                        className="flex items-center space-x-4 p-4 rounded-xl hover:bg-white/80 hover:shadow-md text-gray-700 hover:text-blue-600 transition-all duration-200 group"
-                        onClick={() => setIsOpen(false)}
-                      >
-                        <div className="p-2 rounded-lg bg-gradient-to-br from-emerald-50 to-teal-50 group-hover:from-emerald-100 group-hover:to-teal-100 transition-all">
-                          <item.icon className="h-5 w-5 text-emerald-600" />
-                        </div>
-                        <div>
-                          <span className="text-base font-medium block">{item.title}</span>
-                          <span className="text-sm text-gray-500">{item.description}</span>
-                        </div>
-                      </Link>
-                    ))}
+                  <div>
+                    <h2 className="text-lg font-bold">SIMRYO</h2>
+                    <p className="text-sm text-blue-100">Global eSIM Solutions</p>
                   </div>
-                </div>
-
-                {/* CTA Section */}
-                <div className="pt-4 border-t border-gray-200/50">
-                  <Link href="/plans" onClick={() => setIsOpen(false)}>
-                    <Button className="w-full h-14 text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 rounded-xl">
-                      <Sparkles className="h-5 w-5 mr-2" />
-                      Get Your eSIM Now
-                    </Button>
-                  </Link>
-                  <p className="text-center text-sm text-gray-500 mt-3">
-                    Instant activation • 190+ countries
-                  </p>
                 </div>
               </div>
+
+              {/* Menu Content */}
+              <div className="flex-1 overflow-y-auto h-[calc(100vh-120px)]" style={{ WebkitOverflowScrolling: 'touch' }}>
+                <div className="p-6 space-y-6">
+                  
+                  {/* Main Navigation */}
+                  <div className="space-y-1">
+                    <Link
+                      href="/"
+                      className="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-50 transition-colors group"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center group-hover:bg-blue-100 transition-colors">
+                        <Globe className="h-5 w-5 text-blue-600" />
+                      </div>
+                      <div>
+                        <span className="font-medium text-gray-900">Home</span>
+                        <p className="text-sm text-gray-500">Main dashboard</p>
+                      </div>
+                    </Link>
+
+                    <Link
+                      href="/plans"
+                      className="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-50 transition-colors group"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <div className="w-10 h-10 bg-emerald-50 rounded-lg flex items-center justify-center group-hover:bg-emerald-100 transition-colors">
+                        <MapPin className="h-5 w-5 text-emerald-600" />
+                      </div>
+                      <div>
+                        <span className="font-medium text-gray-900">Travel Plans</span>
+                        <p className="text-sm text-gray-500">Find your destination</p>
+                      </div>
+                      <Badge className="ml-auto bg-emerald-100 text-emerald-700 border-emerald-200">
+                        Popular
+                      </Badge>
+                    </Link>
+
+                    <Link
+                      href="/pricing"
+                      className="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-50 transition-colors group"
+                      onClick={() => setIsOpen(false)}
+                    >
+                      <div className="w-10 h-10 bg-purple-50 rounded-lg flex items-center justify-center group-hover:bg-purple-100 transition-colors">
+                        <CreditCard className="h-5 w-5 text-purple-600" />
+                      </div>
+                      <div>
+                        <span className="font-medium text-gray-900">Pricing</span>
+                        <p className="text-sm text-gray-500">Transparent pricing</p>
+                      </div>
+                    </Link>
+                  </div>
+
+                  {/* Separator */}
+                  <div className="border-t border-gray-100"></div>
+
+                  {/* Support Links */}
+                  <div>
+                    <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">Support</h3>
+                    <div className="space-y-1">
+                      {supportItems.map((item) => (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          className="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-50 transition-colors group"
+                          onClick={() => setIsOpen(false)}
+                        >
+                          <div className="w-8 h-8 bg-gray-50 rounded-lg flex items-center justify-center group-hover:bg-gray-100 transition-colors">
+                            <item.icon className="h-4 w-4 text-gray-600" />
+                          </div>
+                          <span className="font-medium text-gray-700">{item.title}</span>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Separator */}
+                  <div className="border-t border-gray-100"></div>
+
+                  {/* Company Links */}
+                  <div>
+                    <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">Company</h3>
+                    <div className="space-y-1">
+                      {companyItems.map((item) => (
+                        <Link
+                          key={item.href}
+                          href={item.href}
+                          className="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-50 transition-colors"
+                          onClick={() => setIsOpen(false)}
+                        >
+                          <div className="w-8 h-8 bg-gray-50 rounded-lg flex items-center justify-center"></div>
+                          <span className="font-medium text-gray-700">{item.title}</span>
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Footer CTA */}
+              <div className="p-6 bg-gray-50 border-t border-gray-100">
+                <Link href="/plans" onClick={() => setIsOpen(false)}>
+                  <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200">
+                    <Sparkles className="h-4 w-4 mr-2" />
+                    Get Started
+                  </Button>
+                </Link>
+                <p className="text-center text-xs text-gray-500 mt-2">
+                  Join 50,000+ travelers worldwide
+                </p>
+              </div>
             </div>
-            </React.Fragment>
-          )}
+          </div>
         </div>
       </div>
     </nav>

@@ -9,10 +9,10 @@ export function shouldKeepPlan(plan: EnhancedPlan): boolean {
     return false
   }
   
-  // Remove plans with unreasonable pricing (more than $5 per GB)
+  // Remove plans with unreasonable pricing (more than $10 per GB)
   const dataInGB = dataInMB / 1024
   const pricePerGB = plan.price / dataInGB
-  if (pricePerGB > 5) {
+  if (pricePerGB > 10) {
     return false
   }
   
@@ -59,8 +59,15 @@ export function generateMissingPlans(availablePlans: EnhancedPlan[], countryInfo
   const targetDataAmounts = [1, 3, 5, 10, 20] // GB
   const generatedPlans: EnhancedPlan[] = []
   
+  // If no plans available, return empty (we can't generate from nothing)
+  if (availablePlans.length === 0) {
+    console.log(`⚠️ Cannot generate plans for ${countryInfo.country}: no base plans available`)
+    return []
+  }
+  
   // Get existing data amounts
   const existingDataAmounts = availablePlans.map(plan => Math.round(plan.dataInMB / 1024))
+  console.log(`📋 ${countryInfo.country} existing data amounts: ${existingDataAmounts.join(', ')}GB`)
   
   targetDataAmounts.forEach(targetGB => {
     if (!existingDataAmounts.includes(targetGB)) {
@@ -73,25 +80,37 @@ export function generateMissingPlans(availablePlans: EnhancedPlan[], countryInfo
       })
       
       if (closestPlan) {
-        // Calculate price based on closest plan's per-GB rate
+        // Calculate price based on closest plan's per-GB rate, but cap it at reasonable levels
         const basePricePerGB = closestPlan.price / (closestPlan.dataInMB / 1024)
-        const newPrice = Math.round(basePricePerGB * targetGB * 100) / 100
+        let adjustedPricePerGB = basePricePerGB
+        
+        // Adjust pricing scale - smaller plans can be more expensive per GB
+        if (targetGB <= 1) {
+          adjustedPricePerGB = Math.min(basePricePerGB, 8) // Max $8/GB for 1GB plans
+        } else if (targetGB <= 5) {
+          adjustedPricePerGB = Math.min(basePricePerGB, 5) // Max $5/GB for small plans
+        } else {
+          adjustedPricePerGB = Math.min(basePricePerGB, 3) // Max $3/GB for large plans
+        }
+        
+        const newPrice = Math.round(adjustedPricePerGB * targetGB * 100) / 100
         
         // Prefer 15 days for 3GB, 30 days for others
         const preferredDuration = targetGB === 3 ? 15 : 30
         
         const generatedPlan: EnhancedPlan = {
           ...closestPlan,
-          id: `generated-${countryInfo.country.toLowerCase()}-${targetGB}gb`,
+          id: `generated-${countryInfo.country.toLowerCase().replace(/\s+/g, '-')}-${targetGB}gb`,
           data: `${targetGB}GB`,
           dataInMB: targetGB * 1024,
           days: preferredDuration,
           price: newPrice,
-          providerDisplayName: `${closestPlan.providerDisplayName} (Converted)`,
+          providerDisplayName: `${closestPlan.providerDisplayName} (Generated)`,
           popular: false,
           featured: false
         }
         
+        console.log(`✨ Generated ${targetGB}GB plan for ${countryInfo.country}: €${newPrice} (${adjustedPricePerGB.toFixed(2)}/GB)`)
         generatedPlans.push(generatedPlan)
       }
     }
@@ -126,7 +145,7 @@ export function filterAllowedPlans(plans: EnhancedPlan[], countryInfo?: { countr
   console.log(`🔍 Plan filtering summary: Kept ${deduplicated.length}/${originalCount} plans, generated ${generatedCount} missing plans`)
   
   if (originalCount - deduplicated.length > 0) {
-    console.log(`📊 Filtered out plans with: unreasonable pricing (>$5/GB), extreme durations (<1 or >90 days), tiny data (<100MB), or massive data (>100GB)`)
+    console.log(`📊 Filtered out plans with: unreasonable pricing (>$10/GB), extreme durations (<1 or >90 days), tiny data (<100MB), or massive data (>100GB)`)
   }
   
   return finalPlans
