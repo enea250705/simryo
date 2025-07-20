@@ -3,29 +3,57 @@ import { NextRequest, NextResponse } from 'next/server'
 import { ProviderManager } from '@/lib/services/provider-manager'
 
 // GET /api/plans/[countryCode] - Get eSIM plans for a specific country
+// Convert slug back to proper country identifier
+function convertSlugToCountryIdentifier(slug: string): string {
+  // Special mapping for known problematic slugs
+  const slugMapping: Record<string, string> = {
+    'china-mainland': 'China Mainland',
+    'hong-kong': 'Hong Kong', 
+    'macao': 'Macao',
+    'south-korea': 'South Korea',
+    'united-states': 'United States',
+    'united-kingdom': 'United Kingdom'
+  }
+  
+  // If we have a specific mapping, use it
+  if (slugMapping[slug.toLowerCase()]) {
+    return slugMapping[slug.toLowerCase()]
+  }
+  
+  // Otherwise, convert slug back to title case
+  return slug
+    .split('-')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(' ')
+}
+
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ countryCode: string }> }
 ) {
   try {
-    const { countryCode } = await params
+    const { countryCode: slug } = await params
 
-    if (!countryCode) {
+    if (!slug) {
       return NextResponse.json(
         { success: false, error: 'Country code is required' },
         { status: 400 }
       )
     }
 
+    console.log(`🔍 API: Received slug "${slug}", converting to country identifier...`)
+    const countryIdentifier = convertSlugToCountryIdentifier(slug)
+    console.log(`🔄 API: Converted "${slug}" to "${countryIdentifier}"`)
+
     const providerManager = new ProviderManager()
-    const plans = await providerManager.getPlansByCountry(countryCode)
+    const plans = await providerManager.getPlansByCountry(countryIdentifier)
 
     if (plans.length === 0) {
       return NextResponse.json({
         success: true,
         data: [],
         count: 0,
-        message: `No plans available for country code: ${countryCode}`,
+        message: `No plans available for: ${countryIdentifier} (slug: ${slug})`,
         timestamp: new Date().toISOString()
       })
     }
@@ -48,7 +76,7 @@ export async function GET(
       data: plans,
       plansByProvider: Object.values(plansByProvider),
       count: plans.length,
-      countryCode,
+      countryCode: countryIdentifier,
       timestamp: new Date().toISOString(),
       providers: providerManager.getEnabledProviders()
     })
