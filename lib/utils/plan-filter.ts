@@ -9,9 +9,10 @@ export function shouldKeepPlan(plan: EnhancedPlan): boolean {
     return false
   }
   
-  // Remove plans with unreasonable pricing (more than $2 per GB)
-  const pricePerGB = plan.price / (dataInMB / 1024)
-  if (pricePerGB > 2) {
+  // Remove plans with unreasonable pricing (more than $2 per GB), except for 1GB plans
+  const dataInGB = dataInMB / 1024
+  const pricePerGB = plan.price / dataInGB
+  if (pricePerGB > 2 && dataInGB > 1.2) { // Allow 1GB plans to have higher per-GB pricing
     return false
   }
   
@@ -30,7 +31,6 @@ export function shouldKeepPlan(plan: EnhancedPlan): boolean {
   const hasReasonableDuration = preferredDurations.some(duration => Math.abs(days - duration) <= 2)
   
   // Prefer standard data amounts but allow flexibility
-  const dataInGB = dataInMB / 1024
   const hasReasonableData = dataInGB >= 0.1 && dataInGB <= 100
   
   return hasReasonableDuration && hasReasonableData
@@ -47,7 +47,7 @@ export function filterAllowedPlans(plans: EnhancedPlan[]): EnhancedPlan[] {
   console.log(`🔍 Plan filtering summary: Kept ${filteredCount}/${originalCount} plans (${removedCount} filtered out)`)
   
   if (removedCount > 0) {
-    console.log(`📊 Filtered out plans with: unreasonable pricing (>$2/GB), extreme durations (<1 or >90 days), tiny data (<100MB), or massive data (>100GB)`)
+    console.log(`📊 Filtered out plans with: unreasonable pricing (>$2/GB for plans >1.2GB), extreme durations (<1 or >90 days), tiny data (<100MB), or massive data (>100GB)`)
   }
   
   return filteredPlans
