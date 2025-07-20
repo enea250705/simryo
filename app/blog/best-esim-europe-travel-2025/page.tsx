@@ -1,4 +1,5 @@
 import { Metadata } from "next"
+import Image from "next/image"
 import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -39,10 +40,10 @@ export const metadata: Metadata = {
     description: "Discover the best eSIM options for traveling in Europe in 2025. Compare plans, coverage, and prices for 45+ European countries with our comprehensive guide.",
     images: [
       {
-        url: "/blog/europe-travel-connectivity.jpg",
+        url: "https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=1200&h=630&fit=crop&crop=center",
         width: 1200,
         height: 630,
-        alt: "Best eSIM for Europe Travel 2025"
+        alt: "Best eSIM for Europe Travel 2025 - European landmarks and connectivity"
       }
     ],
     type: "article",
@@ -115,8 +116,20 @@ export default function BestESIMEuropePage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <header className="bg-gradient-to-br from-blue-600 to-purple-600 text-white py-16">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+      <header className="relative bg-gradient-to-br from-blue-600 to-purple-600 text-white py-16 overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <Image
+            src="https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=1920&h=1080&fit=crop&crop=center"
+            alt="European landmarks and travel connectivity"
+            fill
+            className="object-cover opacity-20"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-600/90 to-purple-600/90"></div>
+        </div>
+        
+        <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <Badge className="mb-6 bg-white/20 text-white hover:bg-white/30 border-white/30">
               <MapPin className="h-3 w-3 mr-1" />

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 
 export const metadata: Metadata = {
@@ -8,7 +9,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: '5G eSIM Coverage & Speed Guide 2025: Global Network Performance',
     description: 'Complete guide to 5G eSIM coverage worldwide. Compare speeds, network quality, and availability across countries for optimal mobile performance.',
-    images: ['/blog/5g-network-coverage.jpg'],
+    images: ['https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=1200&h=630&fit=crop&crop=center'],
     type: 'article',
     publishedTime: '2025-07-18T10:00:00.000Z'
   },
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: '5G eSIM Coverage & Speed Guide 2025: Global Network Performance',
     description: 'Complete guide to 5G eSIM coverage worldwide. Compare speeds, network quality, and availability across countries for optimal mobile performance.',
-    images: ['/blog/5g-network-coverage.jpg']
+    images: ['https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=1200&h=630&fit=crop&crop=center']
   }
 }
 
@@ -25,14 +26,26 @@ export default function FiveGEsimPage() {
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50">
       <div className="container mx-auto px-4 py-12 max-w-4xl">
         <article className="prose prose-lg max-w-none">
-          <header className="mb-12 text-center">
-            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent mb-6">
-              5G eSIM Coverage & Speed Guide 2025
-            </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Experience lightning-fast 5G speeds worldwide with our eSIM plans. Compare coverage, performance, and availability across global networks.
-            </p>
-          </header>
+          {/* Hero Image */}
+          <div className="relative mb-12 rounded-2xl overflow-hidden shadow-2xl">
+            <Image
+              src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=1200&h=400&fit=crop&crop=center"
+              alt="5G network technology and connectivity"
+              width={1200}
+              height={400}
+              className="w-full h-64 object-cover"
+              priority
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+            <div className="absolute bottom-6 left-6 text-white">
+              <h1 className="text-3xl md:text-4xl font-bold mb-2">
+                5G eSIM Coverage & Speed Guide 2025
+              </h1>
+              <p className="text-lg text-gray-200 max-w-2xl">
+                Experience lightning-fast 5G speeds worldwide with our eSIM plans. Compare coverage, performance, and availability across global networks.
+              </p>
+            </div>
+          </div>
 
           <div className="bg-purple-50 border-l-4 border-purple-500 p-6 mb-8">
             <h2 className="text-xl font-semibold text-purple-800 mb-3">⚡ 5G Speed Advantage</h2>

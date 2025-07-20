@@ -45,10 +45,10 @@ export const metadata: Metadata = {
     description: "Discover the best eSIM for international travel in 2025. Compare top providers, learn setup tips, and find the perfect SIMRYO eSIM plan for your next adventure abroad.",
     images: [
       {
-        url: "/blog/esim-travel-guide-hero.jpg",
+        url: "https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1200&h=630&fit=crop&crop=center",
         width: 1200,
         height: 630,
-        alt: "Ultimate Guide to Best eSIM for International Travel 2025"
+        alt: "Ultimate Guide to Best eSIM for International Travel 2025 - Traveler using smartphone with global connectivity"
       }
     ],
     type: "article",
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "The Ultimate Guide to the Best eSIM for International Travel in 2025",
     description: "Discover the best eSIM for international travel in 2025. Compare top providers, learn setup tips, and find the perfect SIMRYO eSIM plan for your next adventure abroad.",
-    images: ["/blog/esim-travel-guide-hero.jpg"]
+    images: ["https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1200&h=630&fit=crop&crop=center"]
   },
   alternates: {
     canonical: "https://simryo.com/blog/ultimate-guide-best-esim-international-travel-2025"
@@ -136,8 +136,20 @@ export default function UltimateESIMGuidePage() {
         <meta itemProp="jobTitle" content="Travel Technology Expert" />
       </div>
       {/* Article Header */}
-      <header className="bg-gradient-to-br from-blue-600 to-purple-600 text-white py-16">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+      <header className="relative bg-gradient-to-br from-blue-600 to-purple-600 text-white py-16 overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <Image
+            src="https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1920&h=1080&fit=crop&crop=center"
+            alt="Traveler using smartphone with global connectivity"
+            fill
+            className="object-cover opacity-20"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-600/90 to-purple-600/90"></div>
+        </div>
+        
+        <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <Badge className="mb-6 bg-white/20 text-white hover:bg-white/30 border-white/30">
               <BookOpen className="h-3 w-3 mr-1" />
