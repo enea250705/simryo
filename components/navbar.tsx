@@ -29,7 +29,8 @@ import {
   MapPin,
   CreditCard,
   Gift,
-  Sparkles
+  Sparkles,
+  User
 } from "lucide-react"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
@@ -443,150 +444,151 @@ export function Navbar() {
           </div>
 
           {/* Mobile Menu */}
-          <div className={`fixed inset-0 z-50 ${isOpen ? 'visible' : 'invisible'}`}>
+          <div className={`lg:hidden fixed inset-0 z-50 transition-all duration-300 ${
+            isOpen ? 'visible opacity-100' : 'invisible opacity-0'
+          }`}>
             {/* Backdrop */}
             <div 
-              className={`fixed inset-0 bg-black/60 backdrop-blur-sm transition-all duration-300 ${
-                isOpen ? 'opacity-100' : 'opacity-0'
-              }`}
+              className="absolute inset-0 bg-black/50"
               onClick={() => setIsOpen(false)}
-              aria-hidden="true"
             />
             
-            {/* Slide-in Menu */}
-            <div className={`fixed top-0 right-0 h-full w-[320px] bg-white shadow-2xl transition-transform duration-300 ease-out ${
-              isOpen ? 'translate-x-0' : 'translate-x-full'
+            {/* Menu Panel */}
+            <div className={`absolute top-0 left-0 h-full w-80 bg-white shadow-2xl transform transition-transform duration-300 ease-out ${
+              isOpen ? 'translate-x-0' : '-translate-x-full'
             }`}>
-              {/* Header */}
-              <div className="relative bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-600 text-white p-6">
+              {/* Close Button */}
+              <div className="absolute top-4 right-4 z-10">
                 <button
                   onClick={() => setIsOpen(false)}
-                  className="absolute top-4 right-4 p-2 rounded-full bg-white/20 hover:bg-white/30 transition-colors"
-                  aria-label="Close menu"
+                  className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
                 >
-                  <X className="h-5 w-5" />
+                  <X className="h-5 w-5 text-gray-600" />
                 </button>
-                
-                <div className="flex items-center space-x-3 mt-2">
-                  <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
-                    <Globe className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <h2 className="text-lg font-bold">SIMRYO</h2>
-                    <p className="text-sm text-blue-100">Global eSIM Solutions</p>
-                  </div>
-                </div>
               </div>
 
               {/* Menu Content */}
-              <div className="flex-1 overflow-y-auto h-[calc(100vh-120px)]" style={{ WebkitOverflowScrolling: 'touch' }}>
-                <div className="p-6 space-y-6">
-                  
-                  {/* Main Navigation */}
-                  <div className="space-y-1">
+              <div className="h-full flex flex-col">
+                {/* Logo Section */}
+                <div className="px-6 pt-8 pb-6">
+                  <Link href="/" onClick={() => setIsOpen(false)} className="flex items-center space-x-3">
+                    <Image
+                      src="/simryologo.png"
+                      alt="SIMRYO"
+                      width={40}
+                      height={40}
+                      className="rounded-lg"
+                    />
+                    <div>
+                      <h2 className="text-xl font-bold text-gray-900">SIMRYO</h2>
+                      <p className="text-sm text-gray-500">Global eSIM</p>
+                    </div>
+                  </Link>
+                </div>
+
+                {/* Navigation Links */}
+                <div className="flex-1 px-6 overflow-y-auto">
+                  <nav className="space-y-2">
+                    {/* Main Links */}
                     <Link
                       href="/"
-                      className="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-50 transition-colors group"
                       onClick={() => setIsOpen(false)}
+                      className="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
                     >
-                      <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center group-hover:bg-blue-100 transition-colors">
-                        <Globe className="h-5 w-5 text-blue-600" />
-                      </div>
-                      <div>
-                        <span className="font-medium text-gray-900">Home</span>
-                        <p className="text-sm text-gray-500">Main dashboard</p>
-                      </div>
+                      <Globe className="h-5 w-5" />
+                      <span className="font-medium">Home</span>
                     </Link>
 
                     <Link
                       href="/plans"
-                      className="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-50 transition-colors group"
                       onClick={() => setIsOpen(false)}
+                      className="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
                     >
-                      <div className="w-10 h-10 bg-emerald-50 rounded-lg flex items-center justify-center group-hover:bg-emerald-100 transition-colors">
-                        <MapPin className="h-5 w-5 text-emerald-600" />
-                      </div>
-                      <div>
-                        <span className="font-medium text-gray-900">Travel Plans</span>
-                        <p className="text-sm text-gray-500">Find your destination</p>
-                      </div>
-                      <Badge className="ml-auto bg-emerald-100 text-emerald-700 border-emerald-200">
-                        Popular
-                      </Badge>
+                      <MapPin className="h-5 w-5" />
+                      <span className="font-medium">Travel Plans</span>
+                      <Badge className="ml-auto bg-blue-100 text-blue-700 text-xs">Popular</Badge>
                     </Link>
 
                     <Link
                       href="/pricing"
-                      className="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-50 transition-colors group"
                       onClick={() => setIsOpen(false)}
+                      className="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
                     >
-                      <div className="w-10 h-10 bg-purple-50 rounded-lg flex items-center justify-center group-hover:bg-purple-100 transition-colors">
-                        <CreditCard className="h-5 w-5 text-purple-600" />
-                      </div>
-                      <div>
-                        <span className="font-medium text-gray-900">Pricing</span>
-                        <p className="text-sm text-gray-500">Transparent pricing</p>
-                      </div>
+                      <CreditCard className="h-5 w-5" />
+                      <span className="font-medium">Pricing</span>
                     </Link>
-                  </div>
 
-                  {/* Separator */}
-                  <div className="border-t border-gray-100"></div>
+                    <Link
+                      href="/setup"
+                      onClick={() => setIsOpen(false)}
+                      className="flex items-center space-x-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors"
+                    >
+                      <Settings className="h-5 w-5" />
+                      <span className="font-medium">How it Works</span>
+                    </Link>
 
-                  {/* Support Links */}
-                  <div>
-                    <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">Support</h3>
+                    {/* Divider */}
+                    <div className="my-4 border-t border-gray-200"></div>
+
+                    {/* Support Section */}
                     <div className="space-y-1">
-                      {supportItems.map((item) => (
-                        <Link
-                          key={item.href}
-                          href={item.href}
-                          className="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-50 transition-colors group"
-                          onClick={() => setIsOpen(false)}
-                        >
-                          <div className="w-8 h-8 bg-gray-50 rounded-lg flex items-center justify-center group-hover:bg-gray-100 transition-colors">
-                            <item.icon className="h-4 w-4 text-gray-600" />
-                          </div>
-                          <span className="font-medium text-gray-700">{item.title}</span>
-                        </Link>
-                      ))}
+                      <p className="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">Support</p>
+                      
+                      <Link
+                        href="/support"
+                        onClick={() => setIsOpen(false)}
+                        className="flex items-center space-x-3 px-4 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-800 transition-colors"
+                      >
+                        <MessageCircle className="h-4 w-4" />
+                        <span>Help Center</span>
+                      </Link>
+
+                      <Link
+                        href="/faq"
+                        onClick={() => setIsOpen(false)}
+                        className="flex items-center space-x-3 px-4 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-800 transition-colors"
+                      >
+                        <HelpCircle className="h-4 w-4" />
+                        <span>FAQ</span>
+                      </Link>
+
+                      <Link
+                        href="/contact"
+                        onClick={() => setIsOpen(false)}
+                        className="flex items-center space-x-3 px-4 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-800 transition-colors"
+                      >
+                        <MessageCircle className="h-4 w-4" />
+                        <span>Contact</span>
+                      </Link>
                     </div>
-                  </div>
 
-                  {/* Separator */}
-                  <div className="border-t border-gray-100"></div>
+                    {/* Divider */}
+                    <div className="my-4 border-t border-gray-200"></div>
 
-                  {/* Company Links */}
-                  <div>
-                    <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider mb-3">Company</h3>
+                    {/* Account Section */}
                     <div className="space-y-1">
-                      {companyItems.map((item) => (
-                        <Link
-                          key={item.href}
-                          href={item.href}
-                          className="flex items-center space-x-3 p-3 rounded-xl hover:bg-gray-50 transition-colors"
-                          onClick={() => setIsOpen(false)}
-                        >
-                          <div className="w-8 h-8 bg-gray-50 rounded-lg flex items-center justify-center"></div>
-                          <span className="font-medium text-gray-700">{item.title}</span>
-                        </Link>
-                      ))}
+                      <p className="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider">Account</p>
+                      
+                      <Link
+                        href="/profile"
+                        onClick={() => setIsOpen(false)}
+                        className="flex items-center space-x-3 px-4 py-2.5 rounded-lg text-gray-600 hover:bg-gray-50 hover:text-gray-800 transition-colors"
+                      >
+                        <User className="h-4 w-4" />
+                        <span>Profile</span>
+                      </Link>
                     </div>
-                  </div>
+                  </nav>
                 </div>
-              </div>
 
-              {/* Footer CTA */}
-              <div className="p-6 bg-gray-50 border-t border-gray-100">
-                <Link href="/plans" onClick={() => setIsOpen(false)}>
-                  <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 rounded-xl shadow-lg hover:shadow-xl transition-all duration-200">
-                    <Sparkles className="h-4 w-4 mr-2" />
-                    Get Started
-                  </Button>
-                </Link>
-                <p className="text-center text-xs text-gray-500 mt-2">
-                  Join 50,000+ travelers worldwide
-                </p>
+                {/* Bottom CTA */}
+                <div className="p-6 bg-gray-50 border-t border-gray-200">
+                  <Link href="/plans" onClick={() => setIsOpen(false)}>
+                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg shadow-sm transition-colors">
+                      Get Your eSIM
+                    </Button>
+                  </Link>
+                </div>
               </div>
             </div>
           </div>
