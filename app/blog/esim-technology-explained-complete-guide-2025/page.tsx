@@ -94,10 +94,10 @@ export const metadata: Metadata = {
     description: "A comprehensive deep dive into eSIM technology, how it works, benefits over physical SIM cards, and what the future holds for mobile connectivity.",
     images: [
       {
-        url: "/blog/esim-technology-explained.jpg",
+        url: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=1200&h=630&fit=crop&crop=center",
         width: 1200,
         height: 630,
-        alt: "eSIM Technology Explained Complete Guide 2025"
+        alt: "eSIM Technology Explained Complete Guide 2025 - Digital technology and connectivity"
       }
     ],
     type: "article",
@@ -107,7 +107,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "eSIM Technology Explained: Everything You Need to Know in 2025",
     description: "A comprehensive deep dive into eSIM technology, how it works, benefits over physical SIM cards, and what the future holds for mobile connectivity.",
-    images: ["/blog/esim-technology-explained.jpg"]
+    images: ["https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=1200&h=630&fit=crop&crop=center"]
   },
   alternates: {
     canonical: "https://simryo.com/blog/esim-technology-explained-complete-guide-2025"
@@ -161,8 +161,20 @@ export default function ESIMTechnologyGuidePage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Article Header */}
-      <header className="bg-gradient-to-br from-purple-600 to-blue-600 text-white py-16">
-        <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+      <header className="relative bg-gradient-to-br from-purple-600 to-blue-600 text-white py-16 overflow-hidden">
+        {/* Background Image */}
+        <div className="absolute inset-0">
+          <Image
+            src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=1920&h=1080&fit=crop&crop=center"
+            alt="Digital technology and connectivity"
+            fill
+            className="object-cover opacity-20"
+            priority
+          />
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-600/90 to-blue-600/90"></div>
+        </div>
+        
+        <div className="relative mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <Badge className="mb-6 bg-white/20 text-white hover:bg-white/30 border-white/30">
               <Cpu className="h-3 w-3 mr-1" />
