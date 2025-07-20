@@ -249,7 +249,7 @@ function CartContent() {
         ) : (
           {/* Cart Items */}
           <div className="px-4">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 max-w-7xl mx-auto">
             {/* Cart Items List */}
             <div className="lg:col-span-2 space-y-4 sm:space-y-6">
               {cartItems.map((item, index) => (
@@ -395,8 +395,8 @@ function CartContent() {
               </div>
             </div>
           </div>
+          </div>
         )}
-        </div>
       </div>
     </div>
   )
