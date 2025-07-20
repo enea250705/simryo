@@ -121,7 +121,7 @@ export function Navbar() {
   const updateCartCount = () => {
     try {
       const cart = JSON.parse(localStorage.getItem('cart') || '[]')
-      const count = cart.reduce((acc, item) => acc + (item.quantity || 0), 0)
+      const count = cart.reduce((acc: number, item: any) => acc + (item.quantity || 0), 0)
       setCartCount(count)
     } catch (error) {
       console.warn('Error updating cart count:', error)
