@@ -140,8 +140,13 @@ export class ProviderManager {
     const filteringSummary = getFilteringSummary(allPlans, allowedPlans)
     console.log(`📊 Plan filtering results: ${filteringSummary.filteredCount}/${filteringSummary.originalCount} plans kept (${filteringSummary.percentageKept}%), ${filteringSummary.removedCount} plans filtered out`)
 
+    // Deduplicate plans by country + data + days, keeping the cheapest one
+    console.log(`🔄 Deduplicating ${allowedPlans.length} plans...`)
+    const deduplicatedPlans = this.deduplicatePlans(allowedPlans)
+    console.log(`✅ Deduplicated to ${deduplicatedPlans.length} unique plans (removed ${allowedPlans.length - deduplicatedPlans.length} duplicates)`)
+
     // Filter out unavailable plans if requested
-    let filteredPlans = options.includeUnavailable ? allowedPlans : allowedPlans.filter(plan => plan.inStock)
+    let filteredPlans = options.includeUnavailable ? deduplicatedPlans : deduplicatedPlans.filter(plan => plan.inStock)
 
     // Sort plans
     if (options.sortBy) {
@@ -313,6 +318,25 @@ export class ProviderManager {
       popularDurations.includes(plan.days) &&
       (hasGoodFeatures || dataToPrice >= 200) // Either has good features or excellent value
     )
+  }
+
+  private deduplicatePlans(plans: EnhancedPlan[]): EnhancedPlan[] {
+    const planMap = new Map<string, EnhancedPlan>()
+    
+    plans.forEach(plan => {
+      // Create a unique key based on country, data amount, and validity period
+      const key = `${plan.countryCode.toLowerCase()}-${plan.dataInMB}-${plan.days}`
+      
+      // Check if we already have a plan for this combination
+      const existingPlan = planMap.get(key)
+      
+      if (!existingPlan || plan.price < existingPlan.price) {
+        // Keep this plan if it's new or cheaper than the existing one
+        planMap.set(key, plan)
+      }
+    })
+    
+    return Array.from(planMap.values())
   }
 
   private sortPlans(plans: EnhancedPlan[], sortBy: string, sortOrder: 'asc' | 'desc'): EnhancedPlan[] {

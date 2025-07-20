@@ -393,6 +393,7 @@ function CartContent() {
             </div>
           </div>
         )}
+        </div>
       </div>
     </div>
   )
