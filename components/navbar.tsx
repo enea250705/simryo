@@ -307,11 +307,13 @@ export function Navbar() {
             </NavigationMenuList>
           </NavigationMenu>
 
+          {/* Currency Selector - Between nav and actions */}
+          <div className="hidden lg:flex">
+            <CurrencySelector variant="compact" />
+          </div>
+
           {/* Right Side Actions */}
           <div className="flex items-center space-x-4">
-            {/* Currency Selector */}
-            <CurrencySelector variant="compact" />
-
             {/* Cart */}
             <Link href="/cart" className="relative p-2 text-gray-700 hover:text-blue-600 transition-colors">
               <ShoppingCart className="h-6 w-6" />
