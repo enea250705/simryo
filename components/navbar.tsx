@@ -28,7 +28,8 @@ import {
   Star,
   MapPin,
   CreditCard,
-  Gift
+  Gift,
+  Sparkles
 } from "lucide-react"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
@@ -405,73 +406,90 @@ export function Navbar() {
           {isOpen && (
             <div 
               id="mobile-menu"
-              className="absolute top-16 left-0 right-0 bg-white border-b border-gray-200 shadow-lg max-h-[calc(100vh-4rem)] overflow-y-auto z-50"
+              className="absolute top-16 left-0 right-0 bg-gradient-to-b from-white to-gray-50 backdrop-blur-lg border-b border-gray-200/20 shadow-2xl max-h-[calc(100vh-4rem)] overflow-y-auto z-50"
               role="menu"
               aria-labelledby="mobile-menu-button"
               style={{ maxHeight: 'calc(100vh - 4rem)' }}
             >
-              <div className="px-4 py-6 space-y-6 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 6rem)' }}>
+              <div className="px-6 py-8 space-y-8 overflow-y-auto" style={{ maxHeight: 'calc(100vh - 6rem)' }}>
                 {/* Home Link */}
                 <div>
                   <Link
                     href="/"
-                    className="flex items-center space-x-3 p-2 rounded-md hover:bg-gray-50 text-gray-700 hover:text-blue-600 min-h-[44px]"
+                    className="flex items-center space-x-4 p-4 rounded-xl hover:bg-white/80 hover:shadow-md text-gray-700 hover:text-blue-600 min-h-[56px] transition-all duration-200 group"
                     onClick={() => setIsOpen(false)}
                     role="menuitem"
                     aria-label="Go to home page"
                   >
-                    <Globe className="h-5 w-5" aria-hidden="true" />
-                    <span className="text-sm font-medium">Home</span>
+                    <div className="p-2 rounded-lg bg-blue-50 group-hover:bg-blue-100 transition-colors">
+                      <Globe className="h-5 w-5 text-blue-600" aria-hidden="true" />
+                    </div>
+                    <span className="text-base font-medium">Home</span>
                   </Link>
                 </div>
 
-                <Separator />
-
                 {/* Plans Section */}
                 <div>
-                  <h3 className="text-sm font-semibold text-gray-900 mb-3">Plans</h3>
-                  <div className="space-y-2">
+                  <h3 className="text-lg font-bold text-gray-900 mb-4 px-2">✈️ Travel Plans</h3>
+                  <div className="space-y-3">
                     {navigationItems.map((item) => (
                       <Link
                         key={item.href}
                         href={item.href}
-                        className="flex items-center space-x-3 p-2 rounded-md hover:bg-gray-50 text-gray-700 hover:text-blue-600"
+                        className="flex items-center space-x-4 p-4 rounded-xl hover:bg-white/80 hover:shadow-md text-gray-700 hover:text-blue-600 transition-all duration-200 group"
                         onClick={() => setIsOpen(false)}
                       >
-                        <item.icon className="h-5 w-5" />
-                        <span className="text-sm font-medium">{item.title}</span>
+                        <div className="p-2 rounded-lg bg-gradient-to-br from-blue-50 to-purple-50 group-hover:from-blue-100 group-hover:to-purple-100 transition-all">
+                          <item.icon className="h-5 w-5 text-blue-600" />
+                        </div>
+                        <div>
+                          <span className="text-base font-medium block">{item.title}</span>
+                          <span className="text-sm text-gray-500">{item.description}</span>
+                        </div>
+                        {item.featured && (
+                          <Badge variant="secondary" className="ml-auto text-xs bg-gradient-to-r from-blue-500 to-purple-500 text-white">
+                            Popular
+                          </Badge>
+                        )}
                       </Link>
                     ))}
                   </div>
                 </div>
 
-                <Separator />
-
                 {/* Support Section */}
                 <div>
-                  <h3 className="text-sm font-semibold text-gray-900 mb-3">Support</h3>
-                  <div className="space-y-2">
+                  <h3 className="text-lg font-bold text-gray-900 mb-4 px-2">🛠️ Support</h3>
+                  <div className="space-y-3">
                     {supportItems.map((item) => (
                       <Link
                         key={item.href}
                         href={item.href}
-                        className="flex items-center space-x-3 p-2 rounded-md hover:bg-gray-50 text-gray-700 hover:text-blue-600"
+                        className="flex items-center space-x-4 p-4 rounded-xl hover:bg-white/80 hover:shadow-md text-gray-700 hover:text-blue-600 transition-all duration-200 group"
                         onClick={() => setIsOpen(false)}
                       >
-                        <item.icon className="h-5 w-5" />
-                        <span className="text-sm font-medium">{item.title}</span>
+                        <div className="p-2 rounded-lg bg-gradient-to-br from-emerald-50 to-teal-50 group-hover:from-emerald-100 group-hover:to-teal-100 transition-all">
+                          <item.icon className="h-5 w-5 text-emerald-600" />
+                        </div>
+                        <div>
+                          <span className="text-base font-medium block">{item.title}</span>
+                          <span className="text-sm text-gray-500">{item.description}</span>
+                        </div>
                       </Link>
                     ))}
                   </div>
                 </div>
 
-                <Separator />
-                <div className="space-y-3">
+                {/* CTA Section */}
+                <div className="pt-4 border-t border-gray-200/50">
                   <Link href="/plans" onClick={() => setIsOpen(false)}>
-                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-                      Buy eSIM Now
+                    <Button className="w-full h-14 text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white shadow-lg hover:shadow-xl transition-all duration-300 rounded-xl">
+                      <Sparkles className="h-5 w-5 mr-2" />
+                      Get Your eSIM Now
                     </Button>
                   </Link>
+                  <p className="text-center text-sm text-gray-500 mt-3">
+                    Instant activation • 190+ countries
+                  </p>
                 </div>
               </div>
             </div>
