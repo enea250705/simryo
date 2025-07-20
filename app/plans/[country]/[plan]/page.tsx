@@ -409,16 +409,6 @@ export default function PlanDetailPage() {
 
               <Separator className="my-6" />
 
-              {/* Provider Info */}
-              <div className="mb-6">
-                <h4 className="font-semibold text-gray-900 mb-2">Provider</h4>
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-700">{plan.providerDisplayName}</span>
-                  <Badge variant={plan.inStock ? "default" : "destructive"}>
-                    {plan.inStock ? "In Stock" : "Out of Stock"}
-                  </Badge>
-                </div>
-              </div>
 
               {/* Network Details */}
               <div className="mb-6">
@@ -494,10 +484,6 @@ export default function PlanDetailPage() {
                     <div className="flex justify-between">
                       <span>Plan:</span>
                       <span className="font-medium">{plan.data} • {plan.days} days</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Provider:</span>
-                      <span className="font-medium">{plan.providerDisplayName}</span>
                     </div>
                     <div className="flex justify-between">
                       <span>Country:</span>

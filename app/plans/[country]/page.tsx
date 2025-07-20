@@ -570,17 +570,6 @@ export default function CountryPage() {
                     </div>
                   </div>
 
-                <Separator />
-
-                  <div className="space-y-2">
-                    <div className="text-xs text-gray-500 uppercase tracking-wide font-medium">Provider</div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm font-medium">{plan.providerDisplayName}</span>
-                      <Badge variant="outline" className="text-xs">
-                        {plan.inStock ? 'In Stock' : 'Out of Stock'}
-                      </Badge>
-                    </div>
-                  </div>
 
                   {plan.features && plan.features.length > 0 && (
                     <>
