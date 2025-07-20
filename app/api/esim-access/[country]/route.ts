@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { esimAccessAPI } from '@/lib/esim-access'
+import { ProviderManager } from '@/lib/services/provider-manager'
 
 // GET /api/esim-access/[country] - Get eSIM plans for a specific country
 export async function GET(
@@ -16,14 +16,9 @@ export async function GET(
       )
     }
 
-    // Get all plans from eSIM Access
-    const allPlans = await esimAccessAPI.getPlans()
-    
-    // Filter plans by country (case-insensitive)
-    const countryPlans = allPlans.filter(plan => 
-      plan.country.toLowerCase() === country.toLowerCase() ||
-      plan.countryCode.toLowerCase() === country.toLowerCase()
-    )
+    // Get filtered plans from ProviderManager (applies plan filtering automatically)
+    const providerManager = new ProviderManager()
+    const countryPlans = await providerManager.getPlansByCountry(country)
 
     if (countryPlans.length === 0) {
       return NextResponse.json({
@@ -83,13 +78,10 @@ export async function POST(
       )
     }
 
-    // Validate the plan exists for the country
-    const allPlans = await esimAccessAPI.getPlans()
-    const plan = allPlans.find(p => 
-      p.id === planId && 
-      (p.country.toLowerCase() === country.toLowerCase() ||
-       p.countryCode.toLowerCase() === country.toLowerCase())
-    )
+    // Validate the plan exists for the country using ProviderManager
+    const providerManager = new ProviderManager()
+    const countryPlans = await providerManager.getPlansByCountry(country)
+    const plan = countryPlans.find(p => p.id === planId)
 
     if (!plan) {
       return NextResponse.json(
@@ -101,12 +93,12 @@ export async function POST(
       )
     }
 
-    // Provision the eSIM
-    const provisionResult = await esimAccessAPI.provisionESIM({
+    // Provision the eSIM using the ProviderManager
+    const provisionResult = await providerManager.purchasePlan(plan.providerId, {
       planId,
-      userId,
-      userEmail,
-      quantity
+      customerEmail: userEmail,
+      customerName: userId, // Using userId as name for now
+      metadata: { userId, platform: 'simryo' }
     })
 
     if (!provisionResult.success) {
@@ -122,7 +114,11 @@ export async function POST(
     return NextResponse.json({
       success: true,
       data: {
-        ...provisionResult.data,
+        orderId: provisionResult.orderId,
+        qrCodeUrl: provisionResult.qrCodeUrl,
+        activationCode: provisionResult.activationCode,
+        instructions: provisionResult.instructions,
+        estimatedActivationTime: provisionResult.estimatedActivationTime,
         country: country,
         purchaseDetails: {
           planId,

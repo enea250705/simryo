@@ -146,24 +146,26 @@ function CheckoutFlow() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 pt-20">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 pt-20">
         <div className="flex flex-col items-center justify-center min-h-[400px]">
           <div className="relative">
-            <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center shadow-xl">
-              <Loader2 className="h-10 w-10 animate-spin text-white" />
+            <div className="w-24 h-24 bg-gradient-to-br from-blue-600 via-purple-600 to-indigo-600 rounded-3xl flex items-center justify-center shadow-2xl">
+              <Loader2 className="h-12 w-12 animate-spin text-white" />
             </div>
-            <div className="absolute -top-2 -right-2 w-6 h-6 bg-emerald-500 rounded-full animate-pulse"></div>
+            <div className="absolute -top-3 -right-3 w-8 h-8 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-full animate-pulse flex items-center justify-center">
+              <Shield className="h-4 w-4 text-white" />
+            </div>
           </div>
-          <h2 className="mt-6 text-2xl font-bold text-gray-900">Securing Your Payment</h2>
-          <p className="mt-2 text-lg text-gray-600">Setting up encrypted checkout...</p>
-          <div className="flex items-center gap-6 mt-8">
-            <div className="flex items-center gap-2 text-sm text-gray-500">
-              <Shield className="h-4 w-4 text-emerald-500" />
-              <span>256-bit SSL Encryption</span>
+          <h2 className="mt-8 text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">Securing Your Payment</h2>
+          <p className="mt-3 text-xl text-gray-600">Setting up bank-level encryption...</p>
+          <div className="flex items-center gap-8 mt-10">
+            <div className="flex items-center gap-3 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-xl border border-gray-200 shadow-sm">
+              <Shield className="h-5 w-5 text-emerald-600" />
+              <span className="text-sm font-medium text-gray-700">256-bit SSL Encryption</span>
             </div>
-            <div className="flex items-center gap-2 text-sm text-gray-500">
-              <Zap className="h-4 w-4 text-blue-500" />
-              <span>Instant Activation</span>
+            <div className="flex items-center gap-3 bg-white/80 backdrop-blur-sm px-4 py-2 rounded-xl border border-gray-200 shadow-sm">
+              <Zap className="h-5 w-5 text-blue-600" />
+              <span className="text-sm font-medium text-gray-700">Instant Activation</span>
             </div>
           </div>
         </div>
@@ -173,18 +175,27 @@ function CheckoutFlow() {
 
   if (orderItems.length === 0) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 pt-20">
-        <div className="container mx-auto max-w-4xl px-4 py-12">
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 pt-20">
+        <div className="container mx-auto max-w-5xl px-4 py-16">
           <div className="text-center">
-            <div className="w-32 h-32 bg-gradient-to-br from-gray-100 to-gray-200 rounded-full flex items-center justify-center mx-auto mb-8 shadow-lg">
-              <div className="text-6xl">🛒</div>
+            <div className="relative inline-block mb-10">
+              <div className="w-40 h-40 bg-gradient-to-br from-gray-100 via-blue-50 to-purple-50 rounded-3xl flex items-center justify-center mx-auto shadow-2xl">
+                <div className="text-7xl">🛒</div>
+              </div>
+              <div className="absolute -top-4 -right-4 w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-xl">
+                <span className="text-3xl">✨</span>
+              </div>
             </div>
-            <h1 className="text-4xl font-bold text-gray-900 mb-4">Nothing to Checkout</h1>
-            <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">Your cart appears to be empty. Add some eSIM plans to get started with your international connectivity!</p>
+            <h1 className="text-5xl font-bold bg-gradient-to-r from-gray-900 via-blue-800 to-purple-800 bg-clip-text text-transparent mb-6">
+              Nothing to Checkout
+            </h1>
+            <p className="text-2xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
+              Your cart appears to be empty. Discover premium eSIM plans for seamless global connectivity!
+            </p>
             <Link href="/plans">
-              <button className="bg-gradient-to-r from-emerald-600 to-emerald-700 hover:from-emerald-700 hover:to-emerald-800 text-white px-8 py-4 rounded-xl text-lg font-semibold shadow-lg hover:shadow-xl transition-all duration-200 transform hover:-translate-y-1">
-                <ShoppingCart className="h-5 w-5 mr-2 inline" />
-                Browse Plans
+              <button className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 hover:from-blue-700 hover:via-purple-700 hover:to-indigo-700 text-white px-12 py-5 rounded-2xl text-xl font-bold shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:-translate-y-2">
+                <ShoppingCart className="h-6 w-6 mr-3 inline" />
+                Explore eSIM Plans
               </button>
             </Link>
           </div>
@@ -194,26 +205,37 @@ function CheckoutFlow() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 pt-20">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 pt-20">
       {/* Hero Section */}
-      <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 text-white py-16">
-        <div className="container mx-auto max-w-7xl px-4">
-          <div className="flex items-center justify-between mb-8">
-            <Link href="/cart" className="flex items-center text-white/90 hover:text-white transition-colors group">
+      <div className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 text-white py-20 relative overflow-hidden">
+        {/* Background Pattern */}
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute top-10 left-10 w-20 h-20 bg-white rounded-3xl transform rotate-12"></div>
+          <div className="absolute top-20 right-20 w-16 h-16 bg-white rounded-2xl transform -rotate-12"></div>
+          <div className="absolute bottom-10 left-1/4 w-12 h-12 bg-white rounded-xl transform rotate-45"></div>
+          <div className="absolute bottom-20 right-1/3 w-8 h-8 bg-white rounded-lg transform -rotate-45"></div>
+        </div>
+        
+        <div className="container mx-auto max-w-7xl px-4 relative z-10">
+          <div className="flex items-center justify-between mb-12">
+            <Link href="/cart" className="flex items-center text-white/90 hover:text-white transition-all duration-200 group bg-white/10 backdrop-blur-sm rounded-xl px-4 py-2 border border-white/20">
               <ArrowLeft className="h-5 w-5 mr-2 group-hover:-translate-x-1 transition-transform" />
               Back to Cart
             </Link>
-            <div className="flex items-center gap-2 bg-white/20 backdrop-blur-sm rounded-xl px-4 py-2 border border-white/30">
-              <Shield className="h-5 w-5" />
-              <span className="text-sm font-medium">Secure Checkout</span>
+            <div className="flex items-center gap-3 bg-white/20 backdrop-blur-sm rounded-xl px-6 py-3 border border-white/30">
+              <Shield className="h-6 w-6" />
+              <span className="text-lg font-semibold">Secure Checkout</span>
             </div>
           </div>
           <div className="text-center">
-            <h1 className="text-4xl sm:text-5xl font-bold mb-4 bg-gradient-to-r from-white to-blue-100 bg-clip-text text-transparent">
+            <div className="inline-flex items-center justify-center w-24 h-24 bg-white/20 backdrop-blur-sm rounded-3xl mb-8 shadow-2xl">
+              <ShoppingCart className="h-12 w-12 text-white" />
+            </div>
+            <h1 className="text-5xl sm:text-6xl font-bold mb-6 bg-gradient-to-r from-white via-blue-100 to-purple-100 bg-clip-text text-transparent">
               Complete Your Purchase
             </h1>
-            <p className="text-xl text-blue-100 max-w-2xl mx-auto">
-              Secure payment powered by Stripe • Instant eSIM delivery • 24/7 support
+            <p className="text-2xl text-blue-100 max-w-3xl mx-auto leading-relaxed">
+              Bank-level security powered by Stripe • Instant eSIM delivery • Premium global coverage
             </p>
           </div>
         </div>
@@ -224,29 +246,38 @@ function CheckoutFlow() {
           {/* Order Summary */}
           <div className="lg:col-span-1">
             <div className="lg:sticky lg:top-24">
-              <Card className="bg-white/80 backdrop-blur-sm shadow-xl border-2 border-white/50">
-                <CardHeader className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-t-lg">
-                  <CardTitle className="flex items-center text-xl text-gray-900">
-                    <ShoppingCart className="h-6 w-6 mr-3 text-emerald-600" />
+              <Card className="bg-white/90 backdrop-blur-sm shadow-2xl border-2 border-white/50 rounded-3xl overflow-hidden">
+                <CardHeader className="bg-gradient-to-r from-blue-50 via-purple-50 to-indigo-50 pb-6">
+                  <CardTitle className="flex items-center text-2xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">
+                    <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center mr-3 shadow-lg">
+                      <ShoppingCart className="h-5 w-5 text-white" />
+                    </div>
                     Order Summary
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="p-6">
-                  <div className="space-y-4 max-h-80 overflow-y-auto pr-2">
+                <CardContent className="p-8">
+                  <div className="space-y-5 max-h-80 overflow-y-auto pr-2">
                     {orderItems.map((item, index) => (
-                      <div key={index} className="flex items-center space-x-4 p-3 bg-gray-50 rounded-xl">
-                        <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center shadow-sm">
+                      <div key={index} className="flex items-center space-x-4 p-4 bg-gradient-to-r from-gray-50 to-blue-50 rounded-2xl border border-white/50 shadow-sm">
+                        <div className="w-14 h-14 bg-white rounded-2xl flex items-center justify-center shadow-md">
                           <span className="text-2xl">{item.flag}</span>
                         </div>
                         <div className="flex-1">
-                          <h3 className="font-semibold text-gray-900">{item.countryName}</h3>
-                          <p className="text-sm text-gray-600">{item.plan.data} • {item.plan.days} days</p>
+                          <h3 className="font-bold text-gray-900 text-lg">{item.countryName}</h3>
+                          <div className="flex gap-2 mt-1">
+                            <span className="px-2 py-1 bg-blue-100 text-blue-700 rounded-lg text-xs font-medium">
+                              {item.plan.data}
+                            </span>
+                            <span className="px-2 py-1 bg-purple-100 text-purple-700 rounded-lg text-xs font-medium">
+                              {item.plan.days} days
+                            </span>
+                          </div>
                           {item.quantity > 1 && (
-                            <p className="text-xs text-emerald-600 font-medium">Quantity: {item.quantity}</p>
+                            <p className="text-sm text-emerald-600 font-bold mt-1">Qty: {item.quantity}</p>
                           )}
                         </div>
                         <div className="text-right">
-                          <p className="font-bold text-emerald-600">
+                          <p className="font-bold text-xl bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">
                             {formatPrice(convertPrice(item.plan.price * item.quantity, 'EUR', currency))}
                           </p>
                         </div>
@@ -254,37 +285,49 @@ function CheckoutFlow() {
                     ))}
                   </div>
                   
-                  <Separator className="my-6" />
+                  <Separator className="my-8" />
                   
-                  <div className="space-y-3">
-                    <div className="flex justify-between text-sm text-gray-600">
-                      <span>Subtotal</span>
-                      <span>{formattedTotal}</span>
+                  <div className="space-y-4">
+                    <div className="flex justify-between text-lg">
+                      <span className="text-gray-600 font-medium">Subtotal</span>
+                      <span className="font-bold">{formattedTotal}</span>
                     </div>
-                    <div className="flex justify-between text-sm text-gray-600">
-                      <span>Processing Fee</span>
-                      <span className="text-emerald-600">Free</span>
+                    <div className="flex justify-between text-lg">
+                      <span className="text-gray-600 font-medium">Processing Fee</span>
+                      <span className="text-emerald-600 font-bold">Free</span>
+                    </div>
+                    <div className="flex justify-between text-lg">
+                      <span className="text-gray-600 font-medium">Delivery</span>
+                      <span className="text-emerald-600 font-bold">Instant</span>
                     </div>
                     <Separator />
-                    <div className="flex justify-between items-center">
-                      <span className="text-lg font-bold text-gray-900">Total</span>
-                      <span className="text-2xl font-bold text-emerald-600">{formattedTotal}</span>
+                    <div className="bg-gradient-to-r from-emerald-50 to-teal-50 rounded-2xl p-6">
+                      <div className="flex justify-between items-center">
+                        <span className="text-xl font-bold text-gray-900">Total</span>
+                        <span className="text-3xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent">{formattedTotal}</span>
+                      </div>
                     </div>
                   </div>
                   
                   {/* Security Badges */}
-                  <div className="mt-6 grid grid-cols-3 gap-2 text-center">
-                    <div className="flex flex-col items-center gap-1">
-                      <Shield className="h-5 w-5 text-emerald-600" />
-                      <span className="text-xs text-gray-600">SSL Secure</span>
+                  <div className="mt-8 grid grid-cols-3 gap-4 text-center">
+                    <div className="flex flex-col items-center gap-2 p-3 bg-white rounded-xl shadow-sm">
+                      <div className="w-8 h-8 bg-emerald-100 rounded-lg flex items-center justify-center">
+                        <Shield className="h-4 w-4 text-emerald-600" />
+                      </div>
+                      <span className="text-xs font-medium text-gray-700">Bank-Level Security</span>
                     </div>
-                    <div className="flex flex-col items-center gap-1">
-                      <Zap className="h-5 w-5 text-blue-600" />
-                      <span className="text-xs text-gray-600">Instant</span>
+                    <div className="flex flex-col items-center gap-2 p-3 bg-white rounded-xl shadow-sm">
+                      <div className="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+                        <Zap className="h-4 w-4 text-blue-600" />
+                      </div>
+                      <span className="text-xs font-medium text-gray-700">Instant Delivery</span>
                     </div>
-                    <div className="flex flex-col items-center gap-1">
-                      <Globe className="h-5 w-5 text-purple-600" />
-                      <span className="text-xs text-gray-600">Global</span>
+                    <div className="flex flex-col items-center gap-2 p-3 bg-white rounded-xl shadow-sm">
+                      <div className="w-8 h-8 bg-purple-100 rounded-lg flex items-center justify-center">
+                        <Globe className="h-4 w-4 text-purple-600" />
+                      </div>
+                      <span className="text-xs font-medium text-gray-700">Global Coverage</span>
                     </div>
                   </div>
                 </CardContent>
@@ -294,12 +337,19 @@ function CheckoutFlow() {
 
           {/* Checkout Form */}
           <div className="lg:col-span-2">
-            <Card className="bg-white/80 backdrop-blur-sm shadow-xl border-2 border-white/50">
-              <CardHeader className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-t-lg">
-                <CardTitle className="text-2xl text-gray-900">Payment Details</CardTitle>
-                <p className="text-gray-600 mt-1">Complete your secure payment to get instant eSIM access</p>
+            <Card className="bg-white/90 backdrop-blur-sm shadow-2xl border-2 border-white/50 rounded-3xl overflow-hidden">
+              <CardHeader className="bg-gradient-to-r from-blue-50 via-purple-50 to-indigo-50 pb-8">
+                <div className="flex items-center gap-4 mb-4">
+                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+                    <Shield className="h-6 w-6 text-white" />
+                  </div>
+                  <div>
+                    <CardTitle className="text-3xl font-bold bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">Payment Details</CardTitle>
+                    <p className="text-lg text-gray-600 mt-1">Complete your secure payment for instant eSIM access</p>
+                  </div>
+                </div>
               </CardHeader>
-              <CardContent className="p-8">
+              <CardContent className="p-10">
                 {clientSecret ? (
                   <Elements stripe={stripePromise} options={options}>
                     <CheckoutForm 
@@ -308,14 +358,20 @@ function CheckoutFlow() {
                     />
                   </Elements>
                 ) : (
-                  <div className="text-center py-12">
+                  <div className="text-center py-16">
                     <div className="relative">
-                      <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center mx-auto mb-4 shadow-lg">
-                        <Loader2 className="h-8 w-8 animate-spin text-white" />
+                      <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-500 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-2xl">
+                        <Loader2 className="h-10 w-10 animate-spin text-white" />
                       </div>
+                      <div className="absolute -top-2 -right-2 w-6 h-6 bg-emerald-500 rounded-full animate-pulse"></div>
                     </div>
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">Preparing Payment</h3>
-                    <p className="text-gray-600">Setting up secure payment gateway...</p>
+                    <h3 className="text-2xl font-bold text-gray-900 mb-3">Preparing Payment Gateway</h3>
+                    <p className="text-lg text-gray-600">Establishing secure connection with Stripe...</p>
+                    <div className="flex justify-center gap-2 mt-6">
+                      <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
+                      <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                      <div className="w-2 h-2 bg-indigo-500 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                    </div>
                   </div>
                 )}
               </CardContent>
@@ -324,29 +380,29 @@ function CheckoutFlow() {
         </div>
         
         {/* Trust Indicators */}
-        <div className="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div className="text-center bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg">
-            <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-              <Shield className="h-8 w-8 text-white" />
+        <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-10">
+          <div className="text-center bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/50 hover:shadow-3xl transition-all duration-300 group">
+            <div className="w-20 h-20 bg-gradient-to-br from-emerald-500 to-teal-500 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl group-hover:scale-110 transition-transform duration-300">
+              <Shield className="h-10 w-10 text-white" />
             </div>
-            <h3 className="text-lg font-bold mb-2 text-gray-900">Bank-Level Security</h3>
-            <p className="text-gray-600 text-sm">Your payment is protected with 256-bit SSL encryption and fraud detection.</p>
+            <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">Bank-Level Security</h3>
+            <p className="text-gray-600 text-lg leading-relaxed">Your payment is protected with 256-bit SSL encryption, fraud detection, and PCI compliance standards.</p>
           </div>
           
-          <div className="text-center bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg">
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-              <Zap className="h-8 w-8 text-white" />
+          <div className="text-center bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/50 hover:shadow-3xl transition-all duration-300 group">
+            <div className="w-20 h-20 bg-gradient-to-br from-blue-500 to-purple-500 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl group-hover:scale-110 transition-transform duration-300">
+              <Zap className="h-10 w-10 text-white" />
             </div>
-            <h3 className="text-lg font-bold mb-2 text-gray-900">Instant Delivery</h3>
-            <p className="text-gray-600 text-sm">Receive your eSIM QR code immediately after payment completion.</p>
+            <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">Instant Delivery</h3>
+            <p className="text-gray-600 text-lg leading-relaxed">Receive your eSIM QR code and activation instructions immediately after successful payment completion.</p>
           </div>
           
-          <div className="text-center bg-white/60 backdrop-blur-sm rounded-2xl p-6 shadow-lg">
-            <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg">
-              <Globe className="h-8 w-8 text-white" />
+          <div className="text-center bg-white/80 backdrop-blur-sm rounded-3xl p-8 shadow-2xl border border-white/50 hover:shadow-3xl transition-all duration-300 group">
+            <div className="w-20 h-20 bg-gradient-to-br from-purple-500 to-pink-500 rounded-3xl flex items-center justify-center mx-auto mb-6 shadow-xl group-hover:scale-110 transition-transform duration-300">
+              <Globe className="h-10 w-10 text-white" />
             </div>
-            <h3 className="text-lg font-bold mb-2 text-gray-900">Global Coverage</h3>
-            <p className="text-gray-600 text-sm">Connect instantly in 190+ countries with premium network partners.</p>
+            <h3 className="text-2xl font-bold mb-4 bg-gradient-to-r from-gray-900 to-gray-700 bg-clip-text text-transparent">Global Coverage</h3>
+            <p className="text-gray-600 text-lg leading-relaxed">Connect instantly in 190+ countries with our premium network partners and reliable data coverage.</p>
           </div>
         </div>
       </div>
