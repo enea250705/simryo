@@ -181,48 +181,8 @@ export function generateMissingPlans(availablePlans: EnhancedPlan[], countryInfo
 }
 
 export function filterAllowedPlans(plans: EnhancedPlan[], countryInfo?: { country: string, flag: string, region: string }): EnhancedPlan[] {
-  // Debug logging
-  if (countryInfo) {
-    console.log(`🔍 Filtering plans for: "${countryInfo.country}"`)
-    console.log(`📊 Original plan count: ${plans.length}`)
-    if (plans.length > 0) {
-      console.log(`📋 Sample plan countries: ${plans.slice(0, 3).map(p => `"${p.country}"`).join(', ')}`)
-    }
-  }
-  
-  // Step 1: Filter out unreasonable plans
-  const qualityFiltered = plans.filter(shouldKeepPlan)
-  console.log(`✅ After quality filtering: ${qualityFiltered.length}/${plans.length} plans kept`)
-  
-  // Step 2: Deduplicate plans (prefer shorter duration)
-  const deduplicated = deduplicatePlans(qualityFiltered)
-  console.log(`🔄 After deduplication: ${deduplicated.length}/${qualityFiltered.length} plans kept`)
-  
-  // Step 3: Generate missing standard plans if country info provided
-  let finalPlans = deduplicated
-  if (countryInfo) {
-    const generated = generateMissingPlans(deduplicated, countryInfo)
-    finalPlans = [...deduplicated, ...generated].sort((a, b) => {
-      const aGB = a.dataInMB / 1024
-      const bGB = b.dataInMB / 1024
-      return aGB - bGB
-    })
-    console.log(`🎯 After plan generation: ${finalPlans.length} total plans (${generated.length} generated)`)
-  }
-  
-  // Log filtering summary
-  const originalCount = plans.length
-  const filteredCount = finalPlans.length
-  const generatedCount = finalPlans.length - deduplicated.length
-  
-  console.log(`🔍 Plan filtering summary for "${countryInfo?.country || 'Unknown'}": Kept ${deduplicated.length}/${originalCount} plans, generated ${generatedCount} missing plans`)
-  
-  if (originalCount - deduplicated.length > 0) {
-    console.log(`📊 Filtered out plans with: unreasonable pricing (>$10/GB), extreme durations (<1 or >90 days), tiny data (<100MB), or massive data (>100GB)`)
-    console.log(`🇨🇳 Note: China/Hong Kong/Macao regions bypass all price and data filters`)
-  }
-  
-  return finalPlans
+  const filtered = plans.filter(shouldKeepPlan)
+  return filtered.sort((a, b) => a.dataInMB - b.dataInMB || a.days - b.days)
 }
 
 export function getFilteringSummary(originalPlans: EnhancedPlan[], filteredPlans: EnhancedPlan[]) {

@@ -1,225 +1,135 @@
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import {
-  Zap,
-  DollarSign,
-  Globe,
-  Shield,
-  Clock,
-  Wifi,
-  Smartphone,
-  HeadphonesIcon,
-  CheckCircle,
-  ArrowRight,
-} from "lucide-react"
+import { Zap, DollarSign, Globe, Shield, Clock, Wifi, Smartphone, HeadphonesIcon, CheckCircle, ArrowRight } from "lucide-react"
 import Link from "next/link"
+
+const benefits = [
+  { icon: Zap, title: "Instant activation", description: "Get connected in seconds with QR code setup. No waiting, no physical SIM cards." },
+  { icon: DollarSign, title: "No roaming fees", description: "Transparent pricing, no hidden charges. Pay only for what you use." },
+  { icon: Globe, title: "190+ countries", description: "Stay connected worldwide with premium network partnerships." },
+  { icon: Wifi, title: "4G/5G speeds", description: "High-speed data with unlimited options in most destinations." },
+]
+
+const features = [
+  { icon: Clock, title: "Flexible validity", description: "Choose from 7, 15, or 30-day plans that fit your travel schedule." },
+  { icon: Smartphone, title: "Multi-device support", description: "Use your eSIM on smartphones, tablets, and compatible devices." },
+  { icon: Shield, title: "Secure connection", description: "Bank-level encryption and security protocols protect your data and privacy." },
+  { icon: HeadphonesIcon, title: "24/7 support", description: "Get help whenever you need it with round-the-clock customer support." },
+]
+
+const steps = [
+  { n: "1", title: "Choose your plan", desc: "Select the right data plan for your destination" },
+  { n: "2", title: "Purchase instantly", desc: "Complete checkout and receive your QR code immediately" },
+  { n: "3", title: "Scan and connect", desc: "Scan the QR code and you're online" },
+]
+
+const comparison = [
+  { feature: "Setup time", simryo: "Instant", roaming: "Hours or days" },
+  { feature: "Pricing", simryo: "Fixed, upfront", roaming: "Variable with hidden fees" },
+  { feature: "Physical SIM required", simryo: "No", roaming: "Yes" },
+  { feature: "Network quality", simryo: "Premium carriers", roaming: "Variable" },
+]
 
 export default function BenefitsPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 pt-20">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+    <div className="min-h-screen bg-white pt-20">
+      <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-12">
+
         {/* Header */}
-        <div className="mb-16">
-          <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">Why Choose SIMRYO?</h1>
-          <p className="mt-4 text-lg text-gray-600 max-w-3xl">
-            Experience the future of mobile connectivity with our premium eSIM technology. No more physical SIM cards,
-            no more roaming surprises.
-          </p>
+        <div className="mb-12">
+          <p className="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-3">Benefits</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-3">Why choose SIMRYO?</h1>
+          <p className="text-gray-500 max-w-2xl">No physical SIM cards, no roaming surprises. Just instant connectivity wherever you travel.</p>
         </div>
 
-        {/* Main Benefits */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
-          <Card className="hover:shadow-lg transition-shadow">
-            <CardContent className="p-8">
-              <Zap className="h-12 w-12 text-blue-600 mb-4" />
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Instant Activation</h3>
-              <p className="text-gray-600">
-                Get connected in seconds with QR code activation. No waiting, no physical SIM cards.
-              </p>
-            </CardContent>
-          </Card>
-
-          <Card className="hover:shadow-lg transition-shadow">
-            <CardContent className="p-8">
-              <DollarSign className="h-12 w-12 text-green-600 mb-4" />
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">No Roaming Fees</h3>
-              <p className="text-gray-600">Transparent pricing with no hidden charges. Pay only for what you use.</p>
-            </CardContent>
-          </Card>
-
-          <Card className="hover:shadow-lg transition-shadow">
-            <CardContent className="p-8">
-              <Globe className="h-12 w-12 text-purple-600 mb-4" />
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">Worldwide Coverage</h3>
-              <p className="text-gray-600">Stay connected in 190+ countries with premium network partnerships.</p>
-            </CardContent>
-          </Card>
-
-          <Card className="hover:shadow-lg transition-shadow">
-            <CardContent className="p-8">
-              <Wifi className="h-12 w-12 text-orange-600 mb-4" />
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">High-Speed Data</h3>
-              <p className="text-gray-600">4G/5G speeds with unlimited data options in most destinations.</p>
-            </CardContent>
-          </Card>
+        {/* Main benefits */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-14">
+          {benefits.map((b, i) => (
+            <div key={i} className="border border-gray-200 rounded-xl p-5">
+              <div className="w-9 h-9 bg-gray-100 rounded-lg flex items-center justify-center mb-4">
+                <b.icon className="h-4 w-4 text-gray-600" />
+              </div>
+              <h3 className="text-sm font-semibold text-gray-900 mb-1">{b.title}</h3>
+              <p className="text-sm text-gray-500">{b.description}</p>
+            </div>
+          ))}
         </div>
 
-        {/* Detailed Features */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
+        {/* Features + how it works */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 mb-14">
           <div>
-            <h2 className="text-3xl font-bold text-gray-900 mb-8">Advanced Features</h2>
-            <div className="space-y-6">
-              <div className="flex items-start space-x-4">
-                <Clock className="h-6 w-6 text-blue-600 mt-1" />
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900">Flexible Validity</h3>
-                  <p className="text-gray-600">
-                    Choose from 7, 15, or 30-day plans that fit your travel schedule perfectly.
-                  </p>
+            <h2 className="text-lg font-semibold text-gray-900 mb-6">Features</h2>
+            <div className="space-y-5">
+              {features.map((f, i) => (
+                <div key={i} className="flex items-start gap-4">
+                  <div className="w-8 h-8 bg-gray-100 rounded-lg flex items-center justify-center shrink-0">
+                    <f.icon className="h-4 w-4 text-gray-600" />
+                  </div>
+                  <div>
+                    <div className="text-sm font-semibold text-gray-900">{f.title}</div>
+                    <div className="text-sm text-gray-500 mt-0.5">{f.description}</div>
+                  </div>
                 </div>
-              </div>
-
-              <div className="flex items-start space-x-4">
-                <Smartphone className="h-6 w-6 text-green-600 mt-1" />
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900">Multi-Device Support</h3>
-                  <p className="text-gray-600">
-                    Use your eSIM on smartphones, tablets, and compatible devices seamlessly.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-4">
-                <Shield className="h-6 w-6 text-purple-600 mt-1" />
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900">Enterprise Security</h3>
-                  <p className="text-gray-600">
-                    Bank-level encryption and security protocols protect your data and privacy.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start space-x-4">
-                <HeadphonesIcon className="h-6 w-6 text-orange-600 mt-1" />
-                <div>
-                  <h3 className="text-lg font-semibold text-gray-900">24/7 Support</h3>
-                  <p className="text-gray-600">
-                    Get help whenever you need it with our round-the-clock customer support.
-                  </p>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
 
-          <div className="bg-gradient-to-br from-blue-100 to-purple-100 rounded-2xl p-8">
-            <h3 className="text-2xl font-bold text-gray-900 mb-6">How It Works</h3>
-            <div className="space-y-6">
-              <div className="flex items-center space-x-4">
-                <div className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-semibold">
-                  1
+          <div className="border border-gray-200 rounded-xl p-6 bg-gray-50">
+            <h2 className="text-lg font-semibold text-gray-900 mb-6">How it works</h2>
+            <div className="space-y-0">
+              {steps.map((s, i) => (
+                <div key={i} className="flex gap-4 pb-6 last:pb-0">
+                  <div className="flex flex-col items-center">
+                    <div className="w-8 h-8 rounded-full bg-gray-900 text-white text-sm font-bold flex items-center justify-center shrink-0">
+                      {s.n}
+                    </div>
+                    {i < steps.length - 1 && <div className="w-px flex-1 bg-gray-200 mt-2" />}
+                  </div>
+                  <div className="pt-1">
+                    <div className="text-sm font-semibold text-gray-900">{s.title}</div>
+                    <div className="text-sm text-gray-500 mt-0.5">{s.desc}</div>
+                  </div>
                 </div>
-                <div>
-                  <h4 className="font-semibold text-gray-900">Choose Your Plan</h4>
-                  <p className="text-gray-600 text-sm">Select the perfect data plan for your destination</p>
-                </div>
-              </div>
-
-              <div className="flex items-center space-x-4">
-                <div className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-semibold">
-                  2
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gray-900">Instant Purchase</h4>
-                  <p className="text-gray-600 text-sm">Complete your purchase and receive QR code instantly</p>
-                </div>
-              </div>
-
-              <div className="flex items-center space-x-4">
-                <div className="flex-shrink-0 w-8 h-8 bg-blue-600 text-white rounded-full flex items-center justify-center font-semibold">
-                  3
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gray-900">Scan & Connect</h4>
-                  <p className="text-gray-600 text-sm">Scan the QR code and get connected immediately</p>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
         </div>
 
-        {/* Comparison Table */}
-        <div className="mb-16">
-          <h2 className="text-3xl font-bold text-gray-900 mb-8">SIMRYO vs Traditional Roaming</h2>
-          <Card>
-            <CardContent className="p-0">
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead className="bg-gray-50">
-                    <tr>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Feature</th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">SIMRYO eSIM</th>
-                      <th className="px-6 py-4 text-left text-sm font-semibold text-gray-900">Traditional Roaming</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200">
-                    <tr>
-                      <td className="px-6 py-4 text-sm text-gray-900">Setup Time</td>
-                      <td className="px-6 py-4">
-                        <CheckCircle className="h-5 w-5 text-green-600" />
-                        <span className="text-sm text-gray-600">Instant</span>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-600">Hours/Days</td>
-                    </tr>
-                    <tr>
-                      <td className="px-6 py-4 text-sm text-gray-900">Cost Transparency</td>
-                      <td className="px-6 py-4">
-                        <CheckCircle className="h-5 w-5 text-green-600" />
-                        <span className="text-sm text-gray-600">Fixed Price</span>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-600">Variable/Hidden Fees</td>
-                    </tr>
-                    <tr>
-                      <td className="px-6 py-4 text-sm text-gray-900">Physical SIM Required</td>
-                      <td className="px-6 py-4 text-sm text-gray-600">No</td>
-                      <td className="px-6 py-4">
-                        <CheckCircle className="h-5 w-5 text-red-600" />
-                        <span className="text-sm text-gray-600">Yes</span>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td className="px-6 py-4 text-sm text-gray-900">Network Quality</td>
-                      <td className="px-6 py-4">
-                        <CheckCircle className="h-5 w-5 text-green-600" />
-                        <span className="text-sm text-gray-600">Premium Partners</span>
-                      </td>
-                      <td className="px-6 py-4 text-sm text-gray-600">Variable</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </CardContent>
-          </Card>
+        {/* Comparison table */}
+        <div className="mb-14">
+          <h2 className="text-lg font-semibold text-gray-900 mb-5">SIMRYO vs traditional roaming</h2>
+          <div className="border border-gray-200 rounded-xl overflow-hidden">
+            <table className="w-full text-sm">
+              <thead className="bg-gray-50 border-b border-gray-200">
+                <tr>
+                  <th className="px-5 py-3 text-left font-semibold text-gray-700">Feature</th>
+                  <th className="px-5 py-3 text-left font-semibold text-gray-700">SIMRYO eSIM</th>
+                  <th className="px-5 py-3 text-left font-semibold text-gray-700">Traditional roaming</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-100">
+                {comparison.map((row, i) => (
+                  <tr key={i}>
+                    <td className="px-5 py-3 text-gray-700 font-medium">{row.feature}</td>
+                    <td className="px-5 py-3 text-gray-900 font-semibold">{row.simryo}</td>
+                    <td className="px-5 py-3 text-gray-400">{row.roaming}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
 
-        {/* CTA Section */}
-        <Card className="bg-gradient-to-r from-blue-600 to-purple-600 text-white">
-          <CardContent className="p-8 sm:p-12">
-            <div className="flex flex-col lg:flex-row lg:justify-between lg:items-center">
-              <div>
-                <h2 className="text-3xl font-bold mb-2">Ready to Get Started?</h2>
-                <p className="max-w-xl mb-6 lg:mb-0">
-                  Browse our plans and get your eSIM in minutes. Instant connectivity is just a few clicks away.
-                </p>
-              </div>
-            <Link href="/plans">
-                <Button variant="secondary" size="lg" className="bg-white text-blue-600 hover:bg-gray-100 flex-shrink-0">
-                  Browse All Plans
-                <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-          </div>
-          </CardContent>
-        </Card>
+        {/* CTA */}
+        <div className="border border-gray-200 rounded-xl p-6 bg-gray-50 text-center">
+          <p className="text-sm font-semibold text-gray-900 mb-1">Ready to get started?</p>
+          <p className="text-sm text-gray-500 mb-5">Browse plans for 190+ countries. Instant setup, no contracts.</p>
+          <Link href="/plans">
+            <button className="inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors">
+              Browse Plans
+              <ArrowRight className="h-4 w-4" />
+            </button>
+          </Link>
+        </div>
+
       </div>
     </div>
   )

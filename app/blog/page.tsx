@@ -1,528 +1,315 @@
 "use client"
 
-import { useState, useEffect } from "react"
+import { useState } from "react"
 import Link from "next/link"
-import Image from "next/image"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { 
-  Search, 
-  Calendar, 
-  Clock, 
-  User, 
-  ArrowRight, 
-  TrendingUp, 
-  Globe, 
-  Smartphone, 
-  Zap,
-  Star,
-  BookOpen,
-  Filter,
-  ChevronRight,
-  Eye,
-  MessageCircle,
-  Share2
-} from "lucide-react"
-import { Separator } from "@/components/ui/separator"
+import { Search, Clock, Calendar, ArrowRight } from "lucide-react"
 
 interface BlogPost {
-  id: string
   slug: string
   title: string
   excerpt: string
-  content?: string
-  featuredImage: string
+  image: string
   category: string
-  tags: string[]
-  author: {
-    name: string
-    avatar: string
-    bio: string
-  }
+  author: string
   publishedAt: string
   readTime: number
-  views: number
-  comments: number
-  featured: boolean
-  seoKeywords: string[]
 }
 
-const categories = [
-  { name: "All Posts", slug: "all", icon: BookOpen, count: 25 },
-  { name: "Travel Guides", slug: "travel-guides", icon: Globe, count: 8 },
-  { name: "eSIM Technology", slug: "esim-technology", icon: Smartphone, count: 6 },
-  { name: "Digital Nomad", slug: "digital-nomad", icon: TrendingUp, count: 5 },
-  { name: "Setup Guides", slug: "setup-guides", icon: Zap, count: 4 },
-  { name: "Comparisons", slug: "comparisons", icon: Star, count: 2 }
-]
-
-const featuredPosts: BlogPost[] = [
+const posts: BlogPost[] = [
   {
-    id: "1",
     slug: "ultimate-guide-best-esim-international-travel-2025",
     title: "The Ultimate Guide to the Best eSIM for International Travel in 2025",
-    excerpt: "Discover the best eSIM for international travel in 2025. Compare top providers, learn setup tips, and find the perfect SIMRYO eSIM plan for your next adventure abroad.",
-    featuredImage: "/blog/featured-esim-guide.jpg",
+    excerpt: "Compare top eSIM providers, learn setup tips, and find the perfect plan for your next trip abroad.",
+    image: "https://images.unsplash.com/photo-1488085061387-422e29b40080?w=800&q=80",
     category: "Travel Guides",
-    tags: ["best esim", "international travel", "travel connectivity", "esim guide"],
-    author: {
-      name: "Sarah Chen",
-      avatar: "/authors/sarah-chen.jpg",
-      bio: "Travel Technology Expert & Digital Nomad"
-    },
+    author: "Sarah Chen",
     publishedAt: "2024-12-15",
-    readTime: 12,
-    views: 15420,
-    comments: 89,
-    featured: true,
-    seoKeywords: ["best esim for international travel", "international esim plans", "travel connectivity"]
+    readTime: 12
   },
   {
-    id: "2", 
     slug: "esim-technology-explained-complete-guide-2025",
     title: "eSIM Technology Explained: Everything You Need to Know in 2025",
-    excerpt: "A comprehensive deep dive into eSIM technology, how it works, benefits over physical SIM cards, and what the future holds for mobile connectivity.",
-    featuredImage: "/blog/esim-technology-explained.jpg",
+    excerpt: "A deep dive into how eSIM works, its benefits over physical SIM cards, and what's next for mobile connectivity.",
+    image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=800&q=80",
     category: "eSIM Technology",
-    tags: ["esim technology", "how esim works", "esim vs physical sim"],
-    author: {
-      name: "Dr. Michael Rodriguez",
-      avatar: "/authors/michael-rodriguez.jpg",
-      bio: "Telecommunications Engineer & Tech Writer"
-    },
+    author: "Dr. Michael Rodriguez",
     publishedAt: "2024-12-10",
-    readTime: 15,
-    views: 12350,
-    comments: 67,
-    featured: true,
-    seoKeywords: ["how esim works", "esim technology", "esim vs physical sim"]
+    readTime: 15
   },
   {
-    id: "3",
     slug: "digital-nomad-global-connectivity-esim-guide",
     title: "Digital Nomad's Complete Guide to Global Connectivity with eSIMs",
-    excerpt: "The ultimate resource for location-independent professionals seeking reliable, cost-effective connectivity across multiple countries and time zones.",
-    featuredImage: "/blog/digital-nomad-connectivity.jpg",
+    excerpt: "Reliable, cost-effective connectivity for location-independent professionals across multiple countries.",
+    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&q=80",
     category: "Digital Nomad",
-    tags: ["digital nomad", "remote work", "global connectivity", "esim for nomads"],
-    author: {
-      name: "Alex Thompson",
-      avatar: "/authors/alex-thompson.jpg",
-      bio: "Digital Nomad & Remote Work Consultant"
-    },
+    author: "Alex Thompson",
     publishedAt: "2024-12-08",
-    readTime: 18,
-    views: 9876,
-    comments: 124,
-    featured: true,
-    seoKeywords: ["esim for digital nomads", "remote work connectivity", "nomad internet"]
+    readTime: 18
+  },
+  {
+    slug: "best-esim-europe-travel-2025",
+    title: "Best eSIM Plans for Europe Travel in 2025",
+    excerpt: "Top eSIM options for exploring Europe — coverage, pricing, and which plan suits your trip.",
+    image: "https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=800&q=80",
+    category: "Travel Guides",
+    author: "Emma Wilson",
+    publishedAt: "2024-12-06",
+    readTime: 10
+  },
+  {
+    slug: "esim-vs-physical-sim-comprehensive-comparison",
+    title: "eSIM vs Physical SIM: A Comprehensive Comparison",
+    excerpt: "Which is right for you? A detailed breakdown of the differences, pros, and cons of each.",
+    image: "https://images.unsplash.com/photo-1556656793-08538906a9f8?w=800&q=80",
+    category: "Comparisons",
+    author: "James Park",
+    publishedAt: "2024-12-04",
+    readTime: 9
+  },
+  {
+    slug: "cheapest-esim-plans-budget-travel-guide",
+    title: "Cheapest eSIM Plans: A Budget Traveler's Guide",
+    excerpt: "How to find the most affordable eSIM plans without sacrificing coverage or reliability.",
+    image: "https://images.unsplash.com/photo-1526772662000-3f88f10405ff?w=800&q=80",
+    category: "Travel Guides",
+    author: "Maria Santos",
+    publishedAt: "2024-12-02",
+    readTime: 8
+  },
+  {
+    slug: "5g-esim-coverage-speed-guide",
+    title: "5G eSIM Coverage & Speed: What Travelers Need to Know",
+    excerpt: "Where 5G eSIM is actually available, what speeds to expect, and how it compares to 4G LTE.",
+    image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&q=80",
+    category: "eSIM Technology",
+    author: "Dr. Michael Rodriguez",
+    publishedAt: "2024-11-30",
+    readTime: 11
+  },
+  {
+    slug: "esim-business-travel-guide-enterprise-solutions",
+    title: "eSIM for Business Travel: Enterprise Solutions Guide",
+    excerpt: "How companies are using eSIM technology to simplify employee travel connectivity and reduce costs.",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80",
+    category: "Travel Guides",
+    author: "David Chen",
+    publishedAt: "2024-11-28",
+    readTime: 13
+  },
+  {
+    slug: "best-unlimited-data-esim-plans-worldwide",
+    title: "Best Unlimited Data eSIM Plans Worldwide",
+    excerpt: "The top unlimited and high-data eSIM plans for heavy users and long-term travelers.",
+    image: "https://images.unsplash.com/photo-1551650975-87deedd944c3?w=800&q=80",
+    category: "Travel Guides",
+    author: "Sarah Chen",
+    publishedAt: "2024-11-25",
+    readTime: 10
+  },
+  {
+    slug: "esim-security-privacy-guide-2025",
+    title: "eSIM Security & Privacy: What You Need to Know in 2025",
+    excerpt: "How eSIM technology handles your data, what risks exist, and how to stay secure while traveling.",
+    image: "https://images.unsplash.com/photo-1563986768609-322da13575f3?w=800&q=80",
+    category: "eSIM Technology",
+    author: "James Park",
+    publishedAt: "2024-11-22",
+    readTime: 9
+  },
+  {
+    slug: "family-travel-esim-group-plans",
+    title: "Family Travel with eSIM: Group Plans and Tips",
+    excerpt: "The best eSIM strategies for families traveling together — shared plans, multi-device setups, and savings.",
+    image: "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80",
+    category: "Travel Guides",
+    author: "Emma Wilson",
+    publishedAt: "2024-11-20",
+    readTime: 8
+  },
+  {
+    slug: "esim-troubleshooting-common-issues-solutions",
+    title: "eSIM Troubleshooting: Common Issues & Solutions",
+    excerpt: "Fix the most common eSIM problems — activation failures, no signal, slow speeds — step by step.",
+    image: "https://images.unsplash.com/photo-1495592822108-9e6261896da8?w=800&q=80",
+    category: "Setup Guides",
+    author: "Tech Support Team",
+    publishedAt: "2024-11-18",
+    readTime: 7
+  },
+  {
+    slug: "cruise-ship-connectivity-esim-guide",
+    title: "eSIM on Cruise Ships: Connectivity Guide",
+    excerpt: "How to stay connected on a cruise — which eSIMs work at sea and in ports, and what to expect.",
+    image: "https://images.unsplash.com/photo-1548574505-5e239809ee19?w=800&q=80",
+    category: "Travel Guides",
+    author: "Maria Santos",
+    publishedAt: "2024-11-15",
+    readTime: 9
+  },
+  {
+    slug: "student-study-abroad-esim-guide",
+    title: "eSIM for Students Studying Abroad: Complete Guide",
+    excerpt: "Affordable connectivity options for students studying internationally — the best plans by region.",
+    image: "https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&q=80",
+    category: "Travel Guides",
+    author: "Alex Thompson",
+    publishedAt: "2024-11-12",
+    readTime: 8
+  },
+  {
+    slug: "best-esim-apps-management-guide",
+    title: "Best Apps for Managing Your eSIM While Traveling",
+    excerpt: "The top apps for monitoring data usage, switching plans, and managing multiple eSIM profiles.",
+    image: "https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=800&q=80",
+    category: "Setup Guides",
+    author: "Jennifer Kim",
+    publishedAt: "2024-11-10",
+    readTime: 7
+  },
+  {
+    slug: "country-specific-esim-guides-usa-canada-mexico",
+    title: "eSIM Guides: USA, Canada & Mexico Coverage",
+    excerpt: "Detailed breakdown of eSIM coverage, carriers, and plans for North America.",
+    image: "https://images.unsplash.com/photo-1501466044931-62695aada8e9?w=800&q=80",
+    category: "Travel Guides",
+    author: "Carlos Mendez",
+    publishedAt: "2024-11-08",
+    readTime: 11
+  },
+  {
+    slug: "emergency-communication-esim-guide",
+    title: "Emergency Communication While Traveling: Why eSIM Matters",
+    excerpt: "How eSIM can be a lifeline in emergencies abroad — instant switching, backup connectivity, and more.",
+    image: "https://images.unsplash.com/photo-1584308666744-24d5c474f2ae?w=800&q=80",
+    category: "Travel Guides",
+    author: "David Chen",
+    publishedAt: "2024-11-05",
+    readTime: 8
+  },
+  {
+    slug: "esim-vs-pocket-wifi-comparison-guide",
+    title: "eSIM vs Pocket WiFi: Which is Better for Travelers?",
+    excerpt: "A practical comparison of eSIM and pocket WiFi — cost, convenience, battery, and coverage.",
+    image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&q=80",
+    category: "Comparisons",
+    author: "Jennifer Kim",
+    publishedAt: "2024-11-02",
+    readTime: 9
   }
 ]
 
-const recentPosts: BlogPost[] = [
-  {
-    id: "4",
-    slug: "esim-compatibility-guide-devices-countries-providers",
-    title: "The Complete eSIM Compatibility Guide: Devices, Countries & Providers",
-    excerpt: "Exhaustive guide to eSIM compatibility across devices, countries, and providers with interactive compatibility checker.",
-    featuredImage: "/blog/esim-compatibility.jpg",
-    category: "Setup Guides",
-    tags: ["esim compatible phones", "device compatibility", "esim support"],
-    author: {
-      name: "Jennifer Kim",
-      avatar: "/authors/jennifer-kim.jpg",
-      bio: "Mobile Technology Specialist"
-    },
-    publishedAt: "2024-12-05",
-    readTime: 10,
-    views: 8234,
-    comments: 45,
-    featured: false,
-    seoKeywords: ["esim compatible phones", "esim supported devices"]
-  },
-  {
-    id: "5",
-    slug: "top-10-benefits-esim-international-trip",
-    title: "Top 10 Benefits of Using eSIM for Your Next International Trip",
-    excerpt: "Discover the key advantages of eSIM technology for international travelers with real-world examples and traveler testimonials.",
-    featuredImage: "/blog/esim-benefits.jpg",
-    category: "Travel Guides",
-    tags: ["esim benefits", "travel advantages", "international travel"],
-    author: {
-      name: "Carlos Mendez",
-      avatar: "/authors/carlos-mendez.jpg",
-      bio: "Travel Writer & Connectivity Expert"
-    },
-    publishedAt: "2024-12-03",
-    readTime: 8,
-    views: 6789,
-    comments: 32,
-    featured: false,
-    seoKeywords: ["benefits of esim for travel", "advantages of esim"]
-  },
-  {
-    id: "6",
-    slug: "setup-activate-esim-5-minutes-guide",
-    title: "How to Set Up and Activate Your eSIM in 5 Minutes or Less",
-    excerpt: "Step-by-step tutorial for quickly setting up your eSIM with troubleshooting tips for common activation issues.",
-    featuredImage: "/blog/esim-setup-guide.jpg",
-    category: "Setup Guides",
-    tags: ["esim setup", "esim activation", "how to install esim"],
-    author: {
-      name: "Tech Support Team",
-      avatar: "/authors/tech-team.jpg",
-      bio: "SIMRYO Technical Support Experts"
-    },
-    publishedAt: "2024-12-01",
-    readTime: 6,
-    views: 11234,
-    comments: 78,
-    featured: false,
-    seoKeywords: ["how to set up esim", "esim activation guide"]
-  }
-]
+const categories = ["All", "Travel Guides", "eSIM Technology", "Digital Nomad", "Setup Guides", "Comparisons"]
 
 export default function BlogPage() {
-  const [searchQuery, setSearchQuery] = useState("")
-  const [selectedCategory, setSelectedCategory] = useState("all")
-  const [filteredPosts, setFilteredPosts] = useState([...featuredPosts, ...recentPosts])
+  const [search, setSearch] = useState("")
+  const [category, setCategory] = useState("All")
 
-  useEffect(() => {
-    let filtered = [...featuredPosts, ...recentPosts]
-    
-    if (selectedCategory !== "all") {
-      filtered = filtered.filter(post => 
-        post.category.toLowerCase().replace(/\s+/g, '-') === selectedCategory
-      )
-    }
-    
-    if (searchQuery) {
-      filtered = filtered.filter(post =>
-        post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        post.excerpt.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        post.tags.some(tag => tag.toLowerCase().includes(searchQuery.toLowerCase()))
-      )
-    }
-    
-    setFilteredPosts(filtered)
-  }, [searchQuery, selectedCategory])
+  const filtered = posts.filter(p => {
+    const matchCat = category === "All" || p.category === category
+    const matchSearch = !search.trim() ||
+      p.title.toLowerCase().includes(search.toLowerCase()) ||
+      p.excerpt.toLowerCase().includes(search.toLowerCase())
+    return matchCat && matchSearch
+  })
 
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    })
-  }
+  const fmt = (d: string) => new Date(d).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-blue-50">
-      {/* Hero Section */}
-      <section className="bg-gradient-to-br from-blue-600 to-purple-600 text-white py-20">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center max-w-4xl mx-auto">
-            <Badge className="mb-6 bg-white/20 text-white hover:bg-white/30 border-white/30">
-              <BookOpen className="h-3 w-3 mr-1" />
-              Expert Travel Connectivity Insights
-            </Badge>
-            
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">
-              SIMRYO Travel Blog
-            </h1>
-            
-            <p className="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
-              Expert guides, tips, and insights for staying connected worldwide. 
-              From eSIM technology to travel hacks, we've got you covered.
-            </p>
+    <div className="min-h-screen bg-white pt-20">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 py-12">
 
-            {/* Search Bar */}
-            <div className="max-w-2xl mx-auto">
-              <div className="relative">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-6 w-6 text-gray-400" />
-                <Input
-                  placeholder="Search articles, guides, and tips..."
-                  className="w-full pl-12 pr-4 py-4 text-lg rounded-2xl border-2 border-white/20 focus:border-white focus:ring-white bg-white/10 backdrop-blur-sm text-white placeholder-white/70"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                />
-              </div>
-            </div>
-          </div>
+        {/* Header */}
+        <div className="mb-10">
+          <p className="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-3">Blog</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-3">Travel connectivity guides</h1>
+          <p className="text-gray-500">eSIM tips, travel guides, and connectivity advice for modern travelers.</p>
         </div>
-      </section>
 
-      {/* Categories */}
-      <section className="py-8 bg-white border-b border-gray-200">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-wrap justify-center gap-4">
-            {categories.map((category) => (
-              <Button
-                key={category.slug}
-                variant={selectedCategory === category.slug ? "default" : "outline"}
-                className={`flex items-center space-x-2 ${
-                  selectedCategory === category.slug 
-                    ? "bg-blue-600 text-white" 
-                    : "text-gray-700 hover:text-blue-600 hover:border-blue-600"
+        {/* Search + filter */}
+        <div className="flex flex-col sm:flex-row gap-4 mb-10">
+          <div className="relative flex-1 max-w-sm">
+            <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <input
+              value={search}
+              onChange={e => setSearch(e.target.value)}
+              placeholder="Search articles..."
+              className="w-full h-10 pl-10 pr-4 rounded-xl border border-gray-200 focus:border-gray-400 focus:outline-none text-sm"
+            />
+          </div>
+          <div className="flex flex-wrap gap-2">
+            {categories.map(c => (
+              <button
+                key={c}
+                onClick={() => setCategory(c)}
+                className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+                  category === c
+                    ? 'bg-gray-900 text-white'
+                    : 'border border-gray-200 text-gray-600 hover:border-gray-300'
                 }`}
-                onClick={() => setSelectedCategory(category.slug)}
               >
-                <category.icon className="h-4 w-4" />
-                <span>{category.name}</span>
-                <Badge variant="secondary" className="ml-1 text-xs">
-                  {category.count}
-                </Badge>
-              </Button>
+                {c}
+              </button>
             ))}
           </div>
         </div>
-      </section>
 
-      {/* Featured Posts */}
-      {selectedCategory === "all" && (
-        <section className="py-16 bg-white">
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div className="text-center mb-12">
-              <Badge className="mb-4 bg-orange-100 text-orange-700 hover:bg-orange-200 border-orange-200">
-                <Star className="h-3 w-3 mr-1" />
-                Featured Articles
-              </Badge>
-              <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-                Must-Read Travel Connectivity Guides
-              </h2>
-              <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-                Our most comprehensive and popular articles to help you stay connected anywhere in the world
-              </p>
-            </div>
-
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-              {featuredPosts.map((post, index) => (
-                <Card key={post.id} className={`professional-card group hover:shadow-2xl transition-all duration-300 border-0 ${index === 0 ? 'lg:col-span-2 lg:row-span-2' : ''}`}>
-                  <div className="relative">
-                    <Image
-                      src={post.featuredImage}
+        {/* Grid */}
+        {filtered.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {filtered.map(post => (
+              <Link key={post.slug} href={`/blog/${post.slug}`} className="group block">
+                <div className="border border-gray-200 rounded-2xl overflow-hidden hover:border-gray-300 hover:shadow-md transition-all duration-200 h-full flex flex-col">
+                  <div className="relative h-44 overflow-hidden bg-gray-100">
+                    <img
+                      src={post.image}
                       alt={post.title}
-                      width={index === 0 ? 800 : 400}
-                      height={index === 0 ? 400 : 200}
-                      className="w-full h-48 lg:h-64 object-cover rounded-t-2xl"
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
-                    <Badge className="absolute top-4 left-4 bg-blue-600 text-white">
-                      {post.category}
-                    </Badge>
-                    <Badge className="absolute top-4 right-4 bg-orange-500 text-white">
-                      <Star className="h-3 w-3 mr-1" />
-                      Featured
-                    </Badge>
                   </div>
-                  
-                  <CardContent className="p-6">
-                    <div className="flex items-center space-x-4 mb-4 text-sm text-gray-500">
-                      <div className="flex items-center space-x-1">
-                        <Calendar className="h-4 w-4" />
-                        <span>{formatDate(post.publishedAt)}</span>
-                      </div>
-                      <div className="flex items-center space-x-1">
-                        <Clock className="h-4 w-4" />
-                        <span>{post.readTime} min read</span>
-                      </div>
-                      <div className="flex items-center space-x-1">
-                        <Eye className="h-4 w-4" />
-                        <span>{post.views.toLocaleString()}</span>
-                      </div>
+                  <div className="p-5 flex flex-col flex-1">
+                    <div className="flex items-center gap-2 mb-3">
+                      <span className="text-xs font-semibold text-gray-500 bg-gray-100 rounded-full px-2.5 py-1">
+                        {post.category}
+                      </span>
                     </div>
-
-                    <h3 className={`font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors ${index === 0 ? 'text-2xl' : 'text-xl'}`}>
-                      <Link href={`/blog/${post.slug}`}>
-                        {post.title}
-                      </Link>
-                    </h3>
-                    
-                    <p className="text-gray-600 mb-4 leading-relaxed">
+                    <h2 className="text-sm font-semibold text-gray-900 mb-2 leading-snug line-clamp-2 group-hover:text-blue-600 transition-colors">
+                      {post.title}
+                    </h2>
+                    <p className="text-xs text-gray-500 leading-relaxed line-clamp-2 mb-4 flex-1">
                       {post.excerpt}
                     </p>
-
-                    <div className="flex flex-wrap gap-2 mb-4">
-                      {post.tags.slice(0, 3).map((tag) => (
-                        <Badge key={tag} variant="secondary" className="text-xs">
-                          {tag}
-                        </Badge>
-                      ))}
-                    </div>
-
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center space-x-3">
-                        <Avatar className="h-8 w-8">
-                          <AvatarImage src={post.author.avatar} alt={post.author.name} />
-                          <AvatarFallback>{post.author.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="text-sm font-medium text-gray-900">{post.author.name}</p>
-                          <p className="text-xs text-gray-500">{post.author.bio}</p>
-                        </div>
+                    <div className="flex items-center justify-between text-xs text-gray-400 mt-auto pt-3 border-t border-gray-100">
+                      <div className="flex items-center gap-3">
+                        <span className="flex items-center gap-1">
+                          <Calendar className="h-3 w-3" />
+                          {fmt(post.publishedAt)}
+                        </span>
+                        <span className="flex items-center gap-1">
+                          <Clock className="h-3 w-3" />
+                          {post.readTime} min
+                        </span>
                       </div>
-                      
-                      <Link href={`/blog/${post.slug}`}>
-                        <Button variant="ghost" size="sm" className="text-blue-600 hover:text-blue-700">
-                          Read More
-                          <ArrowRight className="ml-1 h-4 w-4" />
-                        </Button>
-                      </Link>
+                      <ArrowRight className="h-3.5 w-3.5 text-gray-300 group-hover:text-blue-500 transition-colors" />
                     </div>
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* Recent Posts */}
-      <section className="py-16 bg-gray-50">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
-              {selectedCategory === "all" ? "Latest Articles" : `${categories.find(c => c.slug === selectedCategory)?.name} Articles`}
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Stay up to date with the latest travel connectivity tips, eSIM guides, and industry insights
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredPosts.filter(post => !post.featured || selectedCategory !== "all").map((post) => (
-              <Card key={post.id} className="professional-card group hover:shadow-2xl transition-all duration-300 border-0">
-                <div className="relative">
-                  <Image
-                    src={post.featuredImage}
-                    alt={post.title}
-                    width={400}
-                    height={200}
-                    className="w-full h-48 object-cover rounded-t-2xl"
-                  />
-                  <Badge className="absolute top-4 left-4 bg-blue-600 text-white">
-                    {post.category}
-                  </Badge>
+                  </div>
                 </div>
-                
-                <CardContent className="p-6">
-                  <div className="flex items-center space-x-4 mb-4 text-sm text-gray-500">
-                    <div className="flex items-center space-x-1">
-                      <Calendar className="h-4 w-4" />
-                      <span>{formatDate(post.publishedAt)}</span>
-                    </div>
-                    <div className="flex items-center space-x-1">
-                      <Clock className="h-4 w-4" />
-                      <span>{post.readTime} min read</span>
-                    </div>
-                  </div>
-
-                  <h3 className="text-xl font-bold text-gray-900 mb-3 group-hover:text-blue-600 transition-colors">
-                    <Link href={`/blog/${post.slug}`}>
-                      {post.title}
-                    </Link>
-                  </h3>
-                  
-                  <p className="text-gray-600 mb-4 leading-relaxed">
-                    {post.excerpt}
-                  </p>
-
-                  <div className="flex flex-wrap gap-2 mb-4">
-                    {post.tags.slice(0, 2).map((tag) => (
-                      <Badge key={tag} variant="secondary" className="text-xs">
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <Avatar className="h-8 w-8">
-                        <AvatarImage src={post.author.avatar} alt={post.author.name} />
-                        <AvatarFallback>{post.author.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <p className="text-sm font-medium text-gray-900">{post.author.name}</p>
-                      </div>
-                    </div>
-                    
-                    <div className="flex items-center space-x-2 text-sm text-gray-500">
-                      <div className="flex items-center space-x-1">
-                        <Eye className="h-4 w-4" />
-                        <span>{post.views.toLocaleString()}</span>
-                      </div>
-                      <div className="flex items-center space-x-1">
-                        <MessageCircle className="h-4 w-4" />
-                        <span>{post.comments}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <Separator className="my-4" />
-
-                  <Link href={`/blog/${post.slug}`}>
-                    <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white">
-                      Read Full Article
-                      <ArrowRight className="ml-2 h-4 w-4" />
-                    </Button>
-                  </Link>
-                </CardContent>
-              </Card>
+              </Link>
             ))}
           </div>
-
-          {filteredPosts.length === 0 && (
-            <div className="text-center py-12">
-              <div className="max-w-md mx-auto">
-                <Search className="h-12 w-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-semibold text-gray-900 mb-2">No articles found</h3>
-                <p className="text-gray-600 mb-4">
-                  Try adjusting your search terms or browse different categories.
-                </p>
-                <Button 
-                  variant="outline" 
-                  onClick={() => {
-                    setSearchQuery("")
-                    setSelectedCategory("all")
-                  }}
-                >
-                  Clear Filters
-                </Button>
-              </div>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Newsletter Signup */}
-      <section className="py-16 bg-gradient-to-br from-blue-600 to-purple-600">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="text-center text-white">
-            <h2 className="text-3xl sm:text-4xl font-bold mb-4">
-              Stay Connected with SIMRYO
-            </h2>
-            <p className="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
-              Get the latest travel connectivity tips, eSIM guides, and exclusive offers delivered to your inbox
-            </p>
-            
-            <div className="max-w-md mx-auto">
-              <div className="flex space-x-4">
-                <Input 
-                  placeholder="Enter your email" 
-                  className="bg-white/10 border-white/20 text-white placeholder-white/70"
-                />
-                <Button className="bg-white text-blue-600 hover:bg-gray-100">
-                  Subscribe
-                </Button>
-              </div>
-              <p className="text-sm text-blue-100 mt-2">
-                No spam, unsubscribe at any time
-              </p>
-            </div>
+        ) : (
+          <div className="text-center py-16">
+            <p className="font-semibold text-gray-900 mb-2">No articles found</p>
+            <p className="text-sm text-gray-500 mb-4">Try a different search or category.</p>
+            <button
+              onClick={() => { setSearch(""); setCategory("All") }}
+              className="text-sm text-blue-600 hover:underline"
+            >
+              Clear filters
+            </button>
           </div>
-        </div>
-      </section>
+        )}
+
+      </div>
     </div>
   )
 }

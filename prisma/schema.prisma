@@ -101,7 +101,7 @@ model Esim {
   planId        String?
   provider      Provider? @relation(fields: [providerId], references: [id])
   providerId    String?
-  iccid         String   @unique
+  iccid         String?  @unique
   qrCodeUrl     String
   activationCode String
   status        String   // ACTIVE, INACTIVE, EXPIRED, PENDING

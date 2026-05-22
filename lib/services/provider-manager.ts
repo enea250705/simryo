@@ -63,17 +63,16 @@ export class ProviderManager {
       new EsimAccessProvider({
         name: 'esim-access',
         displayName: 'eSIM Access',
-        apiKey: process.env.ESIM_ACCESS_API_KEY || 'cfd3a757a99d4795a5ff3b1714eae3e6',
-        apiSecret: '2f268c701f2b43beafa9dc4ebed24d47',
+        apiKey: process.env.ESIM_ACCESS_API_KEY || '',
         baseUrl: process.env.ESIM_ACCESS_BASE_URL || 'https://api.esimaccess.com/api/v1',
-        enabled: true, // Enable EsimAccess
+        enabled: true,
         rateLimits: {
           requestsPerMinute: 60,
           requestsPerHour: 2000
         },
         markup: {
-          percentage: 10, // 10% markup as requested
-          fixedAmount: 2.00 // €2.00 fixed profit as requested
+          percentage: 70, // 70% profit on wholesale price
+          fixedAmount: 0
         }
       })
     ]
@@ -243,43 +242,17 @@ export class ProviderManager {
       sortOrder: 'desc'
     })
 
-    // Create a more diverse selection of popular plans
-    // Group by data amount and select best from each group
-    const planGroups = new Map<string, EnhancedPlan[]>()
-    
-    allPlans.forEach(plan => {
-      const dataKey = plan.dataInMB > 10000 ? 'large' : 
-                     plan.dataInMB > 5000 ? 'medium' : 
-                     plan.dataInMB > 1000 ? 'small' : 'tiny'
-      
-      if (!planGroups.has(dataKey)) {
-        planGroups.set(dataKey, [])
-      }
-      planGroups.get(dataKey)!.push(plan)
-    })
-
-    // Select top plans from each group to ensure diversity
-    const diversePlans: EnhancedPlan[] = []
-    const groupSizes = {
-      'large': Math.ceil(limit * 0.4),  // 40% large plans
-      'medium': Math.ceil(limit * 0.3), // 30% medium plans
-      'small': Math.ceil(limit * 0.2),  // 20% small plans
-      'tiny': Math.ceil(limit * 0.1)    // 10% tiny plans
-    }
-
-    for (const [groupKey, groupPlans] of planGroups) {
-      const groupLimit = groupSizes[groupKey as keyof typeof groupSizes] || 1
-      const sortedGroupPlans = groupPlans
-        .sort((a, b) => b.popularity - a.popularity)
-        .slice(0, groupLimit)
-      
-      diversePlans.push(...sortedGroupPlans)
-    }
-
-    // Sort by popularity and return the requested limit
-    return diversePlans
+    // One best plan per country, sorted by popularity
+    const byCountry = new Map<string, EnhancedPlan>()
+    allPlans
       .sort((a, b) => b.popularity - a.popularity)
-      .slice(0, limit)
+      .forEach(plan => {
+        if (!byCountry.has(plan.country)) {
+          byCountry.set(plan.country, plan)
+        }
+      })
+
+    return Array.from(byCountry.values()).slice(0, limit)
   }
 
   public async purchasePlan(

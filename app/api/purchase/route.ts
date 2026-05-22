@@ -6,17 +6,16 @@ import { prisma } from '@/lib/db'
 const esimAccessProvider = new EsimAccessProvider({
   name: 'esim-access',
   displayName: 'eSIM Access',
-  apiKey: process.env.ESIM_ACCESS_API_KEY!,
-  apiSecret: process.env.ESIM_ACCESS_API_SECRET!,
-  baseUrl: process.env.ESIM_ACCESS_BASE_URL!,
-  enabled: process.env.ESIM_ACCESS_ENABLED === 'true',
+  apiKey: process.env.ESIM_ACCESS_API_KEY || '',
+  baseUrl: process.env.ESIM_ACCESS_BASE_URL || 'https://api.esimaccess.com/api/v1',
+  enabled: true,
   rateLimits: {
     requestsPerMinute: 30,
     requestsPerHour: 300
   },
   markup: {
-    percentage: 10,
-    fixedAmount: 2
+    percentage: 70,
+    fixedAmount: 0
   }
 })
 
@@ -68,6 +67,7 @@ export async function POST(request: NextRequest) {
         if (purchaseResponse.success) {
           // Save order to database
           try {
+            const isPending = !purchaseResponse.qrCodeUrl && !purchaseResponse.activationCode
             const order = await prisma.order.create({
               data: {
                 id: paymentIntentId || `order_${Date.now()}_${i}`,
@@ -77,18 +77,18 @@ export async function POST(request: NextRequest) {
                 amount: item.plan.price * item.quantity,
                 currency: 'EUR',
                 quantity: item.quantity,
-                status: 'PAID'
+                status: isPending ? 'PENDING' : 'PAID'
               }
             })
-            
+
             // Create eSIM record
             await prisma.esim.create({
               data: {
                 orderId: order.id,
-                iccid: purchaseResponse.activationCode || '',
+                iccid: purchaseResponse.activationCode || null,
                 qrCodeUrl: purchaseResponse.qrCodeUrl || '',
                 activationCode: purchaseResponse.activationCode || '',
-                status: 'ACTIVE',
+                status: isPending ? 'PENDING' : 'ACTIVE',
                 dataLimit: item.plan.dataInMB || 0,
                 expiresAt: purchaseResponse.expiresAt
               }
@@ -110,8 +110,8 @@ export async function POST(request: NextRequest) {
             qrCodeUrl: purchaseResponse.qrCodeUrl,
             activationCode: purchaseResponse.activationCode,
             instructions: purchaseResponse.instructions,
-            status: 'active',
-            message: 'eSIM provisioned successfully',
+            status: purchaseResponse.qrCodeUrl ? 'active' : 'pending',
+            message: purchaseResponse.qrCodeUrl ? 'eSIM provisioned successfully' : 'eSIM will be delivered to your email within 15 minutes',
             expiresAt: purchaseResponse.expiresAt
           })
         } else {

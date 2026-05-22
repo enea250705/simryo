@@ -58,60 +58,105 @@ export class EsimAccessProvider extends BaseProvider {
   }
 
   async purchasePlan(request: PurchaseRequest): Promise<PurchaseResponse> {
-    try {
-      console.log('Processing manual eSIM delivery order:', request)
-      
-      // For manual delivery, we don't need to actually provision the eSIM
-      // Just create a pending order that will be fulfilled manually
-      
-      const orderId = `MANUAL-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`
-      
-      console.log('Manual order created:', {
-        orderId,
-        planId: request.planId,
-        customerEmail: request.customerEmail,
-        customerName: request.customerName
-      })
+    const packageCode = request.planId.replace(/^ea-/, '')
+    const transactionId = `SIMRYO-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`
+    const headers = {
+      'RT-AccessCode': this.config.apiKey,
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    }
 
-      // Return success response for manual processing
-      return {
-        success: true,
-        orderId: orderId,
-        qrCodeUrl: '', // No QR code - will be sent manually
-        activationCode: '', // No activation code - will be sent manually
-        instructions: [
-          'Your eSIM order has been confirmed!',
-          'You will receive your eSIM activation details via email within 10-15 minutes.',
-          'Please check your email (including spam folder) for delivery.',
-          'If you don\'t receive it within 15 minutes, please contact our support team.',
-          'Thank you for your purchase!'
-        ],
-        estimatedActivationTime: '10-15 minutes via email',
-        expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
-      }
-    } catch (error) {
-      console.error('Failed to purchase plan from eSIM Access:', error)
-      
-      // Log detailed error for debugging
-      console.error('eSIM Access Purchase Error Details:', {
-        error: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
-        config: {
-          baseUrl: this.config.baseUrl,
-          hasApiKey: !!this.config.apiKey,
-          enabled: this.config.enabled
-        }
+    const pendingResponse: PurchaseResponse = {
+      success: true,
+      orderId: transactionId,
+      qrCodeUrl: '',
+      activationCode: '',
+      instructions: [
+        'Your order is confirmed and payment received!',
+        'Your eSIM activation details will be sent to your email within 10-15 minutes.',
+        'Please check your inbox and spam folder.',
+        'If not received within 15 minutes, contact support.'
+      ],
+      estimatedActivationTime: '10-15 minutes via email',
+      expiresAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+    }
+
+    try {
+      // Get wholesale price for this package
+      const pkgRes = await fetch(`${this.config.baseUrl}/open/package/list`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify({ locationCode: '', type: '', slug: '', packageCode, iccid: '' }),
+        signal: AbortSignal.timeout(10000)
       })
-      
-      // Always return failure - no fallbacks, purchase must fail if eSIM provisioning fails
-      return {
-        success: false,
-        error: error instanceof Error ? error.message : 'eSIM provisioning failed',
-        orderId: `EA-FAILED-${Date.now()}`,
-        instructions: [],
-        estimatedActivationTime: 'N/A',
-        expiresAt: new Date()
+      const pkgData = await pkgRes.json()
+      const pkg = pkgData?.obj?.packageList?.[0]
+      if (!pkg) {
+        console.error('Package not found:', packageCode)
+        return pendingResponse
       }
+
+      const orderPayload = {
+        transactionId,
+        packageInfoList: [{ packageCode, count: 1, price: pkg.price }],
+        amount: pkg.price
+      }
+
+      const orderRes = await fetch(`${this.config.baseUrl}/open/esim/order`, {
+        method: 'POST',
+        headers,
+        body: JSON.stringify(orderPayload),
+        signal: AbortSignal.timeout(30000)
+      })
+      const orderData = await orderRes.json()
+
+      if (orderData.success) {
+        // Order placed — query for ICCID/QR code
+        const orderNo = orderData.obj?.orderNo
+        console.log('eSIM Access order placed:', orderNo)
+
+        try {
+          const queryRes = await fetch(`${this.config.baseUrl}/open/esim/query`, {
+            method: 'POST',
+            headers,
+            body: JSON.stringify({ orderNo, iccid: '', pager: { pageNum: 1, pageSize: 10 } }),
+            signal: AbortSignal.timeout(15000)
+          })
+          const queryData = await queryRes.json()
+          const esim = queryData?.obj?.esimList?.[0]
+
+          return {
+            success: true,
+            orderId: orderNo || transactionId,
+            qrCodeUrl: esim?.qrCodeUrl || esim?.ac || '',
+            activationCode: esim?.iccid || esim?.ac || '',
+            instructions: [
+              'Your eSIM is ready!',
+              'Scan the QR code below with your device or use the activation code.',
+              'Make sure your device supports eSIM before activating.'
+            ],
+            estimatedActivationTime: 'Immediate',
+            expiresAt: new Date(Date.now() + (pkg.duration || 30) * 24 * 60 * 60 * 1000)
+          }
+        } catch {
+          // Order placed but query failed — treat as pending
+          console.warn('Order placed but profile query failed, marking pending:', orderNo)
+          return { ...pendingResponse, orderId: orderNo || transactionId }
+        }
+
+      } else if (orderData.errorCode === '200007') {
+        // Insufficient balance — payment goes through, eSIM fulfilled manually
+        console.warn('eSIM Access insufficient balance — order queued for manual fulfillment:', transactionId)
+        return pendingResponse
+
+      } else {
+        console.error('eSIM Access order error:', orderData.errorCode, orderData.errorMsg)
+        return pendingResponse
+      }
+
+    } catch (error) {
+      console.error('eSIM Access purchase error (falling back to pending):', error)
+      return pendingResponse
     }
   }
 
@@ -197,7 +242,7 @@ export class EsimAccessProvider extends BaseProvider {
           packageCode: "",
           iccid: ""
         }),
-        signal: AbortSignal.timeout(10000)
+        signal: AbortSignal.timeout(30000)
       })
 
       if (!packagesResponse.ok) {
@@ -252,17 +297,14 @@ export class EsimAccessProvider extends BaseProvider {
       // Try multiple price fields and formats
       let priceUsd = 0
       
-      if (pkg.retailPrice) {
-        // If retailPrice is in cents (divide by 100) or in 1/100 cents (divide by 10000)
-        priceUsd = pkg.retailPrice > 10000 ? pkg.retailPrice / 10000 : pkg.retailPrice / 100
-      } else if (pkg.price) {
-        // If price is in cents (divide by 100) or in 1/100 cents (divide by 10000)
+      if (pkg.price) {
+        // Use wholesale price (pkg.price), not retailPrice — we apply our own markup
         priceUsd = pkg.price > 10000 ? pkg.price / 10000 : pkg.price / 100
+      } else if (pkg.retailPrice) {
+        priceUsd = pkg.retailPrice > 10000 ? pkg.retailPrice / 10000 : pkg.retailPrice / 100
       } else if (pkg.priceUsd) {
-        // If already in USD
         priceUsd = pkg.priceUsd
       } else if (pkg.cost) {
-        // Alternative cost field
         priceUsd = pkg.cost > 10000 ? pkg.cost / 10000 : pkg.cost / 100
       }
       

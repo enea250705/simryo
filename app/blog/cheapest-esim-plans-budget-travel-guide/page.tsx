@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export const metadata: Metadata = {
   title: 'Cheapest eSIM Plans 2025: Budget Travel Connectivity Guide',
@@ -22,305 +23,137 @@ export const metadata: Metadata = {
 
 export default function CheapestEsimPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-blue-50">
-      <div className="container mx-auto px-4 py-12 max-w-4xl">
-        <article className="prose prose-lg max-w-none">
-          <header className="mb-12 text-center">
-            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-green-600 to-blue-600 bg-clip-text text-transparent mb-6">
-              Cheapest eSIM Plans 2025: Budget Travel Connectivity Guide
-            </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Stay connected on a budget! Discover the most affordable eSIM plans worldwide without compromising on quality or coverage.
-            </p>
-          </header>
+    <div className="min-h-screen bg-white pt-20">
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-12">
 
-          <div className="bg-green-50 border-l-4 border-green-500 p-6 mb-8">
-            <h2 className="text-xl font-semibold text-green-800 mb-3">💰 Smart Budget Travel Tips</h2>
-            <ul className="space-y-2 text-green-700">
-              <li>• <strong>Compare per GB costs</strong> - Not just total price</li>
-              <li>• <strong>Consider validity periods</strong> - Longer = better value</li>
-              <li>• <strong>Check coverage quality</strong> - Cheap isn't good if it doesn't work</li>
-              <li>• <strong>Look for regional deals</strong> - Multi-country plans save money</li>
-              <li>• <strong>Time your purchase</strong> - Watch for seasonal promotions</li>
+        {/* Back */}
+        <Link href="/blog" className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-gray-700 transition-colors mb-8">
+          ← All articles
+        </Link>
+
+        {/* Header */}
+        <header className="mb-10">
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">Budget Travel</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 leading-tight">Cheapest eSIM Plans 2025: Budget Travel Connectivity Guide</h1>
+          <p className="text-gray-500 mb-5 leading-relaxed">Stay connected on a budget. Discover the most affordable eSIM plans worldwide without compromising on quality or coverage.</p>
+          <div className="flex items-center gap-3 text-xs text-gray-400 mb-8">
+            <span className="font-medium text-gray-600">Maria Santos</span>
+            <span>·</span>
+            <span>Dec 2, 2024</span>
+            <span>·</span>
+            <span>8 min read</span>
+          </div>
+          <div className="relative h-56 sm:h-64 rounded-2xl overflow-hidden bg-gray-100">
+            <Image src="https://images.unsplash.com/photo-1526772662000-3f88f10405ff?w=900&q=80" alt="Budget travel connectivity and affordable eSIM plans" fill className="object-cover" priority />
+          </div>
+        </header>
+
+        {/* Article content */}
+        <article className="prose prose-gray max-w-none">
+          <p>Budget travelers know that connectivity costs can quietly eat into your travel funds. A few days of expensive roaming or overpriced hotel Wi-Fi can cost more than a week of accommodation in some destinations. The good news: eSIM technology has made affordable international data more accessible than ever.</p>
+
+          <p>This guide helps you navigate the options and identify the best value eSIM plans for budget-conscious travelers, with practical tips for reducing your connectivity spend.</p>
+
+          <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 mb-6">
+            <p className="text-gray-900 font-medium mb-2">Smart Budget Travel Tips</p>
+            <ul className="mb-0">
+              <li><strong>Compare per-GB costs</strong> rather than just total price — larger plans often cost less per GB.</li>
+              <li><strong>Consider validity periods</strong> — longer validity plans tend to offer better per-day value.</li>
+              <li><strong>Check coverage quality</strong> — a cheap plan that doesn't work at your destination is worthless.</li>
+              <li><strong>Look for regional deals</strong> — multi-country plans typically save money over individual country eSIMs.</li>
+              <li><strong>Time your purchase</strong> — seasonal promotions (Black Friday, Cyber Monday, holiday sales) offer 20–50% discounts.</li>
             </ul>
           </div>
 
-          <section className="mb-12">
-            <h2 className="text-3xl font-bold mb-6">🏆 Best Value eSIM Plans by Budget</h2>
-            
-            <div className="space-y-8">
-              <div className="bg-white rounded-lg p-6 shadow-lg">
-                <h3 className="text-2xl font-semibold mb-4 text-green-600">💸 Ultra Budget: Under $10</h3>
-                
-                <div className="grid md:grid-cols-3 gap-4">
-                  <div className="border-2 border-green-500 rounded-lg p-4">
-                    <div className="bg-green-500 text-white text-xs px-2 py-1 rounded mb-2 w-fit">BEST VALUE</div>
-                    <h4 className="font-semibold text-lg mb-2">Basic Global</h4>
-                    <p className="text-2xl font-bold text-green-600 mb-2">$4.99</p>
-                    <ul className="text-sm space-y-1">
-                      <li>✅ 1GB data</li>
-                      <li>✅ 7-day validity</li>
-                      <li>✅ 50+ countries</li>
-                      <li>✅ $4.99/GB ratio</li>
-                    </ul>
-                  </div>
-                  
-                  <div className="border rounded-lg p-4">
-                    <h4 className="font-semibold text-lg mb-2">Regional Asia</h4>
-                    <p className="text-2xl font-bold text-green-600 mb-2">$7.99</p>
-                    <ul className="text-sm space-y-1">
-                      <li>✅ 2GB data</li>
-                      <li>✅ 15-day validity</li>
-                      <li>✅ 12 Asian countries</li>
-                      <li>✅ $3.99/GB ratio</li>
-                    </ul>
-                  </div>
-                  
-                  <div className="border rounded-lg p-4">
-                    <h4 className="font-semibold text-lg mb-2">Europe Starter</h4>
-                    <p className="text-2xl font-bold text-green-600 mb-2">$8.99</p>
-                    <ul className="text-sm space-y-1">
-                      <li>✅ 3GB data</li>
-                      <li>✅ 30-day validity</li>
-                      <li>✅ 25 EU countries</li>
-                      <li>✅ $2.99/GB ratio</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
+          <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">How to Evaluate Value in an eSIM Plan</h2>
+          <p>Price alone is not the right metric. The most useful comparison is cost per GB, which lets you compare plans of different sizes on equal footing. A plan that looks cheap may have high per-GB costs if it offers very little data. Conversely, a slightly pricier plan with a much larger data allowance may represent far better value.</p>
 
-              <div className="bg-white rounded-lg p-6 shadow-lg">
-                <h3 className="text-2xl font-semibold mb-4 text-blue-600">💵 Mid Budget: $10-25</h3>
-                
-                <div className="grid md:grid-cols-3 gap-4">
-                  <div className="border rounded-lg p-4">
-                    <h4 className="font-semibold text-lg mb-2">Global Standard</h4>
-                    <p className="text-2xl font-bold text-blue-600 mb-2">$12.99</p>
-                    <ul className="text-sm space-y-1">
-                      <li>✅ 5GB data</li>
-                      <li>✅ 30-day validity</li>
-                      <li>✅ 100+ countries</li>
-                      <li>✅ $2.59/GB ratio</li>
-                    </ul>
-                  </div>
-                  
-                  <div className="border-2 border-blue-500 rounded-lg p-4">
-                    <div className="bg-blue-500 text-white text-xs px-2 py-1 rounded mb-2 w-fit">POPULAR</div>
-                    <h4 className="font-semibold text-lg mb-2">Backpacker Special</h4>
-                    <p className="text-2xl font-bold text-blue-600 mb-2">$19.99</p>
-                    <ul className="text-sm space-y-1">
-                      <li>✅ 10GB data</li>
-                      <li>✅ 60-day validity</li>
-                      <li>✅ 80+ countries</li>
-                      <li>✅ $1.99/GB ratio</li>
-                    </ul>
-                  </div>
-                  
-                  <div className="border rounded-lg p-4">
-                    <h4 className="font-semibold text-lg mb-2">Regional Premium</h4>
-                    <p className="text-2xl font-bold text-blue-600 mb-2">$24.99</p>
-                    <ul className="text-sm space-y-1">
-                      <li>✅ 15GB data</li>
-                      <li>✅ 45-day validity</li>
-                      <li>✅ Premium networks</li>
-                      <li>✅ $1.66/GB ratio</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
+          <p>Consider these factors together when evaluating plans:</p>
+          <ul>
+            <li><strong>Price per GB:</strong> Larger data plans almost always cost less per GB.</li>
+            <li><strong>Validity period:</strong> Longer validity gives more flexibility and better per-day value.</li>
+            <li><strong>Country coverage:</strong> Regional plans covering multiple countries save you from buying separate eSIMs at each border.</li>
+            <li><strong>Network quality:</strong> Premium networks (not just any available signal) matter for usable speeds.</li>
+            <li><strong>Top-up availability:</strong> Knowing you can easily add more data reduces anxiety about running out.</li>
+          </ul>
 
-              <div className="bg-white rounded-lg p-6 shadow-lg">
-                <h3 className="text-2xl font-semibold mb-4 text-purple-600">💎 Premium Budget: $25-50</h3>
-                
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div className="border rounded-lg p-4">
-                    <h4 className="font-semibold text-lg mb-2">Long-term Traveler</h4>
-                    <p className="text-2xl font-bold text-purple-600 mb-2">$34.99</p>
-                    <ul className="text-sm space-y-1">
-                      <li>✅ 25GB data</li>
-                      <li>✅ 90-day validity</li>
-                      <li>✅ 120+ countries</li>
-                      <li>✅ $1.39/GB ratio</li>
-                      <li>✅ Premium support</li>
-                    </ul>
-                  </div>
-                  
-                  <div className="border-2 border-purple-500 rounded-lg p-4">
-                    <div className="bg-purple-500 text-white text-xs px-2 py-1 rounded mb-2 w-fit">BEST RATIO</div>
-                    <h4 className="font-semibold text-lg mb-2">Ultimate Value</h4>
-                    <p className="text-2xl font-bold text-purple-600 mb-2">$49.99</p>
-                    <ul className="text-sm space-y-1">
-                      <li>✅ 50GB data</li>
-                      <li>✅ 120-day validity</li>
-                      <li>✅ 150+ countries</li>
-                      <li>✅ $0.99/GB ratio</li>
-                      <li>✅ 5G speeds included</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
+          <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">Data Needs by Trip Type</h2>
+          <p>Understanding how much data you'll realistically need helps you avoid overpaying for a large plan you won't use, or underpaying for one that runs out mid-trip.</p>
 
-          <section className="mb-12">
-            <h2 className="text-3xl font-bold mb-6">📊 Price Per GB Comparison</h2>
-            
-            <div className="overflow-x-auto">
-              <table className="w-full bg-white rounded-lg shadow-lg">
-                <thead className="bg-gray-50">
-                  <tr>
-                    <th className="px-4 py-3 text-left font-semibold">Plan</th>
-                    <th className="px-4 py-3 text-center font-semibold">Total Price</th>
-                    <th className="px-4 py-3 text-center font-semibold">Data Amount</th>
-                    <th className="px-4 py-3 text-center font-semibold">Per GB Cost</th>
-                    <th className="px-4 py-3 text-center font-semibold">Value Rating</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200">
-                  <tr className="bg-green-50">
-                    <td className="px-4 py-3 font-medium">Ultimate Value (50GB)</td>
-                    <td className="px-4 py-3 text-center">$49.99</td>
-                    <td className="px-4 py-3 text-center">50GB</td>
-                    <td className="px-4 py-3 text-center text-green-600 font-bold">$0.99</td>
-                    <td className="px-4 py-3 text-center">⭐⭐⭐⭐⭐</td>
-                  </tr>
-                  <tr>
-                    <td className="px-4 py-3 font-medium">Long-term Traveler (25GB)</td>
-                    <td className="px-4 py-3 text-center">$34.99</td>
-                    <td className="px-4 py-3 text-center">25GB</td>
-                    <td className="px-4 py-3 text-center text-green-600 font-bold">$1.39</td>
-                    <td className="px-4 py-3 text-center">⭐⭐⭐⭐</td>
-                  </tr>
-                  <tr className="bg-blue-50">
-                    <td className="px-4 py-3 font-medium">Backpacker Special (10GB)</td>
-                    <td className="px-4 py-3 text-center">$19.99</td>
-                    <td className="px-4 py-3 text-center">10GB</td>
-                    <td className="px-4 py-3 text-center text-blue-600 font-bold">$1.99</td>
-                    <td className="px-4 py-3 text-center">⭐⭐⭐⭐</td>
-                  </tr>
-                  <tr>
-                    <td className="px-4 py-3 font-medium">Global Standard (5GB)</td>
-                    <td className="px-4 py-3 text-center">$12.99</td>
-                    <td className="px-4 py-3 text-center">5GB</td>
-                    <td className="px-4 py-3 text-center text-yellow-600">$2.59</td>
-                    <td className="px-4 py-3 text-center">⭐⭐⭐</td>
-                  </tr>
-                  <tr>
-                    <td className="px-4 py-3 font-medium">Basic Global (1GB)</td>
-                    <td className="px-4 py-3 text-center">$4.99</td>
-                    <td className="px-4 py-3 text-center">1GB</td>
-                    <td className="px-4 py-3 text-center text-red-600">$4.99</td>
-                    <td className="px-4 py-3 text-center">⭐⭐</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </section>
+          <table className="w-full border-collapse text-sm">
+            <thead>
+              <tr>
+                <th className="border border-gray-200 px-4 py-2 text-left">Trip Type</th>
+                <th className="border border-gray-200 px-4 py-2 text-left">Typical Usage</th>
+                <th className="border border-gray-200 px-4 py-2 text-left">Recommended Data</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="border border-gray-200 px-4 py-2">Weekend city break</td>
+                <td className="border border-gray-200 px-4 py-2">Maps, messaging, social media</td>
+                <td className="border border-gray-200 px-4 py-2">1–3 GB</td>
+              </tr>
+              <tr>
+                <td className="border border-gray-200 px-4 py-2">1–2 week vacation</td>
+                <td className="border border-gray-200 px-4 py-2">Navigation, photos, some streaming</td>
+                <td className="border border-gray-200 px-4 py-2">5–10 GB</td>
+              </tr>
+              <tr>
+                <td className="border border-gray-200 px-4 py-2">2–4 week backpacker trip</td>
+                <td className="border border-gray-200 px-4 py-2">Regular use including video calls</td>
+                <td className="border border-gray-200 px-4 py-2">15–25 GB</td>
+              </tr>
+              <tr>
+                <td className="border border-gray-200 px-4 py-2">1+ month digital nomad</td>
+                <td className="border border-gray-200 px-4 py-2">Heavy use — calls, cloud work</td>
+                <td className="border border-gray-200 px-4 py-2">50 GB+ or unlimited</td>
+              </tr>
+            </tbody>
+          </table>
 
-          <section className="mb-12">
-            <h2 className="text-3xl font-bold mb-6">🎯 Money-Saving Strategies</h2>
-            
-            <div className="grid md:grid-cols-2 gap-8">
-              <div>
-                <h3 className="text-xl font-semibold mb-4">📅 Timing Your Purchase</h3>
-                <div className="space-y-3">
-                  <div className="bg-white rounded-lg p-4 shadow-sm">
-                    <h4 className="font-semibold mb-2">🎉 Seasonal Sales</h4>
-                    <p className="text-gray-600 text-sm">Black Friday, Cyber Monday, and holiday seasons offer 20-50% discounts.</p>
-                  </div>
-                  <div className="bg-white rounded-lg p-4 shadow-sm">
-                    <h4 className="font-semibold mb-2">📧 Newsletter Discounts</h4>
-                    <p className="text-gray-600 text-sm">Subscribe for exclusive promo codes and early access to sales.</p>
-                  </div>
-                  <div className="bg-white rounded-lg p-4 shadow-sm">
-                    <h4 className="font-semibold mb-2">🔄 Loyalty Programs</h4>
-                    <p className="text-gray-600 text-sm">Accumulate points for future purchases and get repeat customer discounts.</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div>
-                <h3 className="text-xl font-semibold mb-4">🧮 Smart Planning</h3>
-                <div className="space-y-3">
-                  <div className="bg-white rounded-lg p-4 shadow-sm">
-                    <h4 className="font-semibold mb-2">📱 WiFi First Strategy</h4>
-                    <p className="text-gray-600 text-sm">Use WiFi when available, cellular for essential connectivity only.</p>
-                  </div>
-                  <div className="bg-white rounded-lg p-4 shadow-sm">
-                    <h4 className="font-semibold mb-2">📦 Bundle Regional Plans</h4>
-                    <p className="text-gray-600 text-sm">Multi-country plans often cost less than individual country eSIMs.</p>
-                  </div>
-                  <div className="bg-white rounded-lg p-4 shadow-sm">
-                    <h4 className="font-semibold mb-2">⏰ Long-term Planning</h4>
-                    <p className="text-gray-600 text-sm">Longer validity periods usually offer better per-day value.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
+          <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">Money-Saving Strategies</h2>
 
-          <section className="mb-12">
-            <h2 className="text-3xl font-bold mb-6">🌍 Best Budget Options by Region</h2>
-            
-            <div className="grid md:grid-cols-3 gap-6">
-              <div className="bg-blue-50 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-blue-800 mb-3">🇪🇺 Europe Budget</h3>
-                <div className="space-y-2">
-                  <div className="bg-white rounded p-3">
-                    <p className="font-semibold">EU Backpacker</p>
-                    <p className="text-sm text-gray-600">3GB • 30 days • $8.99</p>
-                  </div>
-                  <div className="bg-white rounded p-3">
-                    <p className="font-semibold">Schengen Basic</p>
-                    <p className="text-sm text-gray-600">5GB • 45 days • $14.99</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="bg-green-50 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-green-800 mb-3">🌏 Asia Budget</h3>
-                <div className="space-y-2">
-                  <div className="bg-white rounded p-3">
-                    <p className="font-semibold">SEA Explorer</p>
-                    <p className="text-sm text-gray-600">2GB • 15 days • $7.99</p>
-                  </div>
-                  <div className="bg-white rounded p-3">
-                    <p className="font-semibold">Asia Pacific</p>
-                    <p className="text-sm text-gray-600">8GB • 60 days • $19.99</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div className="bg-purple-50 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-purple-800 mb-3">🌎 Americas Budget</h3>
-                <div className="space-y-2">
-                  <div className="bg-white rounded p-3">
-                    <p className="font-semibold">North America</p>
-                    <p className="text-sm text-gray-600">4GB • 30 days • $16.99</p>
-                  </div>
-                  <div className="bg-white rounded p-3">
-                    <p className="font-semibold">Latin America</p>
-                    <p className="text-sm text-gray-600">6GB • 45 days • $22.99</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
+          <h3 className="text-base font-semibold text-gray-900 mt-6 mb-3">Timing Your Purchase</h3>
+          <p>eSIM providers run seasonal promotions, particularly around Black Friday, Cyber Monday, and major holidays. Subscribing to newsletters gives you early access to discount codes and flash sales. Some providers also offer loyalty rewards for repeat purchases.</p>
 
-          <section className="bg-gradient-to-r from-green-500 to-blue-600 rounded-lg p-8 text-white">
-            <h2 className="text-3xl font-bold mb-4">Start Saving on Travel Connectivity</h2>
-            <p className="text-xl mb-6">Find the perfect budget eSIM plan for your next adventure without compromising on quality.</p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link href="/plans" className="bg-white text-green-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors text-center">
-                Browse Budget Plans
-              </Link>
-              <Link href="/contact" className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-green-600 transition-colors text-center">
-                Get Personalized Advice
-              </Link>
-            </div>
-          </section>
+          <h3 className="text-base font-semibold text-gray-900 mt-6 mb-3">Wi-Fi First Strategy</h3>
+          <p>Use Wi-Fi when available — your hotel, cafes, airports, and many public spaces offer free Wi-Fi. Reserve your eSIM data for when you're out and need navigation, translations, or messaging on the go. This approach can reduce a typical trip's data consumption by 40–60%.</p>
+
+          <h3 className="text-base font-semibold text-gray-900 mt-6 mb-3">Bundle Regional Plans</h3>
+          <p>Multi-country regional plans almost always cost less than buying individual country eSIMs separately. If you're visiting three European countries, a pan-European plan will typically be cheaper and more convenient than three separate plans.</p>
+
+          <h3 className="text-base font-semibold text-gray-900 mt-6 mb-3">Longer Validity Periods</h3>
+          <p>Longer validity periods typically offer better per-day value. A 30-day plan divided across two separate short trips (if the validity allows) can effectively double your value compared to two separate 15-day plans.</p>
+
+          <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">Best Budget Options by Region</h2>
+          <p>Budget-friendly eSIM options exist for every major region. For current pricing and availability, browse plans at SIMRYO to compare options for Europe, Asia, the Americas, and global coverage. Regional plans covering multiple countries typically offer the best value per day for travelers crossing borders.</p>
+
+          <p>Generally speaking, Asia plans tend to offer the lowest cost per GB, followed by Europe and the Americas. Global plans cost more per GB but offer unmatched flexibility for multi-continent travelers.</p>
+
+          <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">Avoiding Common Mistakes</h2>
+          <ul>
+            <li><strong>Buying too little data:</strong> Running out mid-trip and paying for top-ups is usually more expensive than buying a slightly larger plan upfront.</li>
+            <li><strong>Ignoring coverage quality:</strong> A rock-bottom price means nothing if the network is slow or unreliable at your destination.</li>
+            <li><strong>Not checking device compatibility:</strong> Confirm your phone supports eSIM before purchase. Most phones from 2018 onward do.</li>
+            <li><strong>Forgetting to enable data roaming:</strong> Even with an active eSIM, internet won't work if data roaming is disabled in your phone settings.</li>
+          </ul>
+
+          <p>Browse real, up-to-date budget eSIM plans at <Link href="/plans" className="text-gray-900 underline">simryo.com/plans</Link> and filter by region, data size, and duration to find the best value for your next trip.</p>
         </article>
+
+        {/* CTA */}
+        <div className="mt-12 border border-gray-200 rounded-xl p-6 bg-gray-50 text-center">
+          <p className="text-sm font-semibold text-gray-900 mb-1">Ready to get connected?</p>
+          <p className="text-sm text-gray-500 mb-4">Browse eSIM plans for 190+ countries.</p>
+          <Link href="/plans">
+            <button className="inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors">
+              Browse Plans →
+            </button>
+          </Link>
+        </div>
+
       </div>
     </div>
   )
-} 
+}

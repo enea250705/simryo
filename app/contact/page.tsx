@@ -1,48 +1,17 @@
 "use client"
 
 import { useState } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Label } from "@/components/ui/label"
-import { 
-  Mail, 
-  Clock,
-  MessageCircle,
-  Send,
-  CheckCircle,
-  Loader2
-} from "lucide-react"
+import { Mail, MessageCircle, Loader2, CheckCircle } from "lucide-react"
+import Link from "next/link"
 import { toast } from "sonner"
 import { analytics } from "@/lib/analytics"
 
-const contactMethods = [
-  {
-    icon: Mail,
-    title: "Email Support",
-    description: "Get help via email",
-    contact: "info@simryo.com",
-    hours: "24/7 response within 2 hours"
-  },
-  {
-    icon: MessageCircle,
-    title: "Live Chat",
-    description: "Instant messaging support",
-    contact: "Available on website",
-    hours: "24/7 during business hours"
-  }
-]
-
-
 export default function ContactPage() {
   const [formData, setFormData] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    company: '',
-    subject: '',
-    message: ''
+    firstName: '', lastName: '', email: '', company: '', subject: '', message: ''
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isSubmitted, setIsSubmitted] = useState(false)
@@ -55,213 +24,139 @@ export default function ContactPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
-
     try {
       const response = await fetch('/api/contact', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       })
-
       const result = await response.json()
-
       if (result.success) {
         setIsSubmitted(true)
-        setFormData({
-          firstName: '',
-          lastName: '',
-          email: '',
-          company: '',
-          subject: '',
-          message: ''
-        })
+        setFormData({ firstName: '', lastName: '', email: '', company: '', subject: '', message: '' })
         toast.success(result.message || 'Message sent successfully!')
-        
-        // Track successful contact form submission
         analytics.contactForm(formData.subject)
       } else {
         toast.error(result.error || 'Failed to send message. Please try again.')
       }
-    } catch (error) {
-      console.error('Contact form error:', error)
-      toast.error('Failed to send message. Please check your connection and try again.')
+    } catch {
+      toast.error('Failed to send message. Check your connection and try again.')
     } finally {
       setIsSubmitting(false)
     }
   }
 
   return (
-    <div className="min-h-screen bg-background pt-20">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
+    <div className="min-h-screen bg-white pt-20">
+      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8 py-12">
+
         {/* Header */}
-        <div className="mb-16">
-          <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
-            Contact Us
-          </h1>
-          <p className="mt-4 text-lg text-gray-600 max-w-2xl">
-            We're here to help. Reach out to us through any of the channels below.
-          </p>
+        <div className="mb-10">
+          <p className="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-3">Contact</p>
+          <h1 className="text-3xl font-bold text-gray-900 mb-3">Get in touch</h1>
+          <p className="text-gray-500">We're here to help. Reach out and we'll respond within a few hours.</p>
         </div>
 
-        {/* Contact Methods */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-          {contactMethods.map((method, index) => (
-            <Card key={index} className="hover:shadow-lg transition-shadow">
-              <CardContent className="p-8">
-                <method.icon className="h-12 w-12 text-accent-500 mb-4" />
-                <h3 className="text-xl font-semibold text-foreground mb-2">{method.title}</h3>
-                <p className="text-gray-600 mb-3">{method.description}</p>
-                <p className="font-semibold text-foreground mb-2">{method.contact}</p>
-                <p className="text-sm text-gray-500">{method.hours}</p>
-              </CardContent>
-            </Card>
-          ))}
-        </div>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
 
-        {/* Contact Form */}
-        <div className="max-w-2xl mx-auto">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center space-x-2">
-                <Send className="h-5 w-5" />
-                <span>Send us a Message</span>
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Contact info */}
+          <div className="space-y-4">
+            <a href="mailto:info@simryo.com" className="flex items-start gap-4 border border-gray-200 hover:border-gray-300 rounded-xl p-4 transition-colors">
+              <div className="w-9 h-9 bg-gray-100 rounded-lg flex items-center justify-center shrink-0">
+                <Mail className="h-4 w-4 text-gray-600" />
+              </div>
+              <div>
+                <div className="text-sm font-semibold text-gray-900">Email</div>
+                <div className="text-sm text-gray-500">info@simryo.com</div>
+                <div className="text-xs text-gray-400 mt-0.5">Reply within 2 hours</div>
+              </div>
+            </a>
+
+            <div className="flex items-start gap-4 border border-gray-200 rounded-xl p-4">
+              <div className="w-9 h-9 bg-gray-100 rounded-lg flex items-center justify-center shrink-0">
+                <MessageCircle className="h-4 w-4 text-gray-600" />
+              </div>
+              <div>
+                <div className="text-sm font-semibold text-gray-900">Live chat</div>
+                <div className="text-sm text-gray-500">Available on website</div>
+                <div className="text-xs text-gray-400 mt-0.5">24/7 support</div>
+              </div>
+            </div>
+
+            <div className="pt-2">
+              <p className="text-xs text-gray-400 mb-3">Looking for quick answers?</p>
+              <div className="flex flex-col gap-2">
+                <Link href="/faq" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Browse FAQ →</Link>
+                <Link href="/setup" className="text-sm text-gray-600 hover:text-gray-900 transition-colors">Setup guide →</Link>
+              </div>
+            </div>
+          </div>
+
+          {/* Form */}
+          <div className="lg:col-span-2">
+            {isSubmitted ? (
+              <div className="border border-gray-200 rounded-xl p-8 text-center">
+                <CheckCircle className="h-8 w-8 text-gray-400 mx-auto mb-3" />
+                <p className="font-semibold text-gray-900 mb-1">Message sent</p>
+                <p className="text-sm text-gray-500">We'll get back to you within 24 hours.</p>
+                <button
+                  onClick={() => setIsSubmitted(false)}
+                  className="mt-5 text-sm text-gray-500 hover:text-gray-900 transition-colors"
+                >
+                  Send another message
+                </button>
+              </div>
+            ) : (
+              <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="firstName">First Name *</Label>
-                    <Input 
-                      id="firstName" 
-                      name="firstName"
-                      placeholder="John" 
-                      value={formData.firstName}
-                      onChange={handleInputChange}
-                      required
-                    />
+                  <div className="space-y-1.5">
+                    <Label htmlFor="firstName" className="text-sm text-gray-700">First name</Label>
+                    <Input id="firstName" name="firstName" placeholder="John" value={formData.firstName} onChange={handleInputChange} required className="border-gray-200 rounded-xl text-sm" />
                   </div>
-                  <div>
-                    <Label htmlFor="lastName">Last Name *</Label>
-                    <Input 
-                      id="lastName" 
-                      name="lastName"
-                      placeholder="Doe" 
-                      value={formData.lastName}
-                      onChange={handleInputChange}
-                      required
-                    />
+                  <div className="space-y-1.5">
+                    <Label htmlFor="lastName" className="text-sm text-gray-700">Last name</Label>
+                    <Input id="lastName" name="lastName" placeholder="Doe" value={formData.lastName} onChange={handleInputChange} required className="border-gray-200 rounded-xl text-sm" />
                   </div>
                 </div>
-                
-                <div>
-                  <Label htmlFor="email">Email *</Label>
-                  <Input 
-                    id="email" 
-                    name="email"
-                    type="email" 
-                    placeholder="john@example.com" 
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    required
-                  />
+
+                <div className="space-y-1.5">
+                  <Label htmlFor="email" className="text-sm text-gray-700">Email</Label>
+                  <Input id="email" name="email" type="email" placeholder="john@example.com" value={formData.email} onChange={handleInputChange} required className="border-gray-200 rounded-xl text-sm" />
                 </div>
 
-                <div>
-                  <Label htmlFor="company">Company (Optional)</Label>
-                  <Input 
-                    id="company" 
-                    name="company"
-                    placeholder="Your Company" 
-                    value={formData.company}
-                    onChange={handleInputChange}
-                  />
+                <div className="space-y-1.5">
+                  <Label htmlFor="company" className="text-sm text-gray-700">Company <span className="text-gray-400">(optional)</span></Label>
+                  <Input id="company" name="company" placeholder="Your company" value={formData.company} onChange={handleInputChange} className="border-gray-200 rounded-xl text-sm" />
                 </div>
 
-                <div>
-                  <Label htmlFor="subject">Subject *</Label>
-                  <Input 
-                    id="subject" 
-                    name="subject"
-                    placeholder="How can we help?" 
-                    value={formData.subject}
-                    onChange={handleInputChange}
-                    required
-                  />
+                <div className="space-y-1.5">
+                  <Label htmlFor="subject" className="text-sm text-gray-700">Subject</Label>
+                  <Input id="subject" name="subject" placeholder="How can we help?" value={formData.subject} onChange={handleInputChange} required className="border-gray-200 rounded-xl text-sm" />
                 </div>
 
-                <div>
-                  <Label htmlFor="message">Message *</Label>
-                  <Textarea 
-                    id="message" 
-                    name="message"
-                    placeholder="Tell us more about your inquiry..."
-                    className="min-h-[120px]"
-                    value={formData.message}
-                    onChange={handleInputChange}
-                    required
-                  />
+                <div className="space-y-1.5">
+                  <Label htmlFor="message" className="text-sm text-gray-700">Message</Label>
+                  <Textarea id="message" name="message" placeholder="Tell us more about your inquiry..." className="min-h-[120px] border-gray-200 rounded-xl text-sm" value={formData.message} onChange={handleInputChange} required />
                 </div>
 
-                <Button 
-                  type="submit" 
-                  className="w-full bg-emerald-600 hover:bg-emerald-700 text-white"
+                <button
+                  type="submit"
                   disabled={isSubmitting}
+                  className="w-full flex items-center justify-center gap-2 bg-gray-900 hover:bg-gray-800 disabled:bg-gray-300 text-white rounded-xl py-3 text-sm font-semibold transition-colors"
                 >
                   {isSubmitting ? (
                     <>
-                      <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                      <Loader2 className="h-4 w-4 animate-spin" />
                       Sending...
                     </>
-                  ) : isSubmitted ? (
-                    <>
-                      <CheckCircle className="h-4 w-4 mr-2" />
-                      Message Sent!
-                    </>
-                  ) : (
-                    <>
-                      <Send className="h-4 w-4 mr-2" />
-                      Send Message
-                    </>
-                  )}
-                </Button>
-                
-                {isSubmitted && (
-                  <div className="text-center p-4 bg-green-50 border border-green-200 rounded-lg">
-                    <CheckCircle className="h-6 w-6 text-green-600 mx-auto mb-2" />
-                    <p className="text-green-800 font-medium">Thank you for your message!</p>
-                    <p className="text-green-600 text-sm mt-1">We'll get back to you within 24 hours.</p>
-                  </div>
-                )}
-                
-                <p className="text-sm text-gray-500 text-center">
-                  * Required fields
-                </p>
+                  ) : 'Send message'}
+                </button>
               </form>
-            </CardContent>
-          </Card>
-        </div>
+            )}
+          </div>
 
-        {/* FAQ Link */}
-        <Card className="mt-16 bg-gradient-to-r from-primary-950 to-primary-800 text-white">
-          <CardContent className="p-8 text-center">
-            <h2 className="text-2xl font-bold mb-4">Looking for Quick Answers?</h2>
-            <p className="text-gray-100 mb-6 max-w-2xl mx-auto">
-              Check out our FAQ section for instant answers to common questions about eSIM setup, plans, and troubleshooting.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button variant="secondary" size="lg" className="bg-white text-primary-950 hover:bg-gray-100" asChild>
-                <a href="/faq">Browse FAQ</a>
-              </Button>
-              <Button variant="outline" size="lg" className="border-white text-white hover:bg-white hover:text-primary-950 bg-transparent" asChild>
-                <a href="/setup">Setup Guide</a>
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+        </div>
       </div>
     </div>
   )
-} 
+}

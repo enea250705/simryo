@@ -2,11 +2,8 @@
 
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import { CheckCircle, Mail, Download, Home, Copy, ExternalLink } from "lucide-react"
+import { CheckCircle, Mail, Download, Home, Copy, ExternalLink, UserPlus, Clock } from "lucide-react"
 import Link from "next/link"
 import { toast } from "sonner"
 
@@ -15,11 +12,7 @@ interface OrderItem {
   orderId: string
   countryName: string
   flag: string
-  plan: {
-    price: number
-    data: string
-    days: number
-  }
+  plan: { price: number; data: string; days: number }
   quantity: number
   qrCodeUrl: string
   activationCode: string
@@ -30,27 +23,24 @@ interface OrderItem {
 export default function ConfirmationPage() {
   const [completedOrder, setCompletedOrder] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [isGuest, setIsGuest] = useState(false)
   const router = useRouter()
 
   useEffect(() => {
     const orderData = localStorage.getItem('completedOrder')
     if (orderData) {
-      try {
-        const parsed = JSON.parse(orderData)
-        setCompletedOrder(parsed)
-      } catch (error) {
-        console.error('Failed to parse order data:', error)
-        router.push('/plans')
-      }
+      try { setCompletedOrder(JSON.parse(orderData)) }
+      catch { router.push('/plans') }
     } else {
       router.push('/plans')
     }
+    setIsGuest(!localStorage.getItem('simryo-user'))
     setIsLoading(false)
   }, [router])
 
   const copyToClipboard = (text: string) => {
     navigator.clipboard.writeText(text)
-    toast.success('Copied to clipboard!')
+    toast.success('Copied!')
   }
 
   const downloadQRCode = (url: string, filename: string) => {
@@ -62,26 +52,22 @@ export default function ConfirmationPage() {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-[400px]">
-        <div className="text-center">
-          <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading your order...</p>
-        </div>
+      <div className="min-h-screen bg-white pt-20 flex items-center justify-center">
+        <div className="h-6 w-6 border-2 border-gray-300 border-t-gray-700 rounded-full animate-spin" />
       </div>
     )
   }
 
   if (!completedOrder) {
     return (
-      <div className="container mx-auto max-w-4xl px-4 py-12">
-        <div className="text-center">
-          <div className="text-6xl mb-6">❌</div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">Order Not Found</h1>
-          <p className="text-gray-600 mb-6">We couldn't find your order details.</p>
+      <div className="min-h-screen bg-white pt-20 flex items-center justify-center px-4">
+        <div className="text-center max-w-sm">
+          <p className="font-semibold text-gray-900 mb-2">Order not found</p>
+          <p className="text-sm text-gray-500 mb-6">We couldn't find your order details.</p>
           <Link href="/plans">
-            <Button className="bg-blue-600 hover:bg-blue-700 text-white">
+            <button className="inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors">
               Browse Plans
-            </Button>
+            </button>
           </Link>
         </div>
       </div>
@@ -90,157 +76,185 @@ export default function ConfirmationPage() {
 
   const orderItems: OrderItem[] = completedOrder.data || []
   const customerInfo = completedOrder.customerInfo || {}
+  const hasPending = orderItems.some(item => item.status === 'pending')
+  const signupUrl = `/signup?email=${encodeURIComponent(customerInfo.email || '')}&callbackUrl=${encodeURIComponent('/profile')}`
 
   return (
-    <div className="container mx-auto max-w-4xl px-4 py-12">
-      {/* Success Header */}
-      <div className="text-center mb-8">
-        <div className="flex justify-center mb-4">
-          <CheckCircle className="h-16 w-16 text-green-500" />
-        </div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">
-          Purchase Successful! 🎉
-        </h1>
-        <p className="text-gray-600">
-          Your eSIM{orderItems.length > 1 ? 's are' : ' is'} ready for activation
-        </p>
-      </div>
+    <div className="min-h-screen bg-white pt-20">
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-12">
 
-      {/* Email Confirmation */}
-      <Card className="mb-8 bg-blue-50 border-blue-200">
-        <CardContent className="p-6">
-          <div className="flex items-center space-x-3">
-            <Mail className="h-6 w-6 text-blue-600" />
-            <div>
-              <h3 className="font-semibold text-blue-900">Email Sent!</h3>
-              <p className="text-blue-700">
-                We've sent your eSIM details and QR codes to <strong>{customerInfo.email}</strong>
-              </p>
+        {/* Success header */}
+        <div className="text-center mb-8">
+          <CheckCircle className="h-10 w-10 text-gray-900 mx-auto mb-4" />
+          <h1 className="text-2xl font-bold text-gray-900 mb-2">Purchase confirmed</h1>
+          <p className="text-gray-500 text-sm">
+            {hasPending
+              ? "Your eSIM details will arrive by email within 15 minutes."
+              : `Your eSIM${orderItems.length > 1 ? 's are' : ' is'} ready for activation.`}
+          </p>
+        </div>
+
+        {/* Email confirmation */}
+        <div className="flex items-start gap-3 border border-gray-200 rounded-xl px-5 py-4 mb-6">
+          <Mail className="h-4 w-4 text-gray-500 mt-0.5 shrink-0" />
+          <div>
+            <div className="text-sm font-semibold text-gray-900">Confirmation email sent</div>
+            <div className="text-sm text-gray-500 mt-0.5">
+              QR codes and activation details sent to <strong>{customerInfo.email}</strong>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
 
-      {/* Order Items */}
-      <div className="space-y-6">
-        {orderItems.map((item, index) => (
-          <Card key={index} className="overflow-hidden">
-            <CardHeader className="bg-gray-50">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <span className="text-3xl">{item.flag}</span>
-                  <div>
-                    <CardTitle className="text-lg">{item.countryName}</CardTitle>
-                    <p className="text-sm text-gray-600">
-                      {item.plan.data} • {item.plan.days} days • ${item.plan.price}
+        {/* Create account — guests only */}
+        {isGuest && (
+          <div className="border border-gray-200 rounded-xl p-5 mb-8">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+              <div>
+                <div className="text-sm font-semibold text-gray-900 mb-1">Create a free account</div>
+                <div className="text-sm text-gray-500">Track your eSIM, view order history, and download QR codes anytime.</div>
+              </div>
+              <Link href={signupUrl} className="shrink-0">
+                <button className="inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors whitespace-nowrap">
+                  <UserPlus className="h-4 w-4" />
+                  Create account
+                </button>
+              </Link>
+            </div>
+          </div>
+        )}
+
+        {/* Order items */}
+        <div className="space-y-5">
+          {orderItems.map((item, index) => (
+            <div key={index} className="border border-gray-200 rounded-xl overflow-hidden">
+
+              {/* Item header */}
+              <div className="flex items-center justify-between px-5 py-4 bg-gray-50 border-b border-gray-100">
+                <div>
+                  <div className="text-sm font-semibold text-gray-900">{item.countryName}</div>
+                  <div className="text-xs text-gray-400 mt-0.5">
+                    {item.plan.data} · {item.plan.days} days · €{item.plan.price}
+                  </div>
+                </div>
+                <span className={`text-xs font-semibold rounded-full px-2.5 py-1 ${
+                  item.status === 'pending'
+                    ? 'bg-orange-50 text-orange-600 border border-orange-100'
+                    : 'bg-gray-100 text-gray-700'
+                }`}>
+                  {item.status === 'pending' ? 'Processing' : 'Active'}
+                </span>
+              </div>
+
+              {/* Item content */}
+              <div className="p-5">
+                {item.status === 'pending' ? (
+                  <div className="flex flex-col items-center text-center py-4 gap-2">
+                    <Clock className="h-6 w-6 text-gray-400" />
+                    <p className="text-sm font-semibold text-gray-900">eSIM being processed</p>
+                    <p className="text-sm text-gray-500 max-w-sm">
+                      QR code and activation details will be sent to <strong>{customerInfo.email}</strong> within 10–15 minutes.
                     </p>
+                    <p className="text-xs text-gray-400">Order ID: {item.orderId}</p>
                   </div>
-                </div>
-                <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
-                  {item.status}
-                </Badge>
-              </div>
-            </CardHeader>
-            
-            <CardContent className="p-6">
-              <div className="grid md:grid-cols-2 gap-6">
-                {/* QR Code */}
-                <div className="space-y-4">
-                  <h3 className="font-semibold flex items-center">
-                    📱 QR Code for Activation
-                  </h3>
-                  <div className="bg-white p-4 rounded-lg border text-center">
-                    <img 
-                      src={item.qrCodeUrl} 
-                      alt={`QR Code for ${item.countryName}`}
-                      className="mx-auto mb-4 max-w-[200px] h-auto"
-                    />
-                    <div className="space-y-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => downloadQRCode(item.qrCodeUrl, `${item.countryName}-esim-qr.png`)}
-                      >
-                        <Download className="h-4 w-4 mr-2" />
-                        Download QR Code
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => window.open(item.qrCodeUrl, '_blank')}
-                      >
-                        <ExternalLink className="h-4 w-4 mr-2" />
-                        View Full Size
-                      </Button>
+                ) : (
+                  <div className="grid sm:grid-cols-2 gap-6">
+                    {/* QR Code */}
+                    <div>
+                      <div className="text-sm font-semibold text-gray-900 mb-3">QR code</div>
+                      <div className="border border-gray-200 rounded-xl p-4 text-center bg-gray-50">
+                        {item.qrCodeUrl ? (
+                          <>
+                            <img src={item.qrCodeUrl} alt={`QR Code for ${item.countryName}`} className="mx-auto mb-3 max-w-[180px]" />
+                            <div className="flex flex-col gap-2">
+                              <button
+                                onClick={() => downloadQRCode(item.qrCodeUrl, `${item.countryName}-esim-qr.png`)}
+                                className="inline-flex items-center justify-center gap-1.5 border border-gray-200 hover:border-gray-300 bg-white text-gray-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors"
+                              >
+                                <Download className="h-3 w-3" />
+                                Download
+                              </button>
+                              <button
+                                onClick={() => window.open(item.qrCodeUrl, '_blank')}
+                                className="inline-flex items-center justify-center gap-1.5 border border-gray-200 hover:border-gray-300 bg-white text-gray-700 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors"
+                              >
+                                <ExternalLink className="h-3 w-3" />
+                                View full size
+                              </button>
+                            </div>
+                          </>
+                        ) : (
+                          <p className="text-sm text-gray-400 py-8">QR code sent to your email</p>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Activation + instructions */}
+                    <div className="space-y-4">
+                      <div>
+                        <div className="text-sm font-semibold text-gray-900 mb-2">Activation code</div>
+                        <div className="flex items-center gap-2 border border-gray-200 rounded-lg px-3 py-2 bg-gray-50">
+                          <code className="text-xs font-mono flex-1 break-all text-gray-700">{item.activationCode || '—'}</code>
+                          {item.activationCode && (
+                            <button onClick={() => copyToClipboard(item.activationCode)} className="shrink-0 text-gray-400 hover:text-gray-700 transition-colors">
+                              <Copy className="h-3.5 w-3.5" />
+                            </button>
+                          )}
+                        </div>
+                      </div>
+
+                      <div>
+                        <div className="text-sm font-semibold text-gray-900 mb-2">Setup instructions</div>
+                        <ol className="space-y-1.5">
+                          {item.instructions.map((instruction, idx) => (
+                            <li key={idx} className="flex gap-2 text-sm text-gray-600">
+                              <span className="text-gray-400 shrink-0">{idx + 1}.</span>
+                              {instruction}
+                            </li>
+                          ))}
+                        </ol>
+                      </div>
                     </div>
                   </div>
-                </div>
-
-                {/* Activation Code & Instructions */}
-                <div className="space-y-4">
-                  <div>
-                    <h3 className="font-semibold mb-2">🔑 Activation Code</h3>
-                    <div className="bg-gray-50 p-3 rounded-lg border">
-                      <code className="text-sm font-mono">{item.activationCode}</code>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="ml-2 h-6 w-6 p-0"
-                        onClick={() => copyToClipboard(item.activationCode)}
-                      >
-                        <Copy className="h-3 w-3" />
-                      </Button>
-                    </div>
-                  </div>
-
-                  <div>
-                    <h3 className="font-semibold mb-2">📋 Setup Instructions</h3>
-                    <ol className="space-y-1 text-sm">
-                      {item.instructions.map((instruction, idx) => (
-                        <li key={idx} className="flex">
-                          <span className="text-blue-600 font-medium mr-2">{idx + 1}.</span>
-                          {instruction}
-                        </li>
-                      ))}
-                    </ol>
-                  </div>
-                </div>
+                )}
               </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+            </div>
+          ))}
+        </div>
 
-      {/* Important Notes */}
-      <Card className="mt-8 bg-orange-50 border-orange-200">
-        <CardContent className="p-6">
-          <h3 className="font-semibold text-orange-900 mb-3">⚠️ Important Notes</h3>
-          <ul className="space-y-2 text-sm text-orange-800">
-            <li>• Keep this information safe - you'll need it to activate your eSIM</li>
-            <li>• Your eSIM will activate when you first connect to a network in your destination</li>
-            <li>• Make sure your device supports eSIM technology before traveling</li>
-            <li>• Contact our support team if you need help: info@simryo.com</li>
-            <li>• Check your email for a copy of all this information</li>
-          </ul>
-        </CardContent>
-      </Card>
+        {/* Notes */}
+        <div className="mt-8 border border-gray-200 rounded-xl p-5 bg-gray-50 text-sm text-gray-500 space-y-1">
+          <div className="font-semibold text-gray-700 mb-2">Important</div>
+          <p>· Keep your activation code safe — you'll need it to activate your eSIM.</p>
+          <p>· Your eSIM activates when you first connect at your destination.</p>
+          <p>· Make sure your device supports eSIM before traveling.</p>
+          <p>· Contact support if you need help: <a href="mailto:info@simryo.com" className="underline hover:text-gray-900">info@simryo.com</a></p>
+        </div>
 
-      {/* Action Buttons */}
-      <div className="flex flex-col sm:flex-row gap-4 mt-8 justify-center">
-        <Link href="/plans">
-          <Button variant="outline" className="w-full sm:w-auto">
-            <Home className="h-4 w-4 mr-2" />
-            Browse More Plans
-          </Button>
-        </Link>
-        <Button 
-          onClick={() => window.print()} 
-          variant="outline"
-          className="w-full sm:w-auto"
-        >
-          <Download className="h-4 w-4 mr-2" />
-          Print This Page
-        </Button>
+        {/* Actions */}
+        <div className="flex flex-col sm:flex-row gap-3 mt-8 justify-center">
+          <Link href="/plans">
+            <button className="inline-flex items-center justify-center gap-2 border border-gray-200 hover:border-gray-300 bg-white text-gray-700 px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors w-full sm:w-auto">
+              <Home className="h-4 w-4" />
+              Browse more plans
+            </button>
+          </Link>
+          <button
+            onClick={() => window.print()}
+            className="inline-flex items-center justify-center gap-2 border border-gray-200 hover:border-gray-300 bg-white text-gray-700 px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors"
+          >
+            <Download className="h-4 w-4" />
+            Print this page
+          </button>
+          {isGuest && (
+            <Link href={signupUrl}>
+              <button className="inline-flex items-center justify-center gap-2 bg-gray-900 hover:bg-gray-800 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors w-full sm:w-auto">
+                <UserPlus className="h-4 w-4" />
+                Create account
+              </button>
+            </Link>
+          )}
+        </div>
+
       </div>
     </div>
   )

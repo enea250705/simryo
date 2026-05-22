@@ -154,18 +154,11 @@ export abstract class BaseProvider {
   }
 
   protected applyMarkup(price: number): number {
-    // Start with the base price (already in EUR from CSV)
     let finalPrice = price;
-    
-    // Apply configured markup percentage (default 10%)
-    const markupPercentage = this.config.markup?.percentage || 10;
+    const markupPercentage = this.config.markup?.percentage ?? 70;
     finalPrice *= (1 + markupPercentage / 100);
-    
-    // Add configured fixed profit (default €2)
-    const fixedProfit = this.config.markup?.fixedAmount || 2.00;
-    finalPrice += fixedProfit;
-    
-    // Round to 2 decimal places
+    const fixedProfit = this.config.markup?.fixedAmount ?? 0;
+    if (fixedProfit > 0) finalPrice += fixedProfit;
     return Math.round(finalPrice * 100) / 100;
   }
 

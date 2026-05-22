@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export const metadata: Metadata = {
   title: 'Cruise Ship Connectivity: eSIM Guide for Ocean Travel 2025',
@@ -22,265 +23,131 @@ export const metadata: Metadata = {
 
 export default function CruiseShipEsimPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-cyan-50">
-      <div className="container mx-auto px-4 py-12 max-w-4xl">
-        <article className="prose prose-lg max-w-none">
-          <header className="mb-12 text-center">
-            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-cyan-600 bg-clip-text text-transparent mb-6">
-              Cruise Ship Connectivity: eSIM Guide for Ocean Travel 2025
-            </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Stay connected during your cruise with smart eSIM solutions. Save money on expensive ship internet and stay in touch at every port.
-            </p>
-          </header>
+    <div className="min-h-screen bg-white pt-20">
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-12">
 
-          <div className="bg-blue-50 border-l-4 border-blue-500 p-6 mb-8">
-            <h2 className="text-xl font-semibold text-blue-800 mb-3">🚢 Cruise Connectivity Challenge</h2>
-            <ul className="space-y-2 text-blue-700">
-              <li>• <strong>Ship WiFi:</strong> $50-100+ per day for basic internet</li>
-              <li>• <strong>Roaming Charges:</strong> $5-15 per MB in international waters</li>
-              <li>• <strong>Poor Coverage:</strong> Unreliable connection at sea</li>
-              <li>• <strong>eSIM Solution:</strong> Connect at ports for 90% less cost</li>
+        {/* Back */}
+        <Link href="/blog" className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-gray-700 transition-colors mb-8">
+          ← All articles
+        </Link>
+
+        {/* Header */}
+        <header className="mb-10">
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">Cruise Travel</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 leading-tight">Cruise Ship Connectivity: eSIM Guide for Ocean Travel 2025</h1>
+          <p className="text-gray-500 mb-5 leading-relaxed">Stay connected during your cruise with smart eSIM solutions. Save money on expensive ship internet and stay in touch at every port.</p>
+          <div className="flex items-center gap-3 text-xs text-gray-400 mb-8">
+            <span className="font-medium text-gray-600">Maria Santos</span>
+            <span>·</span>
+            <span>Nov 15, 2024</span>
+            <span>·</span>
+            <span>9 min read</span>
+          </div>
+          <div className="relative h-56 sm:h-64 rounded-2xl overflow-hidden bg-gray-100">
+            <Image src="https://images.unsplash.com/photo-1548574505-5e239809ee19?w=900&q=80" alt="Cruise ship at sea with port connectivity" fill className="object-cover" priority />
+          </div>
+        </header>
+
+        {/* Article content */}
+        <article className="prose prose-gray max-w-none">
+          <p>Cruise travelers face a unique connectivity challenge: at sea, standard cellular networks don't reach, leaving you dependent on the ship's satellite internet. At ports, however, local networks are fully available. A well-chosen eSIM strategy can save you hundreds of dollars over the course of a cruise by replacing expensive ship Wi-Fi packages with high-speed port connectivity.</p>
+
+          <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 mb-6">
+            <p className="text-gray-900 font-medium mb-2">The Cruise Connectivity Challenge</p>
+            <ul className="mb-0">
+              <li><strong>Ship Wi-Fi:</strong> Typically $50–120+ per day for unlimited access via satellite — slow and expensive.</li>
+              <li><strong>Standard roaming:</strong> Can trigger automatic charges at sea in some regions — always enable Airplane mode while at sea.</li>
+              <li><strong>eSIM at ports:</strong> High-speed 4G/5G available at most cruise destinations, at a fraction of the ship Wi-Fi cost.</li>
             </ul>
           </div>
 
-          <section className="mb-12">
-            <h2 className="text-3xl font-bold mb-6">🌊 Cruise Connectivity Options</h2>
-            
-            <div className="grid md:grid-cols-3 gap-6">
-              <div className="bg-red-50 rounded-lg p-6 border-l-4 border-red-500">
-                <h3 className="text-lg font-semibold text-red-800 mb-3">💸 Ship Internet</h3>
-                <ul className="space-y-2 text-red-700 text-sm">
-                  <li>• $60-120/day for unlimited</li>
-                  <li>• Slow speeds (1-5 Mbps)</li>
-                  <li>• Limited bandwidth</li>
-                  <li>• Works at sea</li>
-                </ul>
-                <p className="text-red-600 font-semibold mt-3">❌ Most Expensive</p>
-              </div>
-              
-              <div className="bg-yellow-50 rounded-lg p-6 border-l-4 border-yellow-500">
-                <h3 className="text-lg font-semibold text-yellow-800 mb-3">📱 Roaming</h3>
-                <ul className="space-y-2 text-yellow-700 text-sm">
-                  <li>• $5-15/MB international</li>
-                  <li>• Automatic connection</li>
-                  <li>• Bill shock risk</li>
-                  <li>• Limited at sea</li>
-                </ul>
-                <p className="text-yellow-600 font-semibold mt-3">⚠️ Unpredictable Cost</p>
-              </div>
-              
-              <div className="bg-green-50 rounded-lg p-6 border-l-4 border-green-500">
-                <h3 className="text-lg font-semibold text-green-800 mb-3">🗺️ Port eSIM</h3>
-                <ul className="space-y-2 text-green-700 text-sm">
-                  <li>• $3-8/day per country</li>
-                  <li>• High-speed 4G/5G</li>
-                  <li>• Works at ports only</li>
-                  <li>• Multiple country plans</li>
-                </ul>
-                <p className="text-green-600 font-semibold mt-3">✅ Best Value</p>
-              </div>
-            </div>
-          </section>
+          <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">Connectivity Options Compared</h2>
 
-          <section className="mb-12">
-            <h2 className="text-3xl font-bold mb-6">🗺️ Popular Cruise Routes & eSIM Plans</h2>
-            
-            <div className="space-y-8">
-              <div className="bg-white rounded-lg p-6 shadow-lg">
-                <h3 className="text-2xl font-semibold mb-4 text-blue-600">🇪🇺 Mediterranean Cruise</h3>
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <h4 className="font-semibold mb-2">Typical Ports:</h4>
-                    <ul className="text-sm space-y-1">
-                      <li>• Barcelona, Spain</li>
-                      <li>• Rome/Civitavecchia, Italy</li>
-                      <li>• French Riviera (Nice/Cannes)</li>
-                      <li>• Santorini, Greece</li>
-                    </ul>
-                  </div>
-                  <div className="border rounded-lg p-4">
-                    <h4 className="font-semibold mb-2">EU Regional eSIM</h4>
-                    <p className="text-2xl font-bold text-blue-600 mb-2">$24.99</p>
-                    <ul className="text-sm space-y-1">
-                      <li>✅ 15GB for 30 days</li>
-                      <li>✅ All EU countries</li>
-                      <li>✅ 4G/5G speeds</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
+          <table className="w-full border-collapse text-sm">
+            <thead>
+              <tr>
+                <th className="border border-gray-200 px-4 py-2 text-left">Option</th>
+                <th className="border border-gray-200 px-4 py-2 text-left">Cost</th>
+                <th className="border border-gray-200 px-4 py-2 text-left">Coverage</th>
+                <th className="border border-gray-200 px-4 py-2 text-left">Speed</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td className="border border-gray-200 px-4 py-2">Ship Internet</td>
+                <td className="border border-gray-200 px-4 py-2">$60–120/day</td>
+                <td className="border border-gray-200 px-4 py-2">Sea and ports</td>
+                <td className="border border-gray-200 px-4 py-2">1–5 Mbps (satellite)</td>
+              </tr>
+              <tr>
+                <td className="border border-gray-200 px-4 py-2">International Roaming</td>
+                <td className="border border-gray-200 px-4 py-2">Unpredictable — can be very high</td>
+                <td className="border border-gray-200 px-4 py-2">Ports only</td>
+                <td className="border border-gray-200 px-4 py-2">Variable</td>
+              </tr>
+              <tr>
+                <td className="border border-gray-200 px-4 py-2 font-medium">Port eSIM</td>
+                <td className="border border-gray-200 px-4 py-2 font-medium">Low — regional plan per cruise route</td>
+                <td className="border border-gray-200 px-4 py-2 font-medium">Ports only</td>
+                <td className="border border-gray-200 px-4 py-2 font-medium">50+ Mbps (4G/5G)</td>
+              </tr>
+            </tbody>
+          </table>
 
-              <div className="bg-white rounded-lg p-6 shadow-lg">
-                <h3 className="text-2xl font-semibold mb-4 text-green-600">🏝️ Caribbean Cruise</h3>
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <h4 className="font-semibold mb-2">Typical Ports:</h4>
-                    <ul className="text-sm space-y-1">
-                      <li>• Cozumel, Mexico</li>
-                      <li>• Jamaica (Ocho Rios)</li>
-                      <li>• Barbados</li>
-                      <li>• St. Thomas, USVI</li>
-                    </ul>
-                  </div>
-                  <div className="border rounded-lg p-4">
-                    <h4 className="font-semibold mb-2">Caribbean Multi-Country</h4>
-                    <p className="text-2xl font-bold text-green-600 mb-2">$19.99</p>
-                    <ul className="text-sm space-y-1">
-                      <li>✅ 10GB for 14 days</li>
-                      <li>✅ 15 Caribbean countries</li>
-                      <li>✅ Premium networks</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
+          <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">eSIM Strategies by Cruise Route</h2>
 
-              <div className="bg-white rounded-lg p-6 shadow-lg">
-                <h3 className="text-2xl font-semibold mb-4 text-purple-600">🌸 Alaska/Northern Cruise</h3>
-                <div className="grid md:grid-cols-2 gap-6">
-                  <div>
-                    <h4 className="font-semibold mb-2">Typical Ports:</h4>
-                    <ul className="text-sm space-y-1">
-                      <li>• Vancouver, Canada</li>
-                      <li>• Juneau, Alaska</li>
-                      <li>• Ketchikan, Alaska</li>
-                      <li>• Seattle, Washington</li>
-                    </ul>
-                  </div>
-                  <div className="border rounded-lg p-4">
-                    <h4 className="font-semibold mb-2">North America Plan</h4>
-                    <p className="text-2xl font-bold text-purple-600 mb-2">$34.99</p>
-                    <ul className="text-sm space-y-1">
-                      <li>✅ 20GB for 30 days</li>
-                      <li>✅ USA + Canada</li>
-                      <li>✅ Premium coverage</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
+          <h3 className="text-base font-semibold text-gray-900 mt-6 mb-3">Mediterranean Cruise</h3>
+          <p>Mediterranean cruises typically visit ports in Spain, Italy, France, and Greece. A European regional eSIM covering all EU countries is the simplest solution — one plan works seamlessly across all port stops. Activate it when you arrive in port and it connects automatically to local networks in each country.</p>
 
-          <section className="mb-12">
-            <h2 className="text-3xl font-bold mb-6">💡 Smart Cruise Connectivity Strategy</h2>
-            
-            <div className="grid md:grid-cols-2 gap-8">
-              <div>
-                <h3 className="text-xl font-semibold mb-4">🚢 At Sea (Offline Strategy)</h3>
-                <div className="space-y-3">
-                  <div className="bg-white rounded-lg p-4 shadow-sm">
-                    <h4 className="font-semibold mb-2">📱 Download Before Sailing</h4>
-                    <ul className="text-gray-600 text-sm space-y-1">
-                      <li>• Offline maps (Google Maps, Maps.me)</li>
-                      <li>• Entertainment (Netflix downloads)</li>
-                      <li>• Translation apps</li>
-                      <li>• Port guides and excursion info</li>
-                    </ul>
-                  </div>
-                  <div className="bg-white rounded-lg p-4 shadow-sm">
-                    <h4 className="font-semibold mb-2">✈️ Enable Airplane Mode</h4>
-                    <p className="text-gray-600 text-sm">Avoid accidental roaming charges while at sea. Use ship WiFi only when necessary.</p>
-                  </div>
-                </div>
-              </div>
-              
-              <div>
-                <h3 className="text-xl font-semibold mb-4">🏝️ At Port (Online Strategy)</h3>
-                <div className="space-y-3">
-                  <div className="bg-white rounded-lg p-4 shadow-sm">
-                    <h4 className="font-semibold mb-2">📶 Activate eSIM</h4>
-                    <ul className="text-gray-600 text-sm space-y-1">
-                      <li>• Turn on cellular data</li>
-                      <li>• Switch to travel eSIM</li>
-                      <li>• Check messages and emails</li>
-                      <li>• Upload photos to cloud</li>
-                    </ul>
-                  </div>
-                  <div className="bg-white rounded-lg p-4 shadow-sm">
-                    <h4 className="font-semibold mb-2">⏰ Time Management</h4>
-                    <p className="text-gray-600 text-sm">Most ports offer 6-8 hours. Use first 30 minutes for essential communications.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </section>
+          <p>Typical Mediterranean ports including Barcelona, Rome (Civitavecchia), the French Riviera, and Santorini all have excellent 4G/5G coverage in tourist areas close to the port.</p>
 
-          <section className="mb-12">
-            <h2 className="text-3xl font-bold mb-6">💰 Cost Comparison Example</h2>
-            
-            <div className="bg-gray-50 rounded-lg p-6">
-              <h3 className="text-xl font-semibold mb-4">7-Day Mediterranean Cruise</h3>
-              
-              <div className="overflow-x-auto">
-                <table className="w-full bg-white rounded-lg shadow-sm">
-                  <thead className="bg-gray-100">
-                    <tr>
-                      <th className="px-4 py-3 text-left font-semibold">Option</th>
-                      <th className="px-4 py-3 text-center font-semibold">Total Cost</th>
-                      <th className="px-4 py-3 text-center font-semibold">Coverage</th>
-                      <th className="px-4 py-3 text-center font-semibold">Speed</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-gray-200">
-                    <tr className="bg-red-50">
-                      <td className="px-4 py-3 font-medium">Ship Internet (7 days)</td>
-                      <td className="px-4 py-3 text-center text-red-600 font-bold">$420-700</td>
-                      <td className="px-4 py-3 text-center">Sea + Ports</td>
-                      <td className="px-4 py-3 text-center">1-5 Mbps</td>
-                    </tr>
-                    <tr className="bg-yellow-50">
-                      <td className="px-4 py-3 font-medium">International Roaming</td>
-                      <td className="px-4 py-3 text-center text-yellow-600 font-bold">$200-500+</td>
-                      <td className="px-4 py-3 text-center">Ports Only</td>
-                      <td className="px-4 py-3 text-center">Variable</td>
-                    </tr>
-                    <tr className="bg-green-50">
-                      <td className="px-4 py-3 font-medium">EU eSIM Plan</td>
-                      <td className="px-4 py-3 text-center text-green-600 font-bold">$24.99</td>
-                      <td className="px-4 py-3 text-center">Ports Only</td>
-                      <td className="px-4 py-3 text-center">50+ Mbps</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-              
-              <div className="mt-4 p-4 bg-green-100 rounded-lg">
-                <p className="text-green-800 font-semibold">💡 Savings with eSIM: $395-675 (94-96% less than ship internet)</p>
-              </div>
-            </div>
-          </section>
+          <h3 className="text-base font-semibold text-gray-900 mt-6 mb-3">Caribbean Cruise</h3>
+          <p>Caribbean cruises visit multiple island nations, each with their own mobile networks. A Caribbean multi-country eSIM plan covering the islands on your itinerary is the most efficient approach. Most Caribbean ports including Cozumel, Jamaica, Barbados, and St. Thomas have solid 4G coverage near the port areas.</p>
 
-          <section className="mb-12">
-            <h2 className="text-3xl font-bold mb-6">📋 Pre-Cruise Checklist</h2>
-            
-            <div className="bg-blue-50 rounded-lg p-6">
-              <h3 className="text-xl font-semibold text-blue-800 mb-4">🧳 2 Weeks Before Departure</h3>
-              <ul className="space-y-2 text-blue-700">
-                <li>☐ Research ports of call and countries visited</li>
-                <li>☐ Purchase appropriate regional eSIM plans</li>
-                <li>☐ Download offline maps and entertainment</li>
-                <li>☐ Install eSIM profiles (but don't activate yet)</li>
-                <li>☐ Contact your carrier about international roaming</li>
-                <li>☐ Set up automatic cloud backup for photos</li>
-                <li>☐ Download currency converter and translation apps</li>
-              </ul>
-            </div>
-          </section>
+          <h3 className="text-base font-semibold text-gray-900 mt-6 mb-3">Alaska and Northern Cruise</h3>
+          <p>Alaska/Canada cruises typically depart from Vancouver and visit Juneau, Ketchikan, and Seattle. A North America plan covering both the USA and Canada works well for this route. Coverage in Alaskan ports is generally good in town areas but drops off quickly in wilderness regions.</p>
 
-          <section className="bg-gradient-to-r from-blue-500 to-cyan-600 rounded-lg p-8 text-white">
-            <h2 className="text-3xl font-bold mb-4">Set Sail with Smart Connectivity</h2>
-            <p className="text-xl mb-6">Get the perfect eSIM plan for your cruise adventure and save hundreds on connectivity costs.</p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <Link href="/plans" className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors text-center">
-                Find My Cruise eSIM
-              </Link>
-              <Link href="/contact" className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors text-center">
-                Get Cruise Advice
-              </Link>
-            </div>
-          </section>
+          <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">Smart Cruise Connectivity Strategy</h2>
+
+          <h3 className="text-base font-semibold text-gray-900 mt-6 mb-3">At Sea: Offline Strategy</h3>
+          <p>While the ship is at sea, enable Airplane mode to prevent accidental roaming charges and unnecessary battery drain. Use this time productively — read downloaded articles, watch Netflix downloads, use offline maps to plan port excursions, and catch up on work that doesn't require connectivity.</p>
+
+          <p>Before sailing, download everything you'll want at sea: offline maps for each port city, entertainment (Netflix, Spotify), translation apps, port guides, and excursion booking confirmations.</p>
+
+          <h3 className="text-base font-semibold text-gray-900 mt-6 mb-3">At Port: Online Strategy</h3>
+          <p>When the ship docks, disable Airplane mode and switch to your travel eSIM. Most ports offer 6–8 hours ashore. Spend the first 20–30 minutes on essential communications — check messages, upload photos, confirm evening reservations, and let family know you've arrived safely. Then put your phone away and enjoy the destination.</p>
+
+          <p>Bulk tasks like uploading all your photos to cloud storage or downloading new content are best done during the first hour ashore when you can focus on it, rather than scrambling on the gangway as the ship prepares to depart.</p>
+
+          <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">Pre-Cruise Checklist</h2>
+          <ul>
+            <li>Research the ports of call on your itinerary and identify which countries they're in.</li>
+            <li>Purchase an appropriate regional or multi-country eSIM plan covering all ports.</li>
+            <li>Download offline maps for each port city via Google Maps or Maps.me.</li>
+            <li>Install the eSIM profile on your device before departure (you don't need to activate it yet).</li>
+            <li>Contact your home carrier about disabling automatic international roaming if not already done.</li>
+            <li>Set up automatic cloud photo backup so uploads happen automatically when you connect in port.</li>
+            <li>Download currency converter and translation apps for offline use.</li>
+          </ul>
+
+          <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">Cost Savings Example: 7-Day Mediterranean Cruise</h2>
+          <p>A 7-day Mediterranean cruise visiting 5 ports illustrates the potential savings clearly. Ship internet packages for the full week can cost $420–700 at typical daily rates, and the satellite speeds are often frustratingly slow. A European regional eSIM plan covering all the EU port countries costs far less and delivers dramatically faster 4G/5G speeds at each port — the trade-off being that you're only connected while ashore.</p>
+
+          <p>For most travelers, port connectivity is when you actually want to be connected anyway: navigating, sharing photos, and communicating with friends and family. The at-sea time is often better spent disconnected. Browse SIMRYO's regional plans at <Link href="/plans" className="text-gray-900 underline">simryo.com/plans</Link> to find the right option for your cruise route.</p>
         </article>
+
+        {/* CTA */}
+        <div className="mt-12 border border-gray-200 rounded-xl p-6 bg-gray-50 text-center">
+          <p className="text-sm font-semibold text-gray-900 mb-1">Ready to get connected?</p>
+          <p className="text-sm text-gray-500 mb-4">Browse eSIM plans for 190+ countries.</p>
+          <Link href="/plans">
+            <button className="inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors">
+              Browse Plans →
+            </button>
+          </Link>
+        </div>
+
       </div>
     </div>
   )
-} 
+}

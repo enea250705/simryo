@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
+import Image from 'next/image'
 
 export const metadata: Metadata = {
   title: 'Student Study Abroad eSIM Guide 2025: Budget Connectivity Solutions',
@@ -22,76 +23,114 @@ export const metadata: Metadata = {
 
 export default function StudentEsimPage() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50">
-      <div className="container mx-auto px-4 py-12 max-w-4xl">
-        <article className="prose prose-lg max-w-none">
-          <header className="mb-12 text-center">
-            <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent mb-6">
-              Student Study Abroad eSIM Guide 2025: Budget Connectivity Solutions
-            </h1>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Essential eSIM guide for students studying abroad. Find affordable plans, long-term options, and connectivity solutions for international education.
-            </p>
-          </header>
+    <div className="min-h-screen bg-white pt-20">
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 py-12">
 
-          <div className="bg-blue-50 border-l-4 border-blue-500 p-6 mb-8">
-            <h2 className="text-xl font-semibold text-blue-800 mb-3">🎓 Student-Focused Features</h2>
-            <ul className="space-y-2 text-blue-700">
-              <li>• <strong>Budget-friendly plans</strong> - Starting from $15/month</li>
-              <li>• <strong>Long-term validity</strong> - Up to 365 days</li>
-              <li>• <strong>Student discounts</strong> - Up to 25% off with valid student ID</li>
-              <li>• <strong>Flexible data options</strong> - From 5GB to unlimited</li>
+        {/* Back */}
+        <Link href="/blog" className="inline-flex items-center gap-2 text-sm text-gray-400 hover:text-gray-700 transition-colors mb-8">
+          ← All articles
+        </Link>
+
+        {/* Header */}
+        <header className="mb-10">
+          <p className="text-xs font-semibold text-gray-400 uppercase tracking-widest mb-3">Student Guide</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-4 leading-tight">Student Study Abroad eSIM Guide 2025: Budget Connectivity Solutions</h1>
+          <p className="text-gray-500 mb-5 leading-relaxed">Essential eSIM guide for students studying abroad. Find affordable plans, long-term options, and connectivity solutions for international education.</p>
+          <div className="flex items-center gap-3 text-xs text-gray-400 mb-8">
+            <span className="font-medium text-gray-600">Alex Thompson</span>
+            <span>·</span>
+            <span>Nov 12, 2024</span>
+            <span>·</span>
+            <span>8 min read</span>
+          </div>
+          <div className="relative h-56 sm:h-64 rounded-2xl overflow-hidden bg-gray-100">
+            <Image src="https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=900&q=80" alt="Student studying abroad with mobile connectivity" fill className="object-cover" priority />
+          </div>
+        </header>
+
+        {/* Article content */}
+        <article className="prose prose-gray max-w-none">
+          <p>Studying abroad is one of the most formative experiences a student can have — and staying connected throughout is essential for academic work, staying in touch with family, and navigating daily life in a new country. But student budgets are tight, and overpaying for connectivity is a significant and avoidable expense.</p>
+
+          <p>eSIM technology is particularly well-suited to study abroad situations: you can activate a plan before you leave, it works immediately upon arrival, and long-validity plans can cover an entire semester without needing to manage renewals mid-term.</p>
+
+          <div className="bg-gray-50 border border-gray-200 rounded-xl p-5 mb-6">
+            <p className="text-gray-900 font-medium mb-2">Why eSIM Works Well for Study Abroad</p>
+            <ul className="mb-0">
+              <li>Long-validity plans that cover a full semester (90–180 days) with no renewals needed</li>
+              <li>Immediate activation upon arrival — no SIM card hunting on day one</li>
+              <li>Keep your home number for calls from family while using the eSIM for data</li>
+              <li>No contract lock-in — pay for the semester, not a year-long phone plan</li>
+              <li>Affordable per-day cost compared to traditional roaming or short-term tourist SIMs</li>
             </ul>
           </div>
 
-          <section className="mb-12">
-            <h2 className="text-3xl font-bold mb-6">📚 Best Student eSIM Plans</h2>
-            
-            <div className="grid md:grid-cols-2 gap-8">
-              <div className="bg-white rounded-lg p-6 shadow-lg border-2 border-blue-500">
-                <div className="bg-blue-500 text-white text-xs px-2 py-1 rounded mb-2 w-fit">STUDENT SPECIAL</div>
-                <h3 className="text-xl font-semibold mb-3">Study Abroad Starter</h3>
-                <p className="text-3xl font-bold text-blue-600 mb-4">$15/month</p>
-                <ul className="space-y-2 mb-6">
-                  <li>✅ 5GB monthly data</li>
-                  <li>✅ 30+ countries</li>
-                  <li>✅ Student discount eligible</li>
-                  <li>✅ No contract required</li>
-                  <li>✅ 24/7 support</li>
-                </ul>
-                <p className="text-sm text-gray-600">Perfect for light usage and staying connected with home</p>
-              </div>
-              
-              <div className="bg-white rounded-lg p-6 shadow-lg border-2 border-purple-500">
-                <div className="bg-purple-500 text-white text-xs px-2 py-1 rounded mb-2 w-fit">MOST POPULAR</div>
-                <h3 className="text-xl font-semibold mb-3">International Student Pro</h3>
-                <p className="text-3xl font-bold text-purple-600 mb-4">$35/month</p>
-                <ul className="space-y-2 mb-6">
-                  <li>✅ 25GB monthly data</li>
-                  <li>✅ 60+ countries</li>
-                  <li>✅ Premium network access</li>
-                  <li>✅ Video calling optimized</li>
-                  <li>✅ Academic support priority</li>
-                </ul>
-                <p className="text-sm text-gray-600">Ideal for research, online classes, and social connections</p>
-              </div>
-            </div>
-          </section>
+          <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">Understanding Your Data Needs as a Student</h2>
+          <p>Student data needs are distinct from tourist needs. You'll likely have good Wi-Fi at your university and accommodation, but need reliable cellular data for commuting, weekend travel, and times when university Wi-Fi isn't available.</p>
 
-          <section className="bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg p-8 text-white">
-            <h2 className="text-3xl font-bold mb-4">Ready to Study Abroad?</h2>
-            <p className="text-xl mb-6">Get connected with student-friendly eSIM plans designed for international education.</p>
-            <div className="flex flex-col sm:flex-row gap-4">
-              <a href="/plans" className="bg-white text-blue-600 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors text-center">
-                View Student Plans
-              </a>
-              <a href="/contact" className="border-2 border-white text-white px-8 py-3 rounded-lg font-semibold hover:bg-white hover:text-blue-600 transition-colors text-center">
-                Get Student Discount
-              </a>
-            </div>
-          </section>
+          <p>Typical student use cases and their data consumption:</p>
+          <ul>
+            <li><strong>Navigation and maps:</strong> 100–200 MB per day in a new city</li>
+            <li><strong>Messaging (WhatsApp, iMessage, etc.):</strong> 50–100 MB per day with media sharing</li>
+            <li><strong>Video calls home:</strong> 500 MB–1 GB per 30-minute call in HD</li>
+            <li><strong>Social media while commuting:</strong> 200–500 MB per day</li>
+            <li><strong>Academic work on the go:</strong> 100–300 MB per day for cloud docs and email</li>
+          </ul>
+
+          <p>A student who uses university Wi-Fi for heavy tasks and cellular data mainly for the above typically needs 5–15 GB per month, depending on how much video calling they do with family.</p>
+
+          <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">Choosing the Right Plan for Your Semester</h2>
+
+          <h3 className="text-base font-semibold text-gray-900 mt-6 mb-3">Short Exchange (1–3 months)</h3>
+          <p>A plan with 30-day validity and moderate data (10–20 GB) suits a single-semester exchange well. If you'll travel to neighboring countries on weekends, a regional plan covering multiple countries is worth the small extra cost over a single-country plan.</p>
+
+          <h3 className="text-base font-semibold text-gray-900 mt-6 mb-3">Full Academic Year (8–12 months)</h3>
+          <p>For year-long programs, consider whether a local SIM card from the host country might actually be the better option for long-term stays — local prepaid plans in many countries offer very competitive rates when you're staying for many months. However, if you're also traveling extensively within the region during the year, an eSIM with broader coverage maintains its advantages.</p>
+
+          <h3 className="text-base font-semibold text-gray-900 mt-6 mb-3">Multi-Country Programs</h3>
+          <p>Some study abroad programs involve multiple countries — a semester in Madrid followed by a language immersion in Lisbon, for example. A regional plan covering both countries in a single eSIM activation is far more convenient than managing separate plans for each leg.</p>
+
+          <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">Maximizing Value on a Student Budget</h2>
+
+          <h3 className="text-base font-semibold text-gray-900 mt-6 mb-3">Wi-Fi First Strategy</h3>
+          <p>Most universities, libraries, cafes, and student housing offer free Wi-Fi. Use cellular data as your backup and supplement, not your primary connection. Download lecture materials, do video calls, and stream entertainment over Wi-Fi when possible. This approach can reduce your monthly data consumption by 50–70%.</p>
+
+          <h3 className="text-base font-semibold text-gray-900 mt-6 mb-3">Plan Data-Heavy Activities</h3>
+          <p>Schedule data-intensive tasks for when you have Wi-Fi: downloading Netflix episodes for a weekend trip, syncing photos to cloud storage, downloading lecture recordings, and updating apps. This preserves your cellular data for genuine on-the-go needs.</p>
+
+          <h3 className="text-base font-semibold text-gray-900 mt-6 mb-3">Keep Your Home Number Active</h3>
+          <p>Most students want to maintain their home phone number for calls and messages from family. Keeping your home SIM in the physical slot while using an eSIM for local data is the ideal setup — you're always reachable on your original number while using affordable local data rates.</p>
+
+          <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">Weekend Travel and Regional Exploration</h2>
+          <p>One of the great joys of studying abroad is the opportunity for weekend travel. A regional eSIM plan that covers neighboring countries eliminates the connectivity anxiety of crossing borders. European students, for example, benefit enormously from a pan-European eSIM plan that works seamlessly whether they're in their host city or on a weekend trip to a neighboring country.</p>
+
+          <p>Check that your plan includes the specific countries you plan to visit — most regional plans have a listed country coverage, and it's worth verifying before booking a trip to an edge case destination.</p>
+
+          <h2 className="text-xl font-semibold text-gray-900 mt-8 mb-4">Before You Leave: Setup Checklist</h2>
+          <ul>
+            <li>Verify your phone is eSIM-compatible and carrier-unlocked.</li>
+            <li>Purchase your eSIM plan before departure and install the profile while still at home on Wi-Fi.</li>
+            <li>Save your home SIM in a safe place — you may want it when you return.</li>
+            <li>Download offline maps for your destination city.</li>
+            <li>Set up automatic cloud backup for photos.</li>
+            <li>Note your university campus Wi-Fi setup instructions so you can connect immediately upon arrival.</li>
+          </ul>
+
+          <p>Browse affordable eSIM plans for students at <Link href="/plans" className="text-gray-900 underline">simryo.com/plans</Link>. Filter by destination and trip duration to find plans that match your semester schedule.</p>
         </article>
+
+        {/* CTA */}
+        <div className="mt-12 border border-gray-200 rounded-xl p-6 bg-gray-50 text-center">
+          <p className="text-sm font-semibold text-gray-900 mb-1">Ready to get connected?</p>
+          <p className="text-sm text-gray-500 mb-4">Browse eSIM plans for 190+ countries.</p>
+          <Link href="/plans">
+            <button className="inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors">
+              Browse Plans →
+            </button>
+          </Link>
+        </div>
+
       </div>
     </div>
   )
-} 
+}

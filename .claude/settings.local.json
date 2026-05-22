@@ -48,7 +48,24 @@
       "Bash(awk:*)",
       "Bash(tail:*)",
       "Bash(head:*)",
-      "Bash(sed:*)"
+      "Bash(sed:*)",
+      "WebSearch",
+      "WebFetch(domain:docs.esimaccess.com)",
+      "WebFetch(domain:esimaccess.com)",
+      "WebFetch(domain:rapidapi.com)",
+      "mcp__plugin_context7_context7__resolve-library-id",
+      "mcp__plugin_context7_context7__query-docs",
+      "Bash(npm list *)",
+      "Bash(del *)",
+      "PowerShell($env:DATABASE_URL = \"postgresql://postgres:Enea13092008@db.obgaezakfamdutjtyblb.supabase.co:5432/postgres\"; Set-Location \"C:\\\\Users\\\\eneam\\\\simryo\"; npx prisma db push)",
+      "PowerShell($env:DATABASE_URL = \"postgresql://postgres:Enea13092008@db.obgaezakfamdutjtyblb.supabase.co:5432/postgres?sslmode=require\"; Set-Location \"C:\\\\Users\\\\eneam\\\\simryo\"; npx prisma db push)",
+      "PowerShell($env:DATABASE_URL = \"postgresql://postgres:Enea13092008%2F%2F@db.obgaezakfamdutjtyblb.supabase.co:5432/postgres\"; Set-Location \"C:\\\\Users\\\\eneam\\\\simryo\"; npx prisma db push)",
+      "PowerShell($env:DATABASE_URL = \"postgresql://postgres.obgaezakfamdutjtyblb:Enea13092008%2F%2F@aws-0-eu-west-1.pooler.supabase.com:6543/postgres\"; Set-Location \"C:\\\\Users\\\\eneam\\\\simryo\"; npx prisma db push)",
+      "PowerShell($env:DATABASE_URL = \"postgresql://postgres.obgaezakfamdutjtyblb:Enea13092008%2F%2F@aws-0-eu-west-1.pooler.supabase.com:6543/postgres\"; Set-Location \"C:\\\\Users\\\\eneam\\\\simryo\"; npx prisma db push --accept-data-loss 2>&1)",
+      "PowerShell($env:DATABASE_URL = \"postgresql://postgres.obgaezakfamdutjtyblb:Enea13092008%2F%2F@aws-0-eu-west-1.pooler.supabase.com:5432/postgres\"; Set-Location \"C:\\\\Users\\\\eneam\\\\simryo\"; npx prisma db push 2>&1)",
+      "Bash(npx tsc *)",
+      "Bash(python -c \"import json,sys; data=json.load\\(sys.stdin\\); pkgs=data['obj']['packageList']; unlimited=[p for p in pkgs if p.get\\('dataType'\\)==2 or p.get\\('volume',0\\)==0 or 'unlimited' in p.get\\('name',''\\).lower\\(\\)]; print\\(f'Total: {len\\(pkgs\\)}, Unlimited: {len\\(unlimited\\)}'\\); [print\\(p['name'], p.get\\('volume'\\), p.get\\('dataType'\\)\\) for p in unlimited[:5]]\")",
+      "Bash(python -c \"import json,sys; data=json.load\\(sys.stdin\\); pkgs=data['obj']['packageList']; dt2=[p for p in pkgs if p.get\\('dataType'\\)==2]; print\\('Sample dataType=2 plan:'\\); print\\(json.dumps\\(dt2[0], indent=2\\)\\)\")"
     ],
     "deny": []
   }

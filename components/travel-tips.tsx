@@ -1,97 +1,60 @@
 "use client"
 
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { 
-  Plane, 
-  MapPin, 
-  Clock, 
-  Wifi, 
-  Battery, 
-  Camera,
-  Coffee,
-  Globe,
-  Shield,
-  Zap,
-  Heart,
-  Star
-} from "lucide-react"
+import { Plane, Battery, Wifi, MapPin, Shield, Clock } from "lucide-react"
 
 const travelTips = [
   {
     icon: Plane,
-    title: "Before You Fly",
-    tip: "Install your eSIM while on Wi-Fi at home. It activates when you arrive!",
-    color: "text-blue-500"
+    title: "Install before you fly",
+    tip: "Set up your eSIM at home on Wi-Fi. It activates automatically when you land."
   },
   {
     icon: Battery,
-    title: "Save Battery",
-    tip: "Turn off automatic app updates and background refresh while traveling",
-    color: "text-green-500"
+    title: "Save battery",
+    tip: "Disable automatic app updates and background refresh while traveling."
   },
   {
     icon: Wifi,
-    title: "Smart Usage",
-    tip: "Use Wi-Fi when available and save cellular data for when you really need it",
-    color: "text-purple-500"
+    title: "Use Wi-Fi when available",
+    tip: "Reserve cellular data for when you actually need it on the go."
   },
   {
     icon: MapPin,
-    title: "Offline Maps",
-    tip: "Download offline maps before you travel to save data and never get lost",
-    color: "text-orange-500"
+    title: "Download offline maps",
+    tip: "Save Google Maps or Maps.me offline before departure to avoid data use."
   },
   {
     icon: Shield,
-    title: "Stay Secure",
-    tip: "Avoid public Wi-Fi for sensitive activities. Your eSIM data is safer!",
-    color: "text-red-500"
+    title: "Skip public Wi-Fi",
+    tip: "Use your eSIM data for banking or logins — it's more secure than café Wi-Fi."
   },
   {
     icon: Clock,
-    title: "Time Zones",
-    tip: "Your eSIM activates automatically in the new time zone. No manual setup needed!",
-    color: "text-teal-500"
+    title: "No time zone setup",
+    tip: "Your eSIM works automatically in any time zone. Nothing to configure."
   }
 ]
 
 export function TravelTips() {
   return (
-    <div className="bg-gradient-to-br from-blue-50 to-purple-50 rounded-2xl p-8">
-      <div className="text-center mb-8">
-        <div className="flex justify-center items-center gap-2 mb-3">
-          <Star className="h-6 w-6 text-yellow-500" />
-          <Heart className="h-6 w-6 text-red-500" />
-          <Globe className="h-6 w-6 text-blue-500" />
-        </div>
-        <h3 className="text-2xl font-bold text-gray-900 mb-2">Travel Tips from Fellow Nomads</h3>
-        <p className="text-gray-600">Make the most of your eSIM and travel experience</p>
+    <div>
+      <div className="mb-10">
+        <p className="text-sm font-semibold text-gray-400 uppercase tracking-widest mb-3">Travel tips</p>
+        <h3 className="text-2xl sm:text-3xl font-bold text-gray-900">Get more from your eSIM</h3>
       </div>
-      
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
         {travelTips.map((tip, index) => (
-          <Card key={index} className="bg-white/70 backdrop-blur-sm border-none shadow-sm hover:shadow-md transition-shadow">
-            <CardContent className="p-4">
-              <div className="flex items-start gap-3">
-                <div className={`p-2 rounded-lg bg-gray-100 ${tip.color}`}>
-                  <tip.icon className="h-5 w-5" />
-                </div>
-                <div>
-                  <h4 className="font-semibold text-gray-900 mb-1">{tip.title}</h4>
-                  <p className="text-sm text-gray-600 leading-relaxed">{tip.tip}</p>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+          <div key={index} className="flex items-start gap-4 bg-white border border-gray-200 rounded-xl p-5">
+            <div className="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-gray-100 shrink-0">
+              <tip.icon className="h-4 w-4 text-gray-600" />
+            </div>
+            <div>
+              <h4 className="text-sm font-semibold text-gray-900 mb-1">{tip.title}</h4>
+              <p className="text-sm text-gray-500 leading-relaxed">{tip.tip}</p>
+            </div>
+          </div>
         ))}
-      </div>
-      
-      <div className="text-center mt-8">
-        <Badge className="bg-blue-100 text-blue-800 hover:bg-blue-200">
-          <Coffee className="h-3 w-3 mr-1" />
-          Happy travels! ☕✈️
-        </Badge>
       </div>
     </div>
   )
