@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
+import { useSession } from "next-auth/react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
@@ -111,6 +112,7 @@ export function Navbar() {
   const [cartCount, setCartCount] = useState(0)
   const [isScrolled, setIsScrolled] = useState(false)
   const pathname = usePathname()
+  const { data: session } = useSession()
 
   // Handle scroll effect
   useEffect(() => {
@@ -454,7 +456,7 @@ export function Navbar() {
                   { href: "/support", label: "Support" },
                   { href: "/faq", label: "FAQ" },
                   { href: "/contact", label: "Contact" },
-                  { href: "/profile", label: "My Account" },
+                  ...(session ? [{ href: "/profile", label: "My Account" }] : []),
                 ].map(({ href, label }) => (
                   <Link
                     key={href}
