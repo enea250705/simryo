@@ -145,20 +145,25 @@ export function Navbar() {
   }, [cartCount])
 
 
-  // Handle escape key to close mobile menu
+  // Close menu on route change
+  useEffect(() => {
+    setIsOpen(false)
+  }, [pathname])
+
+  // Escape key + body scroll lock
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
-      if (e.key === 'Escape' && isOpen) {
-        setIsOpen(false)
-      }
+      if (e.key === 'Escape') setIsOpen(false)
     }
-
     if (isOpen) {
       document.addEventListener('keydown', handleEscape)
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
     }
-
     return () => {
       document.removeEventListener('keydown', handleEscape)
+      document.body.style.overflow = ''
     }
   }, [isOpen])
 
@@ -419,73 +424,63 @@ export function Navbar() {
             </div>
           </div>
 
-          {/* Simple Mobile Menu */}
-          {isOpen && (
-            <div 
-              id="mobile-menu"
-              className="absolute top-16 left-0 right-0 z-40 bg-white border-t border-gray-200 shadow-lg"
+          {/* Mobile Menu — fixed full-screen panel */}
+          <div
+            id="mobile-menu"
+            className={cn(
+              "fixed inset-0 top-16 z-40 transition-all duration-300",
+              isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
+            )}
+          >
+            {/* Backdrop */}
+            <div
+              className="absolute inset-0 bg-black/30"
+              onClick={() => setIsOpen(false)}
+            />
+
+            {/* Panel */}
+            <div
+              className={cn(
+                "absolute top-0 left-0 right-0 bg-white shadow-xl transition-transform duration-300 ease-out overflow-y-auto max-h-[calc(100vh-4rem)]",
+                isOpen ? "translate-y-0" : "-translate-y-4"
+              )}
             >
-              <nav className="py-4">
-                <div className="space-y-1">
+              <nav className="px-4 py-6 space-y-1">
+                {[
+                  { href: "/", label: "Home" },
+                  { href: "/plans", label: "eSIM Plans" },
+                  { href: "/pricing", label: "Pricing" },
+                  { href: "/setup", label: "How it Works" },
+                  { href: "/support", label: "Support" },
+                  { href: "/faq", label: "FAQ" },
+                  { href: "/contact", label: "Contact" },
+                  { href: "/profile", label: "My Account" },
+                ].map(({ href, label }) => (
                   <Link
-                    href="/"
+                    key={href}
+                    href={href}
                     onClick={() => setIsOpen(false)}
-                    className="block px-6 py-3 text-gray-900 hover:bg-gray-50 border-l-4 border-transparent hover:border-blue-500 transition-colors"
+                    className={cn(
+                      "flex items-center px-4 py-3.5 rounded-xl text-base font-medium transition-colors",
+                      pathname === href
+                        ? "bg-blue-50 text-blue-600"
+                        : "text-gray-700 hover:bg-gray-50 hover:text-gray-900"
+                    )}
                   >
-                    Home
+                    {label}
                   </Link>
-                  
-                  <Link
-                    href="/plans"
-                    onClick={() => setIsOpen(false)}
-                    className="block px-6 py-3 text-gray-900 hover:bg-gray-50 border-l-4 border-transparent hover:border-blue-500 transition-colors"
-                  >
-                    eSIM Plans
-                  </Link>
-                  
-                  <Link
-                    href="/pricing"
-                    onClick={() => setIsOpen(false)}
-                    className="block px-6 py-3 text-gray-900 hover:bg-gray-50 border-l-4 border-transparent hover:border-blue-500 transition-colors"
-                  >
-                    Pricing
-                  </Link>
-                  
-                  <Link
-                    href="/setup"
-                    onClick={() => setIsOpen(false)}
-                    className="block px-6 py-3 text-gray-900 hover:bg-gray-50 border-l-4 border-transparent hover:border-blue-500 transition-colors"
-                  >
-                    How it Works
-                  </Link>
-                  
-                  <Link
-                    href="/support"
-                    onClick={() => setIsOpen(false)}
-                    className="block px-6 py-3 text-gray-900 hover:bg-gray-50 border-l-4 border-transparent hover:border-blue-500 transition-colors"
-                  >
-                    Support
-                  </Link>
-                  
-                  <Link
-                    href="/contact"
-                    onClick={() => setIsOpen(false)}
-                    className="block px-6 py-3 text-gray-900 hover:bg-gray-50 border-l-4 border-transparent hover:border-blue-500 transition-colors"
-                  >
-                    Contact
-                  </Link>
-                  
-                  <Link
-                    href="/profile"
-                    onClick={() => setIsOpen(false)}
-                    className="block px-6 py-3 text-gray-900 hover:bg-gray-50 border-l-4 border-transparent hover:border-blue-500 transition-colors"
-                  >
-                    My Account
-                  </Link>
-                </div>
+                ))}
               </nav>
+
+              <div className="px-4 pb-6 pt-2 border-t border-gray-100">
+                <Link href="/plans" onClick={() => setIsOpen(false)}>
+                  <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 text-base font-semibold rounded-xl">
+                    Browse Plans
+                  </Button>
+                </Link>
+              </div>
             </div>
-          )}
+          </div>
         </div>
       </div>
     </nav>
