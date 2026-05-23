@@ -115,14 +115,14 @@ function CartContent() {
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-10">
 
         {/* Header */}
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-8">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Your cart</h1>
             {cartItems.length > 0 && (
               <p className="text-sm text-gray-400 mt-0.5">{totalItems} item{totalItems > 1 ? 's' : ''}</p>
             )}
           </div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-4">
             <Link href="/plans">
               <button className="inline-flex items-center gap-2 text-sm text-gray-500 hover:text-gray-900 transition-colors">
                 <ArrowLeft className="h-4 w-4" />
@@ -132,7 +132,7 @@ function CartContent() {
             {cartItems.length > 0 && (
               <button
                 onClick={() => setCartItems([])}
-                className="text-sm text-red-500 hover:text-red-700 transition-colors"
+                className="text-sm text-red-500 hover:text-red-700 transition-colors ml-auto sm:ml-0"
               >
                 Clear all
               </button>
@@ -155,7 +155,7 @@ function CartContent() {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
 
             {/* Items */}
-            <div className="lg:col-span-2 space-y-3">
+            <div className="lg:col-span-2 space-y-3 order-2 lg:order-1">
               {cartItems.map((item, index) => (
                 <div key={index} className="border border-gray-200 rounded-xl p-5">
                   <div className="flex items-start justify-between gap-4">
@@ -212,7 +212,7 @@ function CartContent() {
             </div>
 
             {/* Summary */}
-            <div className="lg:col-span-1">
+            <div className="lg:col-span-1 order-1 lg:order-2">
               <div className="lg:sticky lg:top-24 border border-gray-200 rounded-2xl overflow-hidden">
                 <div className="px-6 py-5 border-b border-gray-100">
                   <h2 className="font-semibold text-gray-900">Order summary</h2>

@@ -121,29 +121,72 @@ const features = [
 const stats = [
   {
     icon: Users,
-    value: "2M+",
+    numValue: 2,
+    suffix: "M+",
+    decimals: 0,
     label: "Happy Customers",
     description: "Travelers worldwide trust SIMRYO"
   },
   {
     icon: Globe,
-    value: "190+",
+    numValue: 190,
+    suffix: "+",
+    decimals: 0,
     label: "Countries",
     description: "Global coverage everywhere you go"
   },
   {
     icon: TrendingUp,
-    value: "99.9%",
+    numValue: 99.9,
+    suffix: "%",
+    decimals: 1,
     label: "Uptime",
     description: "Reliable connection you can count on"
   },
   {
     icon: Award,
-    value: "4.8★",
+    numValue: 4.8,
+    suffix: "★",
+    decimals: 1,
     label: "Customer Rating",
     description: "Rated excellent by our users"
   }
 ]
+
+function StatCounter({ numValue, suffix, decimals = 0 }: { numValue: number; suffix: string; decimals?: number }) {
+  const [count, setCount] = useState(0)
+  const [started, setStarted] = useState(false)
+  const ref = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting && !started) setStarted(true)
+    }, { threshold: 0.5 })
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [started])
+
+  useEffect(() => {
+    if (!started) return
+    const duration = 1800
+    const start = Date.now()
+    const timer = setInterval(() => {
+      const progress = Math.min((Date.now() - start) / duration, 1)
+      const eased = 1 - Math.pow(1 - progress, 3)
+      setCount(eased * numValue)
+      if (progress >= 1) clearInterval(timer)
+    }, 16)
+    return () => clearInterval(timer)
+  }, [started, numValue])
+
+  return (
+    <div ref={ref} className="text-4xl sm:text-5xl font-black text-gray-900 mb-2 tracking-tight">
+      {decimals > 0 ? count.toFixed(decimals) : Math.round(count)}{suffix}
+    </div>
+  )
+}
 
 const howItWorks = [
   {
@@ -413,8 +456,8 @@ export default function HomePage() {
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
             {stats.map((stat, index) => (
-              <div key={index} className="text-center" role="img" aria-label={`${stat.value} ${stat.label}: ${stat.description}`}>
-                <div className="text-4xl sm:text-5xl font-black text-gray-900 mb-2 tracking-tight">{stat.value}</div>
+              <div key={index} className="text-center">
+                <StatCounter numValue={stat.numValue} suffix={stat.suffix} decimals={stat.decimals} />
                 <div className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-1">{stat.label}</div>
                 <div className="text-sm text-gray-400">{stat.description}</div>
               </div>
@@ -461,17 +504,22 @@ export default function HomePage() {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-16 relative">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-0 md:gap-8 lg:gap-16 relative">
             {howItWorks.map((step, index) => (
-              <div key={index} className="text-center relative">
+              <div key={index} className="relative flex flex-col items-center text-center md:block md:text-center pb-10 md:pb-0 last:pb-0">
+                {/* vertical connector — mobile only */}
+                {index < howItWorks.length - 1 && (
+                  <div className="md:hidden absolute top-10 left-1/2 -translate-x-1/2 w-px h-full bg-gray-200" />
+                )}
+                {/* horizontal connector — desktop only */}
                 {index < howItWorks.length - 1 && (
                   <div className="hidden md:block absolute top-5 left-[calc(50%+2.5rem)] w-[calc(100%-5rem)] h-px bg-gray-200" />
                 )}
-                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-900 text-white text-sm font-bold mb-5">
+                <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-900 text-white text-sm font-bold mb-5 relative z-10">
                   {step.step}
                 </div>
                 <h3 className="text-base font-semibold text-gray-900 mb-2">{step.title}</h3>
-                <p className="text-sm text-gray-500 leading-relaxed">{step.description}</p>
+                <p className="text-sm text-gray-500 leading-relaxed max-w-xs mx-auto md:max-w-none">{step.description}</p>
               </div>
             ))}
           </div>
