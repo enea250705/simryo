@@ -45,8 +45,6 @@ import { useCurrency } from "@/lib/contexts/currency-context"
 // Lazy load heavy components
 const Testimonials = lazy(() => import("@/components/testimonials"))
 const FAQSection = lazy(() => import("@/components/faq-section"))
-const MobileOptimizedHero = lazy(() => import("@/components/mobile-optimized-hero"))
-
 
 
 interface Plan {
@@ -198,37 +196,10 @@ export default function HomePage() {
   const [popularPlans, setPopularPlans] = useState<Plan[]>([])
   const [loadingPlans, setLoadingPlans] = useState(true)
   const [errorPlans, setErrorPlans] = useState<string | null>(null)
-  const [isMobile, setIsMobile] = useState(false)
   const [countries, setCountries] = useState<{ name: string; countryCode: string }[]>([])
   const [showDropdown, setShowDropdown] = useState(false)
   const searchRef = useRef<HTMLDivElement>(null)
   const router = useRouter()
-
-  // Mobile detection - optimized to prevent reflow
-  useEffect(() => {
-    const checkMobile = () => {
-      // Use requestAnimationFrame to batch layout reads
-      requestAnimationFrame(() => {
-        setIsMobile(window.innerWidth < 768)
-      })
-    }
-    
-    // Initial check
-    checkMobile()
-    
-    // Debounced resize listener to prevent excessive reflows
-    let resizeTimeout: NodeJS.Timeout
-    const handleResize = () => {
-      clearTimeout(resizeTimeout)
-      resizeTimeout = setTimeout(checkMobile, 100)
-    }
-    
-    window.addEventListener('resize', handleResize, { passive: true })
-    return () => {
-      window.removeEventListener('resize', handleResize)
-      clearTimeout(resizeTimeout)
-    }
-  }, [])
 
   useEffect(() => {
     const fetchPopularPlans = async () => {
@@ -313,11 +284,6 @@ export default function HomePage() {
   return (
     <div className="min-h-screen bg-white">
       {/* Hero Section */}
-      {isMobile ? (
-        <Suspense fallback={<div className="pt-32 pb-20 flex items-center justify-center"><Loader2 className="h-8 w-8 animate-spin" /></div>}>
-          <MobileOptimizedHero isMobile={isMobile} />
-        </Suspense>
-      ) : (
         <section className="relative overflow-hidden pt-32 sm:pt-48 pb-20 sm:pb-24" aria-labelledby="hero-heading">
         <div className="absolute inset-0 bg-gray-50" />
         <div className="relative mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -441,7 +407,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-      )}
 
       {/* Stats Section */}
       <section className="py-16 sm:py-20 bg-white" aria-labelledby="stats-heading">

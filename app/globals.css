@@ -382,35 +382,16 @@ img {
   color: #6b7280 !important; /* Darker gray for better contrast */
 }
 
-/* Ensure minimum touch targets */
-a, button, [role="button"], [role="link"], input[type="button"], input[type="submit"] {
+/* Ensure minimum touch targets - buttons only, not all links */
+button, [role="button"], input[type="button"], input[type="submit"] {
   min-height: 44px;
   min-width: 44px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0.5rem 1rem;
 }
 
-/* Mobile-specific touch targets */
+/* Prevent iOS zoom on inputs */
 @media (max-width: 768px) {
-  a, button, [role="button"], [role="link"], input[type="button"], input[type="submit"] {
-    min-height: 48px;
-    min-width: 48px;
-    padding: 0.75rem 1.5rem;
-  }
-  
-  /* Ensure form elements are touch-friendly */
   input, textarea, select {
-    min-height: 48px;
-    font-size: 16px; /* Prevent zoom on iOS */
-  }
-  
-  /* Increase tap target for small elements */
-  .icon-button {
-    min-height: 48px;
-    min-width: 48px;
-    padding: 12px;
+    font-size: 16px;
   }
 }
 
@@ -496,30 +477,6 @@ a, button, [role="button"], [role="link"], input[type="button"], input[type="sub
     transition: none;
   }
   
-  /* Mobile-specific optimizations */
-  h1 {
-    font-size: clamp(1.75rem, 8vw, 2.5rem);
-    line-height: 1.1;
-  }
-  
-  h2 {
-    font-size: clamp(1.5rem, 6vw, 2rem);
-    line-height: 1.2;
-  }
-  
-  /* Optimize buttons for mobile */
-  .btn-primary {
-    min-height: 44px; /* Minimum touch target */
-    font-size: 1rem;
-    padding: 0.75rem 1.5rem;
-  }
-  
-  .btn-secondary {
-    min-height: 44px; /* Minimum touch target */
-    font-size: 1rem;
-    padding: 0.75rem 1.5rem;
-  }
-  
   /* Reduce motion on mobile */
   * {
     animation-duration: 0.3s !important;
@@ -532,13 +489,7 @@ a, button, [role="button"], [role="link"], input[type="button"], input[type="sub
   .container {
     padding: 0 1rem;
   }
-  
-  /* Optimize grid layouts for mobile */
-  .grid {
-    grid-template-columns: 1fr !important;
-    gap: 1rem !important;
-  }
-  
+
   /* Optimize image containers */
   .aspect-ratio-container {
     aspect-ratio: 16/9;
