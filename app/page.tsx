@@ -504,22 +504,40 @@ export default function HomePage() {
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-0 md:gap-8 lg:gap-16 relative">
+          {/* Mobile: left-aligned timeline */}
+          <div className="md:hidden flex flex-col gap-0">
             {howItWorks.map((step, index) => (
-              <div key={index} className="relative flex flex-col items-center text-center md:block md:text-center pb-10 md:pb-0 last:pb-0">
-                {/* vertical connector — mobile only */}
+              <div key={index} className="flex gap-4">
+                {/* Left: circle + connector line */}
+                <div className="flex flex-col items-center">
+                  <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gray-900 text-white text-sm font-bold flex items-center justify-center">
+                    {step.step}
+                  </div>
+                  {index < howItWorks.length - 1 && (
+                    <div className="w-px flex-1 bg-gray-200 my-1" />
+                  )}
+                </div>
+                {/* Right: content */}
+                <div className={`pb-8 ${index === howItWorks.length - 1 ? 'pb-0' : ''}`}>
+                  <h3 className="text-base font-semibold text-gray-900 mb-1 mt-2">{step.title}</h3>
+                  <p className="text-sm text-gray-500 leading-relaxed">{step.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop: horizontal 3-column */}
+          <div className="hidden md:grid grid-cols-3 gap-8 lg:gap-16 relative">
+            {howItWorks.map((step, index) => (
+              <div key={index} className="relative text-center">
                 {index < howItWorks.length - 1 && (
-                  <div className="md:hidden absolute top-10 left-1/2 -translate-x-1/2 w-px h-full bg-gray-200" />
-                )}
-                {/* horizontal connector — desktop only */}
-                {index < howItWorks.length - 1 && (
-                  <div className="hidden md:block absolute top-5 left-[calc(50%+2.5rem)] w-[calc(100%-5rem)] h-px bg-gray-200" />
+                  <div className="absolute top-5 left-[calc(50%+2.5rem)] w-[calc(100%-5rem)] h-px bg-gray-200" />
                 )}
                 <div className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-gray-900 text-white text-sm font-bold mb-5 relative z-10">
                   {step.step}
                 </div>
                 <h3 className="text-base font-semibold text-gray-900 mb-2">{step.title}</h3>
-                <p className="text-sm text-gray-500 leading-relaxed max-w-xs mx-auto md:max-w-none">{step.description}</p>
+                <p className="text-sm text-gray-500 leading-relaxed">{step.description}</p>
               </div>
             ))}
           </div>
