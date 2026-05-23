@@ -9,6 +9,7 @@ import { ErrorBoundary } from "@/components/error-boundary"
 import dynamic from "next/dynamic"
 import { ThemeProvider } from "@/components/theme-provider"
 import { CurrencyProvider } from "@/lib/contexts/currency-context"
+import { AuthProvider } from "@/components/auth-provider"
 import { WebVitals } from "@/components/web-vitals"
 import { GoogleAnalytics, GoogleAnalyticsPageView } from "@/components/analytics/google-analytics"
 import { Toaster } from "@/components/ui/sonner"
@@ -448,6 +449,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <CurrencyProvider>
+            <AuthProvider>
             <ErrorBoundary>
               <a href="#main-content" className="skip-link">Skip to main content</a>
               <div className="relative min-h-screen bg-background">
@@ -461,6 +463,7 @@ export default function RootLayout({
                 <GoogleAnalyticsPageView />
               </div>
             </ErrorBoundary>
+            </AuthProvider>
           </CurrencyProvider>
         </ThemeProvider>
         

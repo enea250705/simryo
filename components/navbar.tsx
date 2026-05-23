@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react"
 import Link from "next/link"
 import Image from "next/image"
 import { usePathname } from "next/navigation"
-import { useSession } from "next-auth/react"
+import { useAuth } from "@/lib/serverless-auth"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
@@ -112,7 +112,7 @@ export function Navbar() {
   const [cartCount, setCartCount] = useState(0)
   const [isScrolled, setIsScrolled] = useState(false)
   const pathname = usePathname()
-  const { data: session } = useSession()
+  const { user: session } = useAuth()
 
   // Handle scroll effect
   useEffect(() => {
