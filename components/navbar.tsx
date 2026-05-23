@@ -197,11 +197,12 @@ export function Navbar() {
             <NavigationMenuList className="space-x-1">
               {/* Home Link */}
               <NavigationMenuItem>
-                <Link href="/" legacyBehavior passHref>
-                  <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), "text-gray-700 hover:text-blue-600 font-medium")}>
-                    Home
-                  </NavigationMenuLink>
-                </Link>
+                <NavigationMenuLink
+                  href="/"
+                  className={cn(navigationMenuTriggerStyle(), "text-gray-700 hover:text-blue-600 font-medium")}
+                >
+                  Home
+                </NavigationMenuLink>
               </NavigationMenuItem>
 
               {/* Plans Menu */}
@@ -212,43 +213,40 @@ export function Navbar() {
                 <NavigationMenuContent>
                   <div className="grid gap-3 p-6 w-[500px] lg:w-[600px] lg:grid-cols-[.75fr_1fr]">
                     <div className="row-span-3">
-                      <NavigationMenuLink asChild>
-                        <Link
-                          className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-blue-50 to-blue-100 p-6 no-underline outline-none focus:shadow-md group"
-                          href="/plans"
-                        >
-                          <Globe className="h-6 w-6 text-blue-600 mb-2" />
-                          <div className="mb-2 mt-4 text-lg font-medium text-gray-900">
-                            Global Coverage
-                          </div>
-                          <p className="text-sm leading-tight text-gray-600">
-                            Stay connected in 190+ countries with our premium eSIM data plans.
-                          </p>
-                        </Link>
+                      <NavigationMenuLink
+                        href="/plans"
+                        className="flex h-full w-full select-none flex-col justify-end rounded-md bg-gradient-to-b from-blue-50 to-blue-100 p-6 no-underline outline-none focus:shadow-md group"
+                      >
+                        <Globe className="h-6 w-6 text-blue-600 mb-2" />
+                        <div className="mb-2 mt-4 text-lg font-medium text-gray-900">
+                          Global Coverage
+                        </div>
+                        <p className="text-sm leading-tight text-gray-600">
+                          Stay connected in 190+ countries with our premium eSIM data plans.
+                        </p>
                       </NavigationMenuLink>
                     </div>
                     <div className="grid gap-3">
                       {navigationItems.map((item) => (
-                        <NavigationMenuLink key={item.href} asChild>
-                          <Link
-                            href={item.href}
-                            className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-50 hover:text-blue-600 focus:bg-gray-50 focus:text-blue-600 group"
-                          >
-                            <div className="flex items-center space-x-2">
-                              <item.icon className="h-4 w-4 text-gray-400 group-hover:text-blue-600" />
-                              <div className="text-sm font-medium leading-none">
-                                {item.title}
-                              </div>
-                              {item.featured && (
-                                <Badge variant="secondary" className="text-xs">
-                                  Popular
-                                </Badge>
-                              )}
+                        <NavigationMenuLink
+                          key={item.href}
+                          href={item.href}
+                          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-50 hover:text-blue-600 focus:bg-gray-50 focus:text-blue-600 group"
+                        >
+                          <div className="flex items-center space-x-2">
+                            <item.icon className="h-4 w-4 text-gray-400 group-hover:text-blue-600" />
+                            <div className="text-sm font-medium leading-none">
+                              {item.title}
                             </div>
-                            <p className="line-clamp-2 text-sm leading-snug text-gray-600">
-                              {item.description}
-                            </p>
-                          </Link>
+                            {item.featured && (
+                              <Badge variant="secondary" className="text-xs">
+                                Popular
+                              </Badge>
+                            )}
+                          </div>
+                          <p className="line-clamp-2 text-sm leading-snug text-gray-600">
+                            {item.description}
+                          </p>
                         </NavigationMenuLink>
                       ))}
                     </div>
@@ -264,21 +262,20 @@ export function Navbar() {
                 <NavigationMenuContent>
                   <div className="grid gap-3 p-6 w-[400px] lg:w-[500px] lg:grid-cols-2">
                     {supportItems.map((item) => (
-                      <NavigationMenuLink key={item.href} asChild>
-                        <Link
-                          href={item.href}
-                          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-50 hover:text-blue-600 focus:bg-gray-50 focus:text-blue-600 group"
-                        >
-                          <div className="flex items-center space-x-2">
-                            <item.icon className="h-4 w-4 text-gray-400 group-hover:text-blue-600" />
-                            <div className="text-sm font-medium leading-none">
-                              {item.title}
-                            </div>
+                      <NavigationMenuLink
+                        key={item.href}
+                        href={item.href}
+                        className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-50 hover:text-blue-600 focus:bg-gray-50 focus:text-blue-600 group"
+                      >
+                        <div className="flex items-center space-x-2">
+                          <item.icon className="h-4 w-4 text-gray-400 group-hover:text-blue-600" />
+                          <div className="text-sm font-medium leading-none">
+                            {item.title}
                           </div>
-                          <p className="line-clamp-2 text-sm leading-snug text-gray-600">
-                            {item.description}
-                          </p>
-                        </Link>
+                        </div>
+                        <p className="line-clamp-2 text-sm leading-snug text-gray-600">
+                          {item.description}
+                        </p>
                       </NavigationMenuLink>
                     ))}
                   </div>
@@ -293,18 +290,17 @@ export function Navbar() {
                 <NavigationMenuContent>
                   <div className="grid gap-3 p-6 w-[400px] lg:w-[500px] lg:grid-cols-2">
                     {companyItems.map((item) => (
-                      <NavigationMenuLink key={item.href} asChild>
-                        <Link
-                          href={item.href}
-                          className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-50 hover:text-blue-600 focus:bg-gray-50 focus:text-blue-600"
-                        >
-                          <div className="text-sm font-medium leading-none">
-                            {item.title}
-                          </div>
-                          <p className="line-clamp-2 text-sm leading-snug text-gray-600">
-                            {item.description}
-                          </p>
-                        </Link>
+                      <NavigationMenuLink
+                        key={item.href}
+                        href={item.href}
+                        className="block select-none space-y-1 rounded-md p-3 leading-none no-underline outline-none transition-colors hover:bg-gray-50 hover:text-blue-600 focus:bg-gray-50 focus:text-blue-600"
+                      >
+                        <div className="text-sm font-medium leading-none">
+                          {item.title}
+                        </div>
+                        <p className="line-clamp-2 text-sm leading-snug text-gray-600">
+                          {item.description}
+                        </p>
                       </NavigationMenuLink>
                     ))}
                   </div>
@@ -313,11 +309,12 @@ export function Navbar() {
 
               {/* Direct Links */}
               <NavigationMenuItem>
-                <Link href="/pricing" legacyBehavior passHref>
-                  <NavigationMenuLink className={cn(navigationMenuTriggerStyle(), "text-gray-700 hover:text-blue-600 font-medium")}>
-                    Pricing
-                  </NavigationMenuLink>
-                </Link>
+                <NavigationMenuLink
+                  href="/pricing"
+                  className={cn(navigationMenuTriggerStyle(), "text-gray-700 hover:text-blue-600 font-medium")}
+                >
+                  Pricing
+                </NavigationMenuLink>
               </NavigationMenuItem>
             </NavigationMenuList>
           </NavigationMenu>

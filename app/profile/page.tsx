@@ -201,16 +201,16 @@ function ProfileContent() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 pt-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">My Account</h1>
-          <p className="text-gray-600 mt-2">Manage your profile and eSIMs</p>
+          <h1 className="text-3xl font-bold text-gray-900">Your Dashboard</h1>
+          <p className="text-gray-600 mt-2">View your eSIM plans, profile details, and account preferences.</p>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="grid w-full grid-cols-4">
-            <TabsTrigger value="overview">Overview</TabsTrigger>
-            <TabsTrigger value="esims">My eSIMs</TabsTrigger>
-            <TabsTrigger value="account">Account</TabsTrigger>
-            <TabsTrigger value="settings">Settings</TabsTrigger>
+            <TabsTrigger value="overview">Dashboard</TabsTrigger>
+            <TabsTrigger value="esims">eSIMs</TabsTrigger>
+            <TabsTrigger value="account">Profile</TabsTrigger>
+            <TabsTrigger value="settings">Preferences</TabsTrigger>
           </TabsList>
 
           {/* OVERVIEW */}
