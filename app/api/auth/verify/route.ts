@@ -28,7 +28,7 @@ export async function GET(request: NextRequest) {
         id: sessionData.userId,
         name: sessionData.name,
         email: sessionData.email,
-        image: null
+        image: sessionData.image ?? null
       }
     })
 

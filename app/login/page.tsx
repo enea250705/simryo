@@ -8,34 +8,26 @@ import Link from "next/link"
 import { Loader2 } from "lucide-react"
 import { GoogleIcon } from "@/components/icons/google-icon"
 import { toast } from "sonner"
-import { signIn } from "next-auth/react"
+import { useAuth } from "@/lib/serverless-auth"
 
 export default function LoginPage() {
   const router = useRouter()
+  const { signIn } = useAuth()
   const [formData, setFormData] = useState({ email: "", password: "" })
   const [isLoading, setIsLoading] = useState(false)
-  const [isGoogleLoading, setIsGoogleLoading] = useState(false)
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!formData.email || !formData.password) { toast.error("Please fill in all fields"); return }
     setIsLoading(true)
     try {
-      const result = await signIn('credentials', { email: formData.email, password: formData.password, redirect: false })
-      if (result?.error) { toast.error("Invalid email or password.") }
-      else { toast.success("Signed in successfully!"); router.push('/checkout') }
-    } catch { toast.error("Invalid email or password.") }
-    finally { setIsLoading(false) }
-  }
-
-  const handleGoogleLogin = async () => {
-    setIsGoogleLoading(true)
-    try {
-      const result = await signIn('google', { redirect: false })
-      if (result?.error) { toast.error("Google sign-in failed.") }
-      else { toast.success("Signed in with Google!"); router.push('/checkout') }
-    } catch { toast.error("Google sign-in failed.") }
-    finally { setIsGoogleLoading(false) }
+      await signIn(formData.email, formData.password)
+      router.push('/profile')
+    } catch (err: any) {
+      toast.error(err.message || "Invalid email or password.")
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -76,9 +68,9 @@ export default function LoginPage() {
           <div className="flex-1 h-px bg-gray-200" />
         </div>
 
-        <button type="button" onClick={handleGoogleLogin} disabled={isGoogleLoading || isLoading} className="w-full flex items-center justify-center gap-2 border border-gray-200 hover:border-gray-300 bg-white text-gray-700 rounded-xl py-2.5 text-sm font-medium transition-colors disabled:opacity-50">
-          {isGoogleLoading ? <><Loader2 className="h-4 w-4 animate-spin" />Signing in...</> : <><GoogleIcon className="h-4 w-4" />Sign in with Google</>}
-        </button>
+        <a href="/api/auth/google" className="w-full flex items-center justify-center gap-2 border border-gray-200 hover:border-gray-300 bg-white text-gray-700 rounded-xl py-2.5 text-sm font-medium transition-colors">
+          <GoogleIcon className="h-4 w-4" />Sign in with Google
+        </a>
 
         <p className="text-sm text-gray-500 text-center mt-6">
           No account?{" "}

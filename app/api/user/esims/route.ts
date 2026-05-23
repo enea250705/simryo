@@ -1,21 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { getSession } from '@/lib/session'
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    const session = await getServerSession(authOptions)
-    
-    if (!session?.user || !('id' in session.user)) {
-      return NextResponse.json(
-        { success: false, error: 'Authentication required' },
-        { status: 401 }
-      )
+    const session = await getSession()
+    if (!session) {
+      return NextResponse.json({ success: false, error: 'Authentication required' }, { status: 401 })
     }
 
     const esims = await prisma.esim.findMany({
-      where: { userId: (session.user as any).id },
+      where: { userId: session.userId },
       include: {
         plan: {
           select: {
@@ -33,12 +28,7 @@ export async function GET(request: NextRequest) {
             activation: true
           }
         },
-        provider: {
-          select: {
-            name: true,
-            displayName: true
-          }
-        }
+        provider: { select: { name: true, displayName: true } }
       },
       orderBy: { createdAt: 'desc' }
     })
@@ -73,26 +63,9 @@ export async function GET(request: NextRequest) {
       provider: esim.provider.displayName
     }))
 
-    return NextResponse.json({
-      success: true,
-      esims: formattedEsims
-    })
+    return NextResponse.json({ success: true, esims: formattedEsims })
   } catch (error) {
     console.error('eSIMs fetch error:', error)
-    return NextResponse.json(
-      { success: false, error: 'Failed to fetch eSIMs' },
-      { status: 500 }
-    )
+    return NextResponse.json({ success: false, error: 'Failed to fetch eSIMs' }, { status: 500 })
   }
-} 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
+}

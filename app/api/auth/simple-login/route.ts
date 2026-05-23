@@ -28,7 +28,9 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Verify password
+    if (!user.password) {
+      return NextResponse.json({ error: 'Please sign in with Google' }, { status: 401 })
+    }
     const isValid = await bcrypt.compare(password, user.password)
     if (!isValid) {
       return NextResponse.json(

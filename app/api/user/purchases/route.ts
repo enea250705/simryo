@@ -1,22 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
-import { getServerSession } from 'next-auth'
-import { authOptions } from '@/lib/auth'
+import { getSession } from '@/lib/session'
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
-    const session = await getServerSession(authOptions)
-
-    if (!session?.user || !('id' in session.user)) {
-      return NextResponse.json(
-        { success: false, error: 'Authentication required' },
-        { status: 401 }
-      )
+    const session = await getSession()
+    if (!session) {
+      return NextResponse.json({ success: false, error: 'Authentication required' }, { status: 401 })
     }
 
-    // Get user's eSIMs with related data
     const esims = await prisma.esim.findMany({
-      where: { userId: (session.user as any).id },
+      where: { userId: session.userId },
       include: {
         plan: {
           select: {
@@ -34,26 +28,12 @@ export async function GET(request: NextRequest) {
             activation: true
           }
         },
-        provider: {
-          select: {
-            name: true,
-            displayName: true
-          }
-        },
-        order: {
-          select: {
-            id: true,
-            status: true,
-            amount: true,
-            currency: true,
-            createdAt: true
-          }
-        }
+        provider: { select: { name: true, displayName: true } },
+        order: { select: { id: true, status: true, amount: true, currency: true, createdAt: true } }
       },
       orderBy: { createdAt: 'desc' }
     })
 
-    // Transform the data to match the frontend interface
     const purchases = esims.map((esim: any) => ({
       id: esim.id,
       orderId: esim.orderId || 'N/A',
@@ -84,21 +64,9 @@ export async function GET(request: NextRequest) {
       ]
     }))
 
-    return NextResponse.json({
-      success: true,
-      purchases
-    })
+    return NextResponse.json({ success: true, purchases })
   } catch (error) {
     console.error('Purchases fetch error:', error)
-    return NextResponse.json(
-      { success: false, error: 'Failed to fetch purchases' },
-      { status: 500 }
-    )
+    return NextResponse.json({ success: false, error: 'Failed to fetch purchases' }, { status: 500 })
   }
-} 
- 
- 
- 
- 
- 
- 
+}

@@ -11,13 +11,11 @@ import { Separator } from "@/components/ui/separator"
 import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { 
-  User, 
-  Smartphone, 
-  Download, 
-  Calendar, 
-  Globe, 
-  Settings, 
+import {
+  User,
+  Smartphone,
+  Globe,
+  Settings,
   LogOut,
   Edit,
   Save,
@@ -27,16 +25,12 @@ import {
   WifiOff,
   BarChart3,
   Clock,
-  Shield,
-  CreditCard,
   RefreshCw,
-  AlertCircle,
-  CheckCircle,
   ExternalLink
 } from "lucide-react"
 import { toast } from "sonner"
 import { ESIMQRModal } from "@/components/esim-qr-modal"
-import { useSession, signOut } from "next-auth/react"
+import { useAuth } from "@/lib/serverless-auth"
 
 interface UserProfile {
   id: string
@@ -75,8 +69,8 @@ interface EsimData {
 function ProfileContent() {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const { data: session, status } = useSession()
-  const [user, setUser] = useState<UserProfile | null>(null)
+  const { user: authUser, loading: authLoading, signOut } = useAuth()
+  const [profile, setProfile] = useState<UserProfile | null>(null)
   const [esims, setEsims] = useState<EsimData[]>([])
   const [loading, setLoading] = useState(true)
   const [editingProfile, setEditingProfile] = useState(false)
@@ -87,103 +81,47 @@ function ProfileContent() {
   const [selectedEsim, setSelectedEsim] = useState<EsimData | null>(null)
 
   useEffect(() => {
-    // Check for tab parameter in URL
     const tab = searchParams.get('tab')
     if (tab && ['overview', 'esims', 'account', 'settings'].includes(tab)) {
       setActiveTab(tab)
     }
+  }, [searchParams])
 
-    // Load user data once auth is ready
-    if (status === 'loading') return // Still loading
-    
-    if (!session) {
-      // User not authenticated, redirect to login
+  useEffect(() => {
+    if (authLoading) return
+    if (!authUser) {
       router.push('/login')
       return
     }
+    loadProfile()
+  }, [authUser, authLoading])
 
-    // User is authenticated, load their data
-    loadUserData()
-  }, [router, searchParams, session, status])
-
-  const loadUserData = async () => {
-    try {
-      // Use the authenticated user from the session
-      if (session?.user) {
-        const profile: UserProfile = {
-          id: (session.user as any).id || '',
-          name: session.user.name || '',
-          email: session.user.email || '',
-          avatar: session.user.image || undefined,
-          joinDate: new Date().toISOString().split('T')[0], // Default to today
-          totalEsims: 0,
-          totalSpent: 0
-        }
-        
-        setUser(profile)
-        setEditForm({ name: profile.name, email: profile.email })
-        
-        // After user is loaded, load their eSIMs
-        loadUserEsims()
-      }
-    } catch (error) {
-      console.error('Failed to load user data:', error)
-      toast.error('Please log in again')
-      router.push('/login')
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  const loadUserEsims = async () => {
+  const loadProfile = async () => {
     try {
       setLoading(true)
-      
-      if (!user?.id) {
-        setEsims([])
+      const [profileRes, esimRes] = await Promise.all([
+        fetch('/api/user/profile'),
+        fetch('/api/user/purchases')
+      ])
+
+      if (!profileRes.ok) {
+        router.push('/login')
         return
       }
-      
-      // Fetch user's eSIMs from the API
-      const response = await fetch(`/api/user/purchases?userId=${user.id}`)
-      const data = await response.json()
-      
-      if (data.success) {
-        // Transform API data to match our EsimData interface
-        const transformedEsims: EsimData[] = data.purchases.map((purchase: any) => ({
-          id: purchase.id,
-          orderId: purchase.orderId,
-          country: purchase.country,
-          flag: purchase.flag,
-          provider: purchase.provider,
-          planName: purchase.planName,
-          dataAmount: purchase.dataAmount,
-          dataUsed: purchase.dataUsed,
-          dataRemaining: purchase.dataRemaining,
-          usagePercentage: purchase.usagePercentage,
-          status: purchase.status,
-          activationDate: purchase.activationDate,
-          expiryDate: purchase.expiryDate,
-          qrCodeUrl: purchase.qrCodeUrl,
-          activationCode: purchase.activationCode,
-          price: purchase.price,
-          currency: purchase.currency,
-          autoRenew: purchase.autoRenew,
-          isRoaming: purchase.isRoaming,
-          lastUsed: purchase.lastUsed,
-          instructions: purchase.instructions
-        }))
-        
-        setEsims(transformedEsims)
-      } else {
-        console.error('Failed to load purchases:', data.error)
-        toast.error('Failed to load your eSIMs')
-        setEsims([])
+
+      const profileData = await profileRes.json()
+      if (profileData.success) {
+        setProfile(profileData.data)
+        setEditForm({ name: profileData.data.name, email: profileData.data.email })
+      }
+
+      if (esimRes.ok) {
+        const esimData = await esimRes.json()
+        if (esimData.success) setEsims(esimData.purchases)
       }
     } catch (error) {
-      console.error('Failed to load eSIMs:', error)
-      toast.error('Failed to load your eSIMs')
-      setEsims([])
+      console.error('Failed to load profile:', error)
+      toast.error('Failed to load profile')
     } finally {
       setLoading(false)
     }
@@ -191,35 +129,37 @@ function ProfileContent() {
 
   const handleProfileUpdate = async () => {
     try {
-      // In a real app, this would be an API call
-      const updatedUser = { ...user, ...editForm }
-      setUser(updatedUser as UserProfile)
-      localStorage.setItem('user', JSON.stringify(updatedUser))
-      setEditingProfile(false)
-      toast.success('Profile updated successfully!')
-    } catch (error) {
+      const res = await fetch('/api/user/profile', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(editForm)
+      })
+      const data = await res.json()
+      if (data.success) {
+        setProfile(prev => prev ? { ...prev, ...data.data } : prev)
+        setEditingProfile(false)
+        toast.success('Profile updated!')
+      } else {
+        toast.error(data.error || 'Update failed')
+      }
+    } catch {
       toast.error('Failed to update profile')
     }
   }
 
   const handleLogout = async () => {
-    try {
-      await signOut({ redirect: false })
-      toast.success('Logged out successfully')
-      router.push('/')
-    } catch (error) {
-      console.error('Logout error:', error)
-      toast.error('Logout failed')
-    }
+    await signOut()
+    router.push('/')
   }
 
-  const refreshEsimData = async (esimId: string) => {
+  const refreshEsims = async () => {
+    setRefreshing(true)
     try {
-      setRefreshing(true)
-      // In a real app, this would call the provider API to get updated usage data
-      toast.success('eSIM data refreshed')
-    } catch (error) {
-      toast.error('Failed to refresh eSIM data')
+      const res = await fetch('/api/user/purchases')
+      const data = await res.json()
+      if (data.success) setEsims(data.purchases)
+    } catch {
+      toast.error('Failed to refresh')
     } finally {
       setRefreshing(false)
     }
@@ -230,7 +170,6 @@ function ProfileContent() {
       case 'active': return 'bg-green-500'
       case 'expired': return 'bg-red-500'
       case 'pending': return 'bg-yellow-500'
-      case 'inactive': return 'bg-gray-500'
       default: return 'bg-gray-500'
     }
   }
@@ -238,35 +177,32 @@ function ProfileContent() {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'active': return <Wifi className="h-4 w-4" />
-      case 'expired': return <WifiOff className="h-4 w-4" />
       case 'pending': return <Clock className="h-4 w-4" />
-      case 'inactive': return <WifiOff className="h-4 w-4" />
       default: return <WifiOff className="h-4 w-4" />
     }
   }
 
-  if (loading || status === 'loading') {
+  if (authLoading || loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-emerald-50 via-teal-50 to-cyan-50 pt-20">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 pt-20">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
           <div className="text-center">
-            <div className="text-2xl font-semibold text-gray-600">Loading your profile...</div>
+            <RefreshCw className="h-8 w-8 animate-spin text-blue-600 mx-auto" />
+            <p className="mt-4 text-gray-600">Loading your profile...</p>
           </div>
         </div>
       </div>
     )
   }
 
-  if (!user) {
-    return null
-  }
+  if (!profile) return null
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 pt-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">My Profile</h1>
-          <p className="text-gray-600 mt-2">Manage your account and eSIMs</p>
+          <h1 className="text-3xl font-bold text-gray-900">My Account</h1>
+          <p className="text-gray-600 mt-2">Manage your profile and eSIMs</p>
         </div>
 
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
@@ -277,15 +213,13 @@ function ProfileContent() {
             <TabsTrigger value="settings">Settings</TabsTrigger>
           </TabsList>
 
+          {/* OVERVIEW */}
           <TabsContent value="overview" className="space-y-6">
-            {/* Quick Actions */}
             <Card className="bg-gradient-to-r from-blue-500 to-purple-600 text-white">
               <CardHeader>
-                <CardTitle className="flex items-center justify-between">
-                  <div className="flex items-center">
-                    <Globe className="h-5 w-5 mr-2" />
-                    Ready for Your Next Trip?
-                  </div>
+                <CardTitle className="flex items-center">
+                  <Globe className="h-5 w-5 mr-2" />
+                  Ready for Your Next Trip?
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -298,8 +232,7 @@ function ProfileContent() {
                 </Button>
               </CardContent>
             </Card>
-            
-            {/* Profile Summary */}
+
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center">
@@ -310,25 +243,25 @@ function ProfileContent() {
               <CardContent>
                 <div className="flex items-center space-x-4 mb-6">
                   <Avatar className="h-20 w-20">
-                    <AvatarImage src={user.avatar} />
-                    <AvatarFallback className="text-lg">
-                      {user.name.split(' ').map(n => n[0]).join('')}
+                    <AvatarImage src={profile.avatar} />
+                    <AvatarFallback className="text-lg bg-blue-100 text-blue-700">
+                      {profile.name.split(' ').map(n => n[0]).join('')}
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <h2 className="text-2xl font-bold">{user.name}</h2>
-                    <p className="text-gray-600">{user.email}</p>
-                    <p className="text-sm text-gray-500">Member since {new Date(user.joinDate).toLocaleDateString()}</p>
+                    <h2 className="text-2xl font-bold">{profile.name}</h2>
+                    <p className="text-gray-600">{profile.email}</p>
+                    <p className="text-sm text-gray-500">Member since {new Date(profile.joinDate).toLocaleDateString()}</p>
                   </div>
                 </div>
-                
+
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                   <div className="text-center p-4 bg-emerald-50 rounded-lg">
-                    <div className="text-2xl font-bold text-emerald-600">{user.totalEsims}</div>
+                    <div className="text-2xl font-bold text-emerald-600">{profile.totalEsims}</div>
                     <div className="text-sm text-gray-600">Total eSIMs</div>
                   </div>
                   <div className="text-center p-4 bg-blue-50 rounded-lg">
-                    <div className="text-2xl font-bold text-blue-600">${user.totalSpent.toFixed(2)}</div>
+                    <div className="text-2xl font-bold text-blue-600">€{profile.totalSpent.toFixed(2)}</div>
                     <div className="text-sm text-gray-600">Total Spent</div>
                   </div>
                   <div className="text-center p-4 bg-purple-50 rounded-lg">
@@ -339,44 +272,57 @@ function ProfileContent() {
               </CardContent>
             </Card>
 
-            {/* Recent eSIMs */}
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center">
-                  <Smartphone className="h-5 w-5 mr-2" />
-                  Recent eSIMs
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {esims.slice(0, 3).map((esim) => (
-                    <div key={esim.id} className="flex items-center space-x-4 p-4 border rounded-lg">
-                      <span className="text-2xl">{esim.flag}</span>
-                      <div className="flex-1">
-                        <div className="flex items-center space-x-2">
-                          <h3 className="font-semibold">{esim.country}</h3>
-                          <Badge className={`${getStatusColor(esim.status)} text-white`}>
-                            {esim.status}
-                          </Badge>
-                        </div>
-                        <p className="text-sm text-gray-600">{esim.planName}</p>
-                        {esim.status === 'active' && (
-                          <div className="mt-2">
-                            <div className="flex justify-between text-sm text-gray-600 mb-1">
-                              <span>Data Usage</span>
-                              <span>{esim.dataUsed} / {esim.dataAmount}</span>
-                            </div>
-                            <Progress value={esim.usagePercentage} className="h-2" />
+            {esims.length === 0 && (
+              <Card className="border-dashed border-2 border-gray-200">
+                <CardContent className="text-center py-12">
+                  <div className="text-5xl mb-4">📱</div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">No eSIMs yet</h3>
+                  <p className="text-sm text-gray-500 mb-6">Pick a plan for your next destination and get connected instantly.</p>
+                  <Button asChild className="bg-gray-900 hover:bg-gray-800 text-white rounded-xl px-6">
+                    <a href="/plans">Buy eSIM</a>
+                  </Button>
+                </CardContent>
+              </Card>
+            )}
+
+            {esims.length > 0 && (
+              <Card>
+                <CardHeader>
+                  <CardTitle className="flex items-center">
+                    <Smartphone className="h-5 w-5 mr-2" />
+                    Recent eSIMs
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-4">
+                    {esims.slice(0, 3).map((esim) => (
+                      <div key={esim.id} className="flex items-center space-x-4 p-4 border rounded-lg">
+                        <span className="text-2xl">{esim.flag}</span>
+                        <div className="flex-1">
+                          <div className="flex items-center space-x-2">
+                            <h3 className="font-semibold">{esim.country}</h3>
+                            <Badge className={`${getStatusColor(esim.status)} text-white`}>{esim.status}</Badge>
                           </div>
-                        )}
+                          <p className="text-sm text-gray-600">{esim.planName}</p>
+                          {esim.status === 'active' && (
+                            <div className="mt-2">
+                              <div className="flex justify-between text-sm text-gray-600 mb-1">
+                                <span>Data</span>
+                                <span>{esim.dataUsed} / {esim.dataAmount}</span>
+                              </div>
+                              <Progress value={esim.usagePercentage} className="h-2" />
+                            </div>
+                          )}
+                        </div>
                       </div>
-                    </div>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            )}
           </TabsContent>
 
+          {/* MY ESIMS */}
           <TabsContent value="esims" className="space-y-6">
             <Card>
               <CardHeader>
@@ -385,7 +331,7 @@ function ProfileContent() {
                     <Smartphone className="h-5 w-5 mr-2" />
                     My eSIMs ({esims.length})
                   </div>
-                  <Button onClick={() => loadUserEsims()} disabled={refreshing}>
+                  <Button onClick={refreshEsims} disabled={refreshing} variant="outline" size="sm">
                     <RefreshCw className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
                     Refresh
                   </Button>
@@ -407,109 +353,65 @@ function ProfileContent() {
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     {esims.map((esim) => (
-                    <Card key={esim.id} className="border-2">
-                      <CardHeader className="pb-3">
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center space-x-2">
-                            <span className="text-2xl">{esim.flag}</span>
-                            <div>
-                              <h3 className="font-semibold">{esim.country}</h3>
-                              <p className="text-sm text-gray-600">{esim.provider}</p>
+                      <Card key={esim.id} className="border-2">
+                        <CardHeader className="pb-3">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center space-x-2">
+                              <span className="text-2xl">{esim.flag}</span>
+                              <div>
+                                <h3 className="font-semibold">{esim.country}</h3>
+                                <p className="text-sm text-gray-600">{esim.provider}</p>
+                              </div>
                             </div>
+                            <Badge className={`${getStatusColor(esim.status)} text-white flex items-center gap-1`}>
+                              {getStatusIcon(esim.status)}
+                              <span className="capitalize">{esim.status}</span>
+                            </Badge>
                           </div>
-                          <Badge className={`${getStatusColor(esim.status)} text-white`}>
-                            {getStatusIcon(esim.status)}
-                            <span className="ml-1 capitalize">{esim.status}</span>
-                          </Badge>
-                        </div>
-                      </CardHeader>
-                      <CardContent className="space-y-4">
-                        <div>
-                          <div className="flex justify-between text-sm">
-                            <span>Plan:</span>
-                            <span className="font-medium">{esim.planName}</span>
+                        </CardHeader>
+                        <CardContent className="space-y-4">
+                          <div className="space-y-1 text-sm">
+                            <div className="flex justify-between"><span className="text-gray-500">Plan</span><span className="font-medium">{esim.planName}</span></div>
+                            <div className="flex justify-between"><span className="text-gray-500">Price</span><span className="font-medium">€{esim.price}</span></div>
+                            {esim.activationDate && (
+                              <div className="flex justify-between"><span className="text-gray-500">Activated</span><span>{new Date(esim.activationDate).toLocaleDateString()}</span></div>
+                            )}
+                            <div className="flex justify-between"><span className="text-gray-500">Expires</span><span>{new Date(esim.expiryDate).toLocaleDateString()}</span></div>
                           </div>
-                          <div className="flex justify-between text-sm">
-                            <span>Price:</span>
-                            <span className="font-medium">${esim.price}</span>
-                          </div>
-                          {esim.activationDate && (
-                            <div className="flex justify-between text-sm">
-                              <span>Activated:</span>
-                              <span>{new Date(esim.activationDate).toLocaleDateString()}</span>
-                            </div>
-                          )}
-                          <div className="flex justify-between text-sm">
-                            <span>Expires:</span>
-                            <span>{new Date(esim.expiryDate).toLocaleDateString()}</span>
-                          </div>
-                        </div>
 
-                        {esim.status === 'active' && (
-                          <div>
-                            <div className="flex justify-between text-sm mb-2">
-                              <span>Data Usage:</span>
-                              <span>{esim.dataUsed} / {esim.dataAmount}</span>
-                            </div>
-                            <Progress value={esim.usagePercentage} className="h-2 mb-2" />
-                            <div className="text-xs text-gray-500">
-                              {esim.dataRemaining} remaining
-                            </div>
-                          </div>
-                        )}
-
-                        <Separator />
-
-                        <div className="space-y-2">
-                          <Button 
-                            variant="outline" 
-                            className="w-full" 
-                            size="sm"
-                            onClick={() => {
-                              setSelectedEsim(esim)
-                              setIsQRModalOpen(true)
-                            }}
-                          >
-                            <QrCode className="h-4 w-4 mr-2" />
-                            View QR Code
-                          </Button>
-                          <Button 
-                            variant="outline" 
-                            className="w-full" 
-                            size="sm"
-                            onClick={() => {
-                              setSelectedEsim(esim)
-                              setIsQRModalOpen(true)
-                            }}
-                          >
-                            <ExternalLink className="h-4 w-4 mr-2" />
-                            Setup Instructions
-                          </Button>
                           {esim.status === 'active' && (
-                            <Button 
-                              variant="outline" 
-                              className="w-full" 
-                              size="sm"
-                              onClick={() => refreshEsimData(esim.id)}
-                            >
-                              <RefreshCw className="h-4 w-4 mr-2" />
-                              Refresh Data
-                            </Button>
+                            <div>
+                              <div className="flex justify-between text-sm mb-1">
+                                <span className="text-gray-500">Data</span>
+                                <span>{esim.dataUsed} / {esim.dataAmount}</span>
+                              </div>
+                              <Progress value={esim.usagePercentage} className="h-2 mb-1" />
+                              <p className="text-xs text-gray-500">{esim.dataRemaining} remaining</p>
+                            </div>
                           )}
-                        </div>
 
-                        <div className="text-xs text-gray-500">
-                          Order ID: {esim.orderId}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+                          <Separator />
+
+                          <div className="space-y-2">
+                            <Button variant="outline" className="w-full" size="sm" onClick={() => { setSelectedEsim(esim); setIsQRModalOpen(true) }}>
+                              <QrCode className="h-4 w-4 mr-2" />View QR Code
+                            </Button>
+                            <Button variant="outline" className="w-full" size="sm" onClick={() => { setSelectedEsim(esim); setIsQRModalOpen(true) }}>
+                              <ExternalLink className="h-4 w-4 mr-2" />Setup Instructions
+                            </Button>
+                          </div>
+
+                          <p className="text-xs text-gray-400">Order: {esim.orderId}</p>
+                        </CardContent>
+                      </Card>
+                    ))}
                   </div>
                 )}
               </CardContent>
             </Card>
           </TabsContent>
 
+          {/* ACCOUNT */}
           <TabsContent value="account" className="space-y-6">
             <Card>
               <CardHeader>
@@ -519,19 +421,16 @@ function ProfileContent() {
                     Account Information
                   </div>
                   {!editingProfile ? (
-                    <Button onClick={() => setEditingProfile(true)} variant="outline">
-                      <Edit className="h-4 w-4 mr-2" />
-                      Edit
+                    <Button onClick={() => setEditingProfile(true)} variant="outline" size="sm">
+                      <Edit className="h-4 w-4 mr-2" />Edit
                     </Button>
                   ) : (
                     <div className="space-x-2">
                       <Button onClick={handleProfileUpdate} size="sm">
-                        <Save className="h-4 w-4 mr-2" />
-                        Save
+                        <Save className="h-4 w-4 mr-2" />Save
                       </Button>
                       <Button onClick={() => setEditingProfile(false)} variant="outline" size="sm">
-                        <X className="h-4 w-4 mr-2" />
-                        Cancel
+                        <X className="h-4 w-4 mr-2" />Cancel
                       </Button>
                     </div>
                   )}
@@ -540,43 +439,34 @@ function ProfileContent() {
               <CardContent className="space-y-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
-                    <Label htmlFor="name">Full Name</Label>
+                    <Label>Full Name</Label>
                     {editingProfile ? (
-                      <Input
-                        id="name"
-                        value={editForm.name}
-                        onChange={(e) => setEditForm({...editForm, name: e.target.value})}
-                      />
+                      <Input value={editForm.name} onChange={(e) => setEditForm({ ...editForm, name: e.target.value })} className="mt-1" />
                     ) : (
-                      <div className="p-2 border rounded-md bg-gray-50">{user.name}</div>
+                      <div className="p-2 border rounded-md bg-gray-50 mt-1">{profile.name}</div>
                     )}
                   </div>
                   <div>
-                    <Label htmlFor="email">Email Address</Label>
+                    <Label>Email Address</Label>
                     {editingProfile ? (
-                      <Input
-                        id="email"
-                        type="email"
-                        value={editForm.email}
-                        onChange={(e) => setEditForm({...editForm, email: e.target.value})}
-                      />
+                      <Input type="email" value={editForm.email} onChange={(e) => setEditForm({ ...editForm, email: e.target.value })} className="mt-1" />
                     ) : (
-                      <div className="p-2 border rounded-md bg-gray-50">{user.email}</div>
+                      <div className="p-2 border rounded-md bg-gray-50 mt-1">{profile.email}</div>
                     )}
                   </div>
                 </div>
-                
+
                 <Separator />
-                
+
                 <div>
-                  <h3 className="font-semibold mb-2">Account Statistics</h3>
+                  <h3 className="font-semibold mb-3">Statistics</h3>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div className="text-center p-3 bg-gray-50 rounded-lg">
-                      <div className="font-bold text-lg">{user.totalEsims}</div>
+                      <div className="font-bold text-lg">{profile.totalEsims}</div>
                       <div className="text-sm text-gray-600">Total eSIMs</div>
                     </div>
                     <div className="text-center p-3 bg-gray-50 rounded-lg">
-                      <div className="font-bold text-lg">${user.totalSpent.toFixed(2)}</div>
+                      <div className="font-bold text-lg">€{profile.totalSpent.toFixed(2)}</div>
                       <div className="text-sm text-gray-600">Total Spent</div>
                     </div>
                     <div className="text-center p-3 bg-gray-50 rounded-lg">
@@ -584,7 +474,7 @@ function ProfileContent() {
                       <div className="text-sm text-gray-600">Active eSIMs</div>
                     </div>
                     <div className="text-center p-3 bg-gray-50 rounded-lg">
-                      <div className="font-bold text-lg">{new Date(user.joinDate).getFullYear()}</div>
+                      <div className="font-bold text-lg">{new Date(profile.joinDate).getFullYear()}</div>
                       <div className="text-sm text-gray-600">Member Since</div>
                     </div>
                   </div>
@@ -593,6 +483,7 @@ function ProfileContent() {
             </Card>
           </TabsContent>
 
+          {/* SETTINGS */}
           <TabsContent value="settings" className="space-y-6">
             <Card>
               <CardHeader>
@@ -610,9 +501,7 @@ function ProfileContent() {
                     </div>
                     <Button variant="outline" size="sm">Configure</Button>
                   </div>
-                  
                   <Separator />
-                  
                   <div className="flex items-center justify-between">
                     <div>
                       <h3 className="font-medium">Auto-Renewal</h3>
@@ -620,9 +509,7 @@ function ProfileContent() {
                     </div>
                     <Button variant="outline" size="sm">Manage</Button>
                   </div>
-                  
                   <Separator />
-                  
                   <div className="flex items-center justify-between">
                     <div>
                       <h3 className="font-medium">Data Usage Alerts</h3>
@@ -630,39 +517,23 @@ function ProfileContent() {
                     </div>
                     <Button variant="outline" size="sm">Set Alerts</Button>
                   </div>
-                  
-                  <Separator />
-                  
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="font-medium">Privacy Settings</h3>
-                      <p className="text-sm text-gray-600">Control your data and privacy preferences</p>
-                    </div>
-                    <Button variant="outline" size="sm">Manage</Button>
-                  </div>
                 </div>
-                
+
                 <Separator />
-                
-                <div className="pt-4">
-                  <Button onClick={handleLogout} variant="destructive" className="w-full">
-                    <LogOut className="h-4 w-4 mr-2" />
-                    Sign Out
-                  </Button>
-                </div>
+
+                <Button onClick={handleLogout} variant="destructive" className="w-full">
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Sign Out
+                </Button>
               </CardContent>
             </Card>
           </TabsContent>
         </Tabs>
       </div>
-      
-      {/* eSIM QR Modal */}
+
       <ESIMQRModal
         isOpen={isQRModalOpen}
-        onClose={() => {
-          setIsQRModalOpen(false)
-          setSelectedEsim(null)
-        }}
+        onClose={() => { setIsQRModalOpen(false); setSelectedEsim(null) }}
         esimData={selectedEsim ? {
           iccid: selectedEsim.id,
           qrCodeUrl: selectedEsim.qrCodeUrl,
@@ -670,7 +541,7 @@ function ProfileContent() {
           planName: selectedEsim.planName,
           country: selectedEsim.country,
           dataAmount: selectedEsim.dataAmount,
-          days: Math.ceil((new Date(selectedEsim.expiryDate).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)),
+          days: Math.ceil((new Date(selectedEsim.expiryDate).getTime() - Date.now()) / (1000 * 60 * 60 * 24)),
           price: selectedEsim.price,
           currency: selectedEsim.currency,
           expiresAt: selectedEsim.expiryDate
@@ -682,18 +553,12 @@ function ProfileContent() {
 
 export default function ProfilePage() {
   return (
-    <Suspense fallback={<div className="p-8"><div className="flex items-center justify-center h-64"><RefreshCw className="h-8 w-8 animate-spin text-emerald-600" /></div></div>}>
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <RefreshCw className="h-8 w-8 animate-spin text-blue-600" />
+      </div>
+    }>
       <ProfileContent />
     </Suspense>
   )
-} 
- 
- 
- 
- 
- 
- 
- 
- 
- 
- 
+}
