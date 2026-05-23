@@ -95,16 +95,6 @@ const companyItems = [
     href: "/blog", 
     description: "Travel tips and guides",
   },
-  {
-    title: "Careers",
-    href: "/careers",
-    description: "Join our team",
-  },
-  {
-    title: "Press",
-    href: "/press",
-    description: "Media resources",
-  },
 ]
 
 export function Navbar() {
