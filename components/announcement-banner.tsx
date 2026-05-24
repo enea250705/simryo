@@ -1,6 +1,6 @@
 "use client"
 
-import Link from "next/link"
+import { useState } from "react"
 
 const messages = [
   "🔥 30% off all plans this week only",
@@ -14,11 +14,23 @@ const messages = [
 const track = [...messages, ...messages]
 
 export function AnnouncementBanner() {
+  const [isPaused, setIsPaused] = useState(false)
+
+  const resume = () => setIsPaused(false)
+  const pause = () => setIsPaused(true)
+
   return (
     <div className="fixed top-0 left-0 right-0 z-[60] h-9 bg-zinc-900 overflow-hidden flex items-center">
-      <div className="flex whitespace-nowrap animate-marquee">
+      <div
+        className="flex whitespace-nowrap animate-marquee"
+        style={{ animationPlayState: isPaused ? "paused" : "running" }}
+        onPointerDown={pause}
+        onPointerUp={resume}
+        onPointerLeave={resume}
+        onPointerCancel={resume}
+      >
         {track.map((msg, i) => (
-          <span key={i} className="inline-flex items-center gap-6 px-8 text-xs font-medium text-white">
+          <span key={i} className="inline-flex items-center gap-4 px-6 text-sm sm:text-xs font-medium text-white">
             {msg}
             <span className="text-zinc-600 text-[10px]">✦</span>
           </span>
@@ -37,7 +49,7 @@ export function AnnouncementBanner() {
         }
         @media (max-width: 768px) {
           .animate-marquee {
-            animation-duration: 260s;
+            animation-duration: 340s;
           }
         }
       `}</style>
