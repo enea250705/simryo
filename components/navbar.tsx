@@ -484,21 +484,24 @@ export function Navbar() {
                 ))}
               </nav>
 
-              <div className="px-4 pb-6 pt-2 border-t border-gray-100 space-y-3">
+              <div className="px-4 pb-6 pt-2 border-t border-gray-100">
                 {!session && (
-                  <div className="grid grid-cols-2 gap-2">
-                    <Link href="/login" onClick={() => setIsOpen(false)}>
-                      <Button variant="outline" className="w-full border-gray-300 text-gray-700 font-medium">
-                        <LogIn className="h-4 w-4 mr-1.5" />
-                        Login
-                      </Button>
-                    </Link>
-                    <Link href="/signup" onClick={() => setIsOpen(false)}>
-                      <Button variant="outline" className="w-full border-gray-300 text-gray-700 font-medium">
-                        Register
-                      </Button>
-                    </Link>
-                  </div>
+                  <>
+                    <div className="grid grid-cols-2 gap-2 mb-4">
+                      <Link href="/login" onClick={() => setIsOpen(false)}>
+                        <Button variant="outline" className="w-full border-gray-300 text-gray-700 font-medium">
+                          <LogIn className="h-4 w-4 mr-1.5" />
+                          Login
+                        </Button>
+                      </Link>
+                      <Link href="/signup" onClick={() => setIsOpen(false)}>
+                        <Button variant="outline" className="w-full border-gray-300 text-gray-700 font-medium">
+                          Register
+                        </Button>
+                      </Link>
+                    </div>
+                    <Separator className="mb-4" />
+                  </>
                 )}
                 <Link href="/plans" onClick={() => setIsOpen(false)}>
                   <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 text-base font-semibold rounded-xl">

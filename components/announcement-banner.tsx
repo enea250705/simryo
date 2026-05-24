@@ -35,6 +35,11 @@ export function AnnouncementBanner() {
         .animate-marquee:hover {
           animation-play-state: paused;
         }
+        @media (max-width: 768px) {
+          .animate-marquee {
+            animation-duration: 260s;
+          }
+        }
       `}</style>
     </div>
   )
