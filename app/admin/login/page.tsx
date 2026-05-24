@@ -23,6 +23,7 @@ export default function AdminLoginPage() {
       const response = await fetch('/api/admin/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ email, password })
       })
 
@@ -32,7 +33,8 @@ export default function AdminLoginPage() {
       if (data.success) {
         localStorage.setItem('admin_token', data.token)
         toast.success('Login successful!')
-        router.push('/admin')
+        window.location.href = '/admin'
+        return
       } else {
         toast.error(`Login failed: ${data.error || 'Invalid credentials'}`)
       }
