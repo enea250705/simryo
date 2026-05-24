@@ -1,14 +1,14 @@
 "use client"
 
-const mobileMessage = "🔥 30% off all plans this week — use code SIMRYO30"
+const mobileMessage = "🔥 30% off all plans this week only"
 
 const desktopMessages = [
   "🔥 30% off all plans this week only",
   "✈️ Get connected before you land",
   "🌍 Works in 190+ countries",
   "📱 No contracts. No roaming bills.",
-  "⚡ Use code SIMRYO30 at checkout",
-  "🛜 4G & 5G speeds wherever you go",
+  "⚡ Discount applied automatically at checkout",
+  "🛜 4G and 5G speeds wherever you go",
 ]
 
 const track = [...desktopMessages, ...desktopMessages]
