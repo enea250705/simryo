@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Search, Clock, Calendar, ArrowRight } from "lucide-react"
 
@@ -203,8 +203,33 @@ const categories = ["All", "Travel Guides", "eSIM Technology", "Digital Nomad", 
 export default function BlogPage() {
   const [search, setSearch] = useState("")
   const [category, setCategory] = useState("All")
+  const [dbPosts, setDbPosts] = useState<BlogPost[]>([])
 
-  const filtered = posts.filter(p => {
+  useEffect(() => {
+    fetch("/api/blog/posts")
+      .then(r => r.json())
+      .then(d => {
+        if (d.success && Array.isArray(d.posts)) {
+          setDbPosts(d.posts.map((p: any) => ({
+            slug: p.slug,
+            title: p.title,
+            excerpt: p.excerpt,
+            image: p.image,
+            category: p.category,
+            author: p.author,
+            publishedAt: p.publishedAt,
+            readTime: p.readTime,
+          })))
+        }
+      })
+      .catch(() => {})
+  }, [])
+
+  const allPosts = [...dbPosts, ...posts].sort(
+    (a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+  )
+
+  const filtered = allPosts.filter(p => {
     const matchCat = category === "All" || p.category === category
     const matchSearch = !search.trim() ||
       p.title.toLowerCase().includes(search.toLowerCase()) ||

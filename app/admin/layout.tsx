@@ -4,7 +4,7 @@ import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { 
+import {
   LayoutDashboard,
   ShoppingCart,
   Users,
@@ -16,7 +16,8 @@ import {
   X,
   LogOut,
   Bell,
-  Search
+  Search,
+  BookOpen
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 
@@ -24,6 +25,7 @@ const navigation = [
   { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
   { name: 'Orders', href: '/admin/orders', icon: ShoppingCart },
   { name: 'Customers', href: '/admin/customers', icon: Users },
+  { name: 'Blog', href: '/admin/blog', icon: BookOpen },
   { name: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
   { name: 'Providers', href: '/admin/providers', icon: Wifi },
   { name: 'Settings', href: '/admin/settings', icon: Settings },
