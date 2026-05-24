@@ -5,12 +5,15 @@ export async function POST(request: NextRequest) {
   try {
     const { email, password } = await request.json()
 
+    const inputEmail = String(email || '').trim().toLowerCase()
+    const inputPassword = String(password || '').trim()
+
     // Simple admin credentials - you can change these
-    const ADMIN_EMAIL = process.env.ADMIN_EMAIL || 'admin@simryo.com'
-    const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'admin123'
+    const ADMIN_EMAIL = String(process.env.ADMIN_EMAIL || 'admin@simryo.com').trim().toLowerCase()
+    const ADMIN_PASSWORD = String(process.env.ADMIN_PASSWORD || 'admin123').trim()
     const JWT_SECRET = process.env.JWT_SECRET || 'your-jwt-secret-key'
 
-    if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+    if (inputEmail === ADMIN_EMAIL && inputPassword === ADMIN_PASSWORD) {
       // Create JWT token
       const token = jwt.sign(
         { email, role: 'admin' },
