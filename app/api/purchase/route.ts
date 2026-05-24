@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { EsimAccessProvider } from '@/lib/services/providers/esim-access'
 import { prisma } from '@/lib/db'
+import { stripe } from '@/lib/services/stripe'
+
+const EUR_TO_USD = 1.09
+const AMOUNT_TOLERANCE = 0.10 // allow 10% tolerance for rounding/FX
 
 // Initialize eSIM Access provider
 const esimAccessProvider = new EsimAccessProvider({
@@ -35,6 +39,63 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { success: false, error: 'Customer email is required' },
         { status: 400 }
+      )
+    }
+
+    // Verify payment intent: status + amount matches server-set metadata
+    if (!paymentIntentId) {
+      return NextResponse.json({ success: false, error: 'Missing payment reference' }, { status: 400 })
+    }
+
+    try {
+      const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId)
+
+      if (paymentIntent.status !== 'succeeded') {
+        return NextResponse.json(
+          { success: false, error: 'Payment not completed' },
+          { status: 402 }
+        )
+      }
+
+      const chargedUsd = paymentIntent.amount / 100
+
+      // Primary check: compare against server-set metadata (tamper-proof)
+      const metaExpected = paymentIntent.metadata?.expectedAmountUsd
+        ? parseFloat(paymentIntent.metadata.expectedAmountUsd)
+        : null
+
+      if (metaExpected !== null) {
+        const ratio = chargedUsd / metaExpected
+        if (ratio < (1 - AMOUNT_TOLERANCE) || ratio > (1 + AMOUNT_TOLERANCE)) {
+          console.error(`Amount mismatch: charged $${chargedUsd}, metadata expected $${metaExpected} (ratio ${ratio.toFixed(3)})`)
+          return NextResponse.json(
+            { success: false, error: 'Payment amount does not match order total. Contact support.' },
+            { status: 402 }
+          )
+        }
+      } else {
+        // Fallback: compare against item prices (older intents without metadata)
+        const expectedEur = orderItems.reduce(
+          (sum: number, item: any) => sum + (item.plan?.price ?? 0) * (item.quantity ?? 1),
+          0
+        )
+        const expectedUsd = expectedEur * EUR_TO_USD
+        const ratio = chargedUsd / expectedUsd
+        if (ratio < (1 - AMOUNT_TOLERANCE) || ratio > (1 + AMOUNT_TOLERANCE)) {
+          console.error(`Amount mismatch (fallback): charged $${chargedUsd}, expected $${expectedUsd.toFixed(2)} (ratio ${ratio.toFixed(3)})`)
+          return NextResponse.json(
+            { success: false, error: 'Payment amount does not match order total. Contact support.' },
+            { status: 402 }
+          )
+        }
+      }
+
+      console.log(`Payment verified: $${chargedUsd} for intent ${paymentIntentId}`)
+    } catch (stripeErr) {
+      console.error('Stripe verification error:', stripeErr)
+      return NextResponse.json(
+        { success: false, error: 'Could not verify payment. Contact support.' },
+        { status: 402 }
       )
     }
 

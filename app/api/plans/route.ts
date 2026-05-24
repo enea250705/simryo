@@ -1,6 +1,7 @@
 // API Route: GET /api/plans - Fetch all plans from all providers
 import { NextRequest, NextResponse } from 'next/server'
 import { ProviderManager } from '@/lib/services/provider-manager'
+import { prisma } from '@/lib/db'
 
 export async function GET(request: NextRequest) {
   try {
@@ -33,6 +34,9 @@ export async function GET(request: NextRequest) {
       })
     }
 
+    // Cache plan prices for server-side checkout verification (fire-and-forget)
+    cachePlanPrices(plans).catch(err => console.warn('PlanCache upsert failed:', err))
+
     return NextResponse.json({
       success: true,
       plans,
@@ -54,6 +58,26 @@ export async function GET(request: NextRequest) {
       { status: 500 }
     )
   }
+}
+
+async function cachePlanPrices(plans: any[]) {
+  const flat: any[] = []
+  for (const p of plans) {
+    // plans page returns country objects with nested plans array
+    if (Array.isArray(p.plans)) flat.push(...p.plans)
+    else if (Array.isArray(p.allPlans)) flat.push(...p.allPlans)
+    else flat.push(p)
+  }
+  const ops = flat
+    .filter((p: any) => p.id && typeof p.price === 'number' && p.price > 0)
+    .map((p: any) =>
+      prisma.planCache.upsert({
+        where: { externalId: p.id },
+        update: { priceEur: p.price, country: p.country || '', data: p.data || '', days: p.days || 0, cachedAt: new Date() },
+        create: { externalId: p.id, priceEur: p.price, country: p.country || '', data: p.data || '', days: p.days || 0 },
+      })
+    )
+  if (ops.length > 0) await prisma.$transaction(ops)
 }
 
 export async function POST(request: Request) {

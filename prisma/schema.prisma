@@ -142,6 +142,16 @@ model Session {
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
+// Caches real plan prices fetched from provider API — used to verify checkout amounts server-side
+model PlanCache {
+  externalId String   @id        // e.g. "ea-PACKAGECODE"
+  priceEur   Float
+  country    String
+  data       String
+  days       Int
+  cachedAt   DateTime @default(now())
+}
+
 model VerificationToken {
   identifier String
   token      String   @unique

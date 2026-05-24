@@ -111,7 +111,7 @@ ACTION REQUIRED: Process and send eSIM to ${customerInfo.email} within 10-15 min
     `
 
     const { data, error } = await resend.emails.send({
-      from: 'SIMRYO Orders <orders@simryo.com>',
+      from: process.env.EMAIL_FROM || 'SIMRYO Orders <onboarding@resend.dev>',
       to: [adminEmail],
       subject: `🚨 URGENT: New eSIM Order - ${customerInfo.name} - $${totalAmount}`,
       html: emailHtml,

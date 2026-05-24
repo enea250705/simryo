@@ -10,6 +10,7 @@ import dynamic from "next/dynamic"
 import { ThemeProvider } from "@/components/theme-provider"
 import { CurrencyProvider } from "@/lib/contexts/currency-context"
 import { AuthProvider } from "@/components/auth-provider"
+import { AnnouncementBanner } from "@/components/announcement-banner"
 import { WebVitals } from "@/components/web-vitals"
 import { GoogleAnalytics, GoogleAnalyticsPageView } from "@/components/analytics/google-analytics"
 import { Toaster } from "@/components/ui/sonner"
@@ -453,8 +454,9 @@ export default function RootLayout({
             <ErrorBoundary>
               <a href="#main-content" className="skip-link">Skip to main content</a>
               <div className="relative min-h-screen bg-background">
+                <AnnouncementBanner />
           <Navbar />
-                <main id="main-content" className="relative">
+                <main id="main-content" className="relative pt-9">
                   <PageAnimation>{children}</PageAnimation>
                 </main>
           <Footer />

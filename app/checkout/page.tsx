@@ -86,12 +86,11 @@ function CheckoutFlow() {
 
   useEffect(() => {
     if (orderItems.length > 0) {
-      const total = orderItems.reduce((acc, item) => acc + item.plan.price * item.quantity, 0)
-      const totalInUSD = convertPrice(total, 'EUR', 'USD')
+      // Send items — server computes the amount, never trust client-supplied total
       fetch('/api/create-payment-intent', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ amount: totalInUSD }),
+        body: JSON.stringify({ items: orderItems }),
       })
         .then(res => res.json())
         .then(data => {

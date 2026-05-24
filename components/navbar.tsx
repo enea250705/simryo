@@ -160,9 +160,9 @@ export function Navbar() {
   }, [isOpen])
 
   const navbarClasses = cn(
-    "fixed w-full z-50 transition-all duration-300 top-0",
-    isScrolled 
-      ? "bg-white/95 backdrop-blur-lg border-b border-gray-200 shadow-sm" 
+    "fixed w-full z-50 transition-all duration-300 top-9",
+    isScrolled
+      ? "bg-white/95 backdrop-blur-lg border-b border-gray-200 shadow-sm"
       : "bg-white/80 backdrop-blur-md border-b border-gray-100"
   )
 
@@ -321,7 +321,7 @@ export function Navbar() {
 
 
           {/* Right Side Actions */}
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-3">
             {/* Cart */}
             <Link href="/cart" className="relative p-2 text-gray-700 hover:text-blue-600 transition-colors">
               <ShoppingCart className="h-6 w-6" />
@@ -332,10 +332,33 @@ export function Navbar() {
               ) : null}
             </Link>
 
+            {/* Auth: login/register or account link */}
+            {!session ? (
+              <>
+                <Link href="/login">
+                  <Button variant="ghost" className="text-gray-700 hover:text-blue-600 font-medium">
+                    <LogIn className="h-4 w-4 mr-1.5" />
+                    Login
+                  </Button>
+                </Link>
+                <Link href="/signup">
+                  <Button variant="outline" className="border-gray-300 text-gray-700 hover:border-blue-600 hover:text-blue-600 font-medium">
+                    Register
+                  </Button>
+                </Link>
+              </>
+            ) : (
+              <Link href="/profile">
+                <Button variant="ghost" className="text-gray-700 hover:text-blue-600 font-medium">
+                  <User className="h-4 w-4 mr-1.5" />
+                  Account
+                </Button>
+              </Link>
+            )}
 
             {/* Buy Now Button */}
             <Link href="/plans">
-              <Button 
+              <Button
                 className="bg-blue-600 hover:bg-blue-700 text-white"
                 onClick={() => {
                   try {
@@ -417,7 +440,7 @@ export function Navbar() {
           <div
             id="mobile-menu"
             className={cn(
-              "fixed inset-0 top-16 z-40 transition-all duration-300",
+              "fixed inset-0 top-[100px] z-40 transition-all duration-300",
               isOpen ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"
             )}
           >
@@ -461,7 +484,22 @@ export function Navbar() {
                 ))}
               </nav>
 
-              <div className="px-4 pb-6 pt-2 border-t border-gray-100">
+              <div className="px-4 pb-6 pt-2 border-t border-gray-100 space-y-3">
+                {!session && (
+                  <div className="grid grid-cols-2 gap-2">
+                    <Link href="/login" onClick={() => setIsOpen(false)}>
+                      <Button variant="outline" className="w-full border-gray-300 text-gray-700 font-medium">
+                        <LogIn className="h-4 w-4 mr-1.5" />
+                        Login
+                      </Button>
+                    </Link>
+                    <Link href="/signup" onClick={() => setIsOpen(false)}>
+                      <Button variant="outline" className="w-full border-gray-300 text-gray-700 font-medium">
+                        Register
+                      </Button>
+                    </Link>
+                  </div>
+                )}
                 <Link href="/plans" onClick={() => setIsOpen(false)}>
                   <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 text-base font-semibold rounded-xl">
                     Browse Plans
