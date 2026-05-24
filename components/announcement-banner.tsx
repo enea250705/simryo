@@ -43,13 +43,24 @@ export function AnnouncementBanner() {
         }
         .animate-marquee {
           animation: marquee 80s linear infinite;
+          animation-timing-function: linear;
         }
         .animate-marquee:hover {
           animation-play-state: paused;
         }
+        @media (max-width: 1024px) {
+          .animate-marquee {
+            animation-duration: 180s;
+          }
+        }
         @media (max-width: 768px) {
           .animate-marquee {
-            animation-duration: 340s;
+            animation-duration: 320s;
+          }
+        }
+        @media (max-width: 640px) {
+          .animate-marquee {
+            animation-duration: 520s;
           }
         }
       `}</style>
