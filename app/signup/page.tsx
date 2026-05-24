@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import Link from "next/link"
 import { Loader2 } from "lucide-react"
+import { GoogleIcon } from "@/components/icons/google-icon"
 import { toast } from "sonner"
 
 function SignupForm() {
@@ -83,6 +84,16 @@ function SignupForm() {
             {isLoading ? <><Loader2 className="h-4 w-4 animate-spin" />Creating account...</> : "Create account"}
           </button>
         </form>
+
+        <div className="flex items-center gap-3 my-5">
+          <div className="flex-1 h-px bg-gray-200" />
+          <span className="text-xs text-gray-400">or</span>
+          <div className="flex-1 h-px bg-gray-200" />
+        </div>
+
+        <a href="/api/auth/google" className="w-full flex items-center justify-center gap-2 border border-gray-200 hover:border-gray-300 bg-white text-gray-700 rounded-xl py-2.5 text-sm font-medium transition-colors">
+          <GoogleIcon className="h-4 w-4" />Continue with Google
+        </a>
 
         <p className="text-sm text-gray-500 text-center mt-6">
           Already have an account?{" "}

@@ -1,5 +1,6 @@
+import Image from "next/image"
 import Link from "next/link"
-import { Globe, Twitter, Facebook, Instagram, Mail, Linkedin, Youtube } from "lucide-react"
+import { Mail, Twitter, Facebook, Instagram, Linkedin, Youtube } from "lucide-react"
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
@@ -27,25 +28,28 @@ export function Footer() {
   ]
 
   return (
-    <footer className="bg-gray-900 text-white">
+    <footer className="bg-black text-white border-t border-slate-800">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           {/* Company Info */}
           <div>
-            <div className="flex items-center space-x-3 mb-6">
-              <div className="relative">
-                <Globe className="h-10 w-10 text-blue-500" />
-                <div className="absolute -top-1 -right-1 w-4 h-4 bg-orange-500 rounded-full animate-pulse" />
-              </div>
-              <span className="font-bold text-2xl">SIMRYO</span>
+            <div className="flex items-center gap-3 mb-4">
+              <Image
+                src="/simryologo.png"
+                alt="SIMRYO logo"
+                width={36}
+                height={36}
+                className="object-contain"
+              />
+              <span className="font-semibold text-lg text-white">SIMRYO</span>
             </div>
             
-            <p className="text-gray-300 mb-6 text-sm leading-relaxed">
-              Global eSIM marketplace connecting travelers to premium mobile networks worldwide.
+            <p className="text-slate-300 mb-6 text-sm leading-relaxed">
+              A clean, easy-to-use global eSIM service for travelers who need reliable mobile data.
             </p>
 
-            <div className="flex items-center space-x-3 text-sm text-gray-300 mb-6">
-              <Mail className="h-4 w-4 text-blue-500" />
+            <div className="flex items-center gap-2 text-sm text-slate-300 mb-6">
+              <Mail className="h-4 w-4 text-slate-300" />
               <span>info@simryo.com</span>
             </div>
 
@@ -59,7 +63,7 @@ export function Footer() {
                 <li key={link.name}>
                   <Link 
                     href={link.href} 
-                    className="text-sm text-gray-300 hover:text-white transition-colors"
+                    className="text-sm text-slate-300 hover:text-white transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -76,7 +80,7 @@ export function Footer() {
                 <li key={link.name}>
                   <Link 
                     href={link.href} 
-                    className="text-sm text-gray-300 hover:text-white transition-colors"
+                    className="text-sm text-slate-300 hover:text-white transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -93,7 +97,7 @@ export function Footer() {
                 <li key={link.name}>
                   <Link 
                     href={link.href} 
-                    className="text-sm text-gray-300 hover:text-white transition-colors"
+                    className="text-sm text-slate-300 hover:text-white transition-colors"
                   >
                     {link.name}
                   </Link>
@@ -104,19 +108,19 @@ export function Footer() {
         </div>
       </div>
 
-      <div className="border-t border-gray-800">
+      <div className="border-t border-slate-800">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-6">
-          <div className="text-center">
-            <p className="text-sm text-gray-400">
+          <div className="flex flex-col items-center gap-3 sm:flex-row sm:justify-between">
+            <p className="text-sm text-slate-400">
               © {currentYear} SIMRYO Technologies Inc. All rights reserved.
             </p>
-            
-            <div className="flex flex-wrap justify-center gap-x-6 gap-y-2 mt-4">
+
+            <div className="flex flex-wrap justify-center gap-4 text-sm text-slate-400">
               {legalLinks.map((link) => (
                 <Link 
                   key={link.name}
                   href={link.href} 
-                  className="text-xs text-gray-400 hover:text-white transition-colors"
+                  className="hover:text-white transition-colors"
                 >
                   {link.name}
                 </Link>
