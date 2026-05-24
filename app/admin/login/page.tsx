@@ -32,7 +32,7 @@ export default function AdminLoginPage() {
       if (data.success) {
         localStorage.setItem('admin_token', data.token)
         toast.success('Login successful!')
-        router.push('/admin/orders')
+        router.push('/admin')
       } else {
         toast.error(`Login failed: ${data.error || 'Invalid credentials'}`)
       }

@@ -20,11 +20,19 @@ export async function POST(request: NextRequest) {
 
       console.log('Admin login successful:', email)
 
-      return NextResponse.json({
+      const response = NextResponse.json({
         success: true,
         token,
         message: 'Login successful'
       })
+      response.cookies.set('admin_token', token, {
+        path: '/',
+        httpOnly: false,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+        maxAge: 24 * 60 * 60,
+      })
+      return response
     } else {
       console.log('Admin login failed:', email)
       

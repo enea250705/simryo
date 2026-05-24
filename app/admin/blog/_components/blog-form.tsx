@@ -78,6 +78,11 @@ export function BlogForm({ initialData, mode }: BlogFormProps) {
       const url = mode === "new" ? "/api/admin/blog" : `/api/admin/blog/${initialData?.id}`
       const method = mode === "new" ? "POST" : "PUT"
       const res = await fetch(url, { method, headers: authHeaders(), body: JSON.stringify(form) })
+      if (res.status === 401) {
+        toast.error('Session expired. Please sign in again.')
+        router.push('/admin/login')
+        return
+      }
       const data = await res.json()
       if (data.success) {
         toast.success(mode === "new" ? "Post created!" : "Post updated!")

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getToken } from 'next-auth/jwt'
+import { verifyAdminToken } from '@/lib/admin-auth'
 
 // Rate limiting store (in production, use Redis)
 const rateLimitStore = new Map<string, { count: number; resetTime: number }>()
@@ -150,25 +150,22 @@ export async function middleware(request: NextRequest) {
   }
   
   // Authentication checks for protected routes
-  const protectedPaths = ['/profile', '/admin', '/dashboard']
+  const protectedPaths = ['/profile', '/dashboard']
   const isProtectedPath = protectedPaths.some(path => pathname.startsWith(path))
   
   if (isProtectedPath) {
-    try {
-      // Use NextAuth's getToken to check authentication
-      const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET })
-      
-      if (!token) {
-        // Redirect to login with return URL
-        const loginUrl = new URL('/login', request.url)
-        loginUrl.searchParams.set('callbackUrl', request.url)
-        return NextResponse.redirect(loginUrl)
-      }
-      
-    } catch (error) {
-      console.error('Auth middleware error:', error)
+    const sessionCookie = request.cookies.get('simryo-session')?.value
+    if (!sessionCookie) {
       const loginUrl = new URL('/login', request.url)
+      loginUrl.searchParams.set('callbackUrl', request.url)
       return NextResponse.redirect(loginUrl)
+    }
+  }
+
+  const isAdminPath = pathname.startsWith('/admin') && pathname !== '/admin/login'
+  if (isAdminPath) {
+    if (!verifyAdminToken(request)) {
+      return NextResponse.redirect(new URL('/admin/login', request.url))
     }
   }
   

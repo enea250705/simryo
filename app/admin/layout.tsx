@@ -1,8 +1,8 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import {
   LayoutDashboard,
@@ -38,6 +38,18 @@ export default function AdminLayout({
 }) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const pathname = usePathname()
+  const router = useRouter()
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return
+    if (pathname === '/admin/login') return
+
+    const token = localStorage.getItem('admin_token')
+    const cookieToken = document.cookie.includes('admin_token=')
+    if (!token && !cookieToken) {
+      router.push('/admin/login')
+    }
+  }, [pathname, router])
 
   return (
     <div className="min-h-screen bg-gray-50">

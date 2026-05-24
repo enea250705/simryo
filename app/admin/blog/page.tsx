@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
@@ -27,11 +28,16 @@ function authHeaders() {
 export default function AdminBlogPage() {
   const [posts, setPosts] = useState<BlogPost[]>([])
   const [loading, setLoading] = useState(true)
+  const router = useRouter()
 
   const load = async () => {
     setLoading(true)
     try {
       const res = await fetch("/api/admin/blog", { headers: authHeaders() })
+      if (res.status === 401) {
+        router.push('/admin/login')
+        return
+      }
       const data = await res.json()
       if (data.success) setPosts(data.posts)
       else toast.error("Failed to load posts")
