@@ -5,11 +5,12 @@ import { prisma } from "@/lib/db"
 import type { Metadata } from "next"
 
 interface Props {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const post = await prisma.blogPost.findUnique({ where: { slug: params.slug, published: true } })
+  const { slug } = await params
+  const post = await prisma.blogPost.findUnique({ where: { slug, published: true } })
   if (!post) return { title: "Post not found | SIMRYO" }
   return {
     title: `${post.title} | SIMRYO`,
@@ -25,7 +26,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function DynamicBlogPost({ params }: Props) {
-  const post = await prisma.blogPost.findUnique({ where: { slug: params.slug, published: true } })
+  const { slug } = await params
+  const post = await prisma.blogPost.findUnique({ where: { slug, published: true } })
   if (!post) notFound()
 
   const publishedDate = new Date(post.publishedAt).toLocaleDateString("en-US", {
