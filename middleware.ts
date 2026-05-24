@@ -162,10 +162,13 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  const isAdminPath = pathname.startsWith('/admin') && pathname !== '/admin/login'
-  if (isAdminPath) {
+  const isAdminApiPath = pathname.startsWith('/api/admin')
+  if (isAdminApiPath) {
     if (!verifyAdminToken(request)) {
-      return NextResponse.redirect(new URL('/admin/login', request.url))
+      return new NextResponse(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { 'Content-Type': 'application/json' }
+      })
     }
   }
   
