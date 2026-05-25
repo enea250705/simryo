@@ -332,8 +332,8 @@ export function Navbar() {
               ) : null}
             </Link>
 
-            {/* Auth: login/register or account link */}
-            {!session ? (
+            {/* Auth: login/register or account link — hidden for now */}
+            {false && (!session ? (
               <>
                 <Link href="/login">
                   <Button variant="ghost" className="text-gray-700 hover:text-blue-600 font-medium">
@@ -354,7 +354,7 @@ export function Navbar() {
                   Account
                 </Button>
               </Link>
-            )}
+            ))}
 
             {/* Buy Now Button */}
             <Link href="/plans">
@@ -485,7 +485,8 @@ export function Navbar() {
               </nav>
 
               <div className="px-4 pb-6 pt-2 border-t border-gray-100">
-                {!session && (
+                {/* Login/Register buttons hidden for now */}
+                {false && !session && (
                   <>
                     <div className="grid grid-cols-2 gap-2 mb-4">
                       <Link href="/login" onClick={() => setIsOpen(false)}>

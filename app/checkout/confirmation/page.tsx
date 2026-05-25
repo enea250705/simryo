@@ -105,8 +105,8 @@ export default function ConfirmationPage() {
           </div>
         </div>
 
-        {/* Create account — guests only */}
-        {isGuest && (
+        {/* Create account — hidden for now */}
+        {false && isGuest && (
           <div className="border border-gray-200 rounded-xl p-5 mb-8">
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
@@ -245,7 +245,8 @@ export default function ConfirmationPage() {
             <Download className="h-4 w-4" />
             Print this page
           </button>
-          {isGuest && (
+          {/* Create account button — hidden for now */}
+          {false && isGuest && (
             <Link href={signupUrl}>
               <button className="inline-flex items-center justify-center gap-2 bg-gray-900 hover:bg-gray-800 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors w-full sm:w-auto">
                 <UserPlus className="h-4 w-4" />
