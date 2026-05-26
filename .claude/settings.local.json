@@ -65,7 +65,9 @@
       "PowerShell($env:DATABASE_URL = \"postgresql://postgres.obgaezakfamdutjtyblb:Enea13092008%2F%2F@aws-0-eu-west-1.pooler.supabase.com:5432/postgres\"; Set-Location \"C:\\\\Users\\\\eneam\\\\simryo\"; npx prisma db push 2>&1)",
       "Bash(npx tsc *)",
       "Bash(python -c \"import json,sys; data=json.load\\(sys.stdin\\); pkgs=data['obj']['packageList']; unlimited=[p for p in pkgs if p.get\\('dataType'\\)==2 or p.get\\('volume',0\\)==0 or 'unlimited' in p.get\\('name',''\\).lower\\(\\)]; print\\(f'Total: {len\\(pkgs\\)}, Unlimited: {len\\(unlimited\\)}'\\); [print\\(p['name'], p.get\\('volume'\\), p.get\\('dataType'\\)\\) for p in unlimited[:5]]\")",
-      "Bash(python -c \"import json,sys; data=json.load\\(sys.stdin\\); pkgs=data['obj']['packageList']; dt2=[p for p in pkgs if p.get\\('dataType'\\)==2]; print\\('Sample dataType=2 plan:'\\); print\\(json.dumps\\(dt2[0], indent=2\\)\\)\")"
+      "Bash(python -c \"import json,sys; data=json.load\\(sys.stdin\\); pkgs=data['obj']['packageList']; dt2=[p for p in pkgs if p.get\\('dataType'\\)==2]; print\\('Sample dataType=2 plan:'\\); print\\(json.dumps\\(dt2[0], indent=2\\)\\)\")",
+      "Bash(git pull *)",
+      "Bash(Remove-Item *)"
     ],
     "deny": []
   }
