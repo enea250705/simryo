@@ -131,7 +131,7 @@ export async function POST(request: NextRequest) {
             const isPending = !purchaseResponse.qrCodeUrl && !purchaseResponse.activationCode
             const order = await prisma.order.create({
               data: {
-                id: paymentIntentId || `order_${Date.now()}_${i}`,
+                id: paymentIntentId ? `${paymentIntentId}_${i}` : `order_${Date.now()}_${i}`,
                 customerEmail: customerInfo.email,
                 customerName: customerInfo.name,
                 customerPhone: customerInfo.phone,
