@@ -28,8 +28,6 @@ const nextConfig = {
       '@stripe/react-stripe-js',
       'sonner'
     ],
-    // Optimize CSS loading for better SEO performance
-    optimizeCss: true,
     // Enable streaming SSR
     serverActions: {
       bodySizeLimit: '2mb',

@@ -113,8 +113,8 @@ export async function middleware(request: NextRequest) {
     let maxRequests = rateLimitConfig.maxRequests
     let windowMs = rateLimitConfig.windowMs
     
-    // Stricter limits for sensitive endpoints
-    if (pathname.includes('/auth/') || pathname.includes('/login') || pathname.includes('/signup')) {
+    // Stricter limits for sensitive endpoints (but not /auth/verify — it's a read-only check)
+    if ((pathname.includes('/auth/') && !pathname.includes('/auth/verify')) || pathname.includes('/login') || pathname.includes('/signup')) {
       maxRequests = rateLimitConfig.authMaxRequests
     } else if (pathname.includes('/payment') || pathname.includes('/purchase') || pathname.includes('/stripe')) {
       maxRequests = rateLimitConfig.paymentMaxRequests
