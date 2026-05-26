@@ -2,9 +2,10 @@
 
 import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { ArrowLeft, Save, Eye, EyeOff, LogOut } from "lucide-react"
+import { ArrowLeft, Save, Eye, EyeOff, LogOut, Code, AlignLeft } from "lucide-react"
 import Link from "next/link"
 import { toast } from "sonner"
+import { marked } from "marked"
 
 interface BlogFormData {
   title: string
@@ -38,6 +39,7 @@ export function BlogForm({ initialData, mode }: BlogFormProps) {
   const router = useRouter()
   const [saving, setSaving] = useState(false)
   const [preview, setPreview] = useState(false)
+  const [contentMode, setContentMode] = useState<'markdown' | 'html'>('markdown')
   const [form, setForm] = useState<BlogFormData>({
     title: initialData?.title || "",
     slug: initialData?.slug || "",
@@ -58,6 +60,13 @@ export function BlogForm({ initialData, mode }: BlogFormProps) {
     })
   }
 
+  const getHtmlContent = () => {
+    if (contentMode === 'markdown') {
+      return marked(form.content) as string
+    }
+    return form.content
+  }
+
   const save = async () => {
     if (!form.title.trim() || !form.slug.trim() || !form.content.trim()) {
       toast.error("Title, slug, and content are required")
@@ -67,7 +76,8 @@ export function BlogForm({ initialData, mode }: BlogFormProps) {
     try {
       const url = mode === "new" ? "/api/admin/blog" : `/api/admin/blog/${initialData?.id}`
       const method = mode === "new" ? "POST" : "PUT"
-      const res = await fetch(url, { method, headers: authHeaders(), body: JSON.stringify(form) })
+      const payload = { ...form, content: getHtmlContent() }
+      const res = await fetch(url, { method, headers: authHeaders(), body: JSON.stringify(payload) })
       if (res.status === 401) { toast.error("Session expired"); router.push("/admin/login"); return }
       const data = await res.json()
       if (data.success) {
@@ -154,7 +164,7 @@ export function BlogForm({ initialData, mode }: BlogFormProps) {
                 </div>
               )}
               {form.content ? (
-                <article className="prose prose-gray max-w-none" dangerouslySetInnerHTML={{ __html: form.content }} />
+                <article className="prose prose-gray max-w-none" dangerouslySetInnerHTML={{ __html: getHtmlContent() }} />
               ) : (
                 <p className="text-gray-400 italic">Content will appear here...</p>
               )}
@@ -255,15 +265,49 @@ export function BlogForm({ initialData, mode }: BlogFormProps) {
             <div className="bg-white rounded-xl border border-gray-200 p-6">
               <div className="flex items-center justify-between mb-3">
                 <h2 className="text-sm font-bold text-gray-900">Content *</h2>
-                <span className="text-xs text-gray-400">Write HTML — &lt;h2&gt;, &lt;p&gt;, &lt;ul&gt;, &lt;strong&gt;, &lt;a&gt; etc. Use Preview to see result.</span>
+                <div className="flex items-center gap-1 bg-gray-100 rounded-lg p-1">
+                  <button
+                    type="button"
+                    onClick={() => setContentMode('markdown')}
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md transition-colors ${
+                      contentMode === 'markdown'
+                        ? 'bg-white text-gray-900 shadow-sm'
+                        : 'text-gray-500 hover:text-gray-700'
+                    }`}
+                  >
+                    <AlignLeft className="h-3.5 w-3.5" />
+                    Markdown
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setContentMode('html')}
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md transition-colors ${
+                      contentMode === 'html'
+                        ? 'bg-white text-gray-900 shadow-sm'
+                        : 'text-gray-500 hover:text-gray-700'
+                    }`}
+                  >
+                    <Code className="h-3.5 w-3.5" />
+                    HTML
+                  </button>
+                </div>
               </div>
               <textarea
                 value={form.content}
                 onChange={e => set("content", e.target.value)}
-                placeholder={"<h2>Introduction</h2>\n<p>Start writing here...</p>\n\n<h2>Section Title</h2>\n<p>More content...</p>\n\n<ul>\n  <li>Point one</li>\n  <li>Point two</li>\n</ul>"}
+                placeholder={contentMode === 'markdown'
+                  ? "## Introduction\n\nStart writing here...\n\n## Section Title\n\nMore content with **bold**, *italic*, and [links](https://example.com).\n\n- Bullet point one\n- Bullet point two"
+                  : "<h2>Introduction</h2>\n<p>Start writing here...</p>\n\n<h2>Section Title</h2>\n<p>More content...</p>"
+                }
                 rows={28}
                 className="w-full px-3 py-2.5 border border-gray-200 rounded-lg text-sm font-mono text-gray-900 bg-white resize-y focus:outline-none focus:ring-2 focus:ring-gray-900 focus:border-transparent placeholder:text-gray-400"
               />
+              <p className="text-xs text-gray-400 mt-2">
+                {contentMode === 'markdown'
+                  ? "Write in Markdown — # headings, **bold**, *italic*, - lists, [links](url). Converts to HTML on save."
+                  : "Write raw HTML — <h2>, <p>, <ul>, <strong>, <a> etc."
+                }
+              </p>
             </div>
 
             {/* Publish card */}
