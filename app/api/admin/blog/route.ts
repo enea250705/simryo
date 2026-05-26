@@ -1,12 +1,35 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/db'
 import { verifyAdminToken } from '@/lib/admin-auth'
+import { STATIC_BLOG_POSTS } from '@/lib/static-blog-posts'
 
 export async function GET(request: NextRequest) {
   if (!verifyAdminToken(request)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
   }
-  const posts = await prisma.blogPost.findMany({ orderBy: { createdAt: 'desc' } })
+  const dbPosts = await prisma.blogPost.findMany({ orderBy: { createdAt: 'desc' } })
+
+  // Merge DB posts with static hardcoded posts (static shown as read-only)
+  const dbSlugs = new Set(dbPosts.map(p => p.slug))
+  const staticPosts = STATIC_BLOG_POSTS
+    .filter(p => !dbSlugs.has(p.slug)) // skip if already in DB
+    .map(p => ({
+      id: `static:${p.slug}`,
+      slug: p.slug,
+      title: p.title,
+      category: p.category,
+      author: p.author,
+      published: true,
+      publishedAt: p.publishedAt,
+      readTime: p.readTime,
+      source: 'static' as const,
+    }))
+
+  const posts = [
+    ...dbPosts.map(p => ({ ...p, source: 'db' as const })),
+    ...staticPosts,
+  ].sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime())
+
   return NextResponse.json({ success: true, posts })
 }
 

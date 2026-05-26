@@ -15,6 +15,7 @@ interface BlogPost {
   published: boolean
   publishedAt: string
   readTime: number
+  source: 'db' | 'static'
 }
 
 function token() {
@@ -47,6 +48,7 @@ export default function AdminBlogPage() {
   useEffect(() => { load() }, [])
 
   const togglePublish = async (post: BlogPost) => {
+    if (post.source === 'static') return
     try {
       const res = await fetch(`/api/admin/blog/${post.id}`, {
         method: "PUT",
@@ -64,6 +66,7 @@ export default function AdminBlogPage() {
   }
 
   const deletePost = async (post: BlogPost) => {
+    if (post.source === 'static') return
     if (!confirm(`Delete "${post.title}"?`)) return
     try {
       await fetch(`/api/admin/blog/${post.id}`, { method: "DELETE", headers: authHeaders() })
@@ -167,42 +170,51 @@ export default function AdminBlogPage() {
                     </td>
                     <td className="px-4 py-3.5 text-xs text-gray-500 hidden md:table-cell">{fmt(post.publishedAt)}</td>
                     <td className="px-4 py-3.5">
-                      <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold border ${
-                        post.published
-                          ? "bg-green-50 text-green-700 border-green-200"
-                          : "bg-gray-100 text-gray-500 border-gray-200"
-                      }`}>
-                        {post.published ? "Live" : "Draft"}
-                      </span>
+                      <div className="flex items-center gap-1.5 flex-wrap">
+                        <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold border ${
+                          post.published
+                            ? "bg-green-50 text-green-700 border-green-200"
+                            : "bg-gray-100 text-gray-500 border-gray-200"
+                        }`}>
+                          {post.published ? "Live" : "Draft"}
+                        </span>
+                        {post.source === 'static' && (
+                          <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-blue-50 text-blue-600 border border-blue-200">
+                            Static
+                          </span>
+                        )}
+                      </div>
                     </td>
                     <td className="px-4 py-3.5">
                       <div className="flex items-center gap-1 justify-end">
-                        {post.published && (
-                          <a href={`/blog/${post.slug}`} target="_blank" rel="noopener noreferrer">
-                            <button title="View live" className="h-8 w-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors">
-                              <Eye className="h-3.5 w-3.5" />
-                            </button>
-                          </a>
-                        )}
-                        <button
-                          onClick={() => togglePublish(post)}
-                          title={post.published ? "Unpublish" : "Publish"}
-                          className="h-8 w-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
-                        >
-                          {post.published ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
-                        </button>
-                        <Link href={`/admin/blog/${post.id}/edit`}>
-                          <button title="Edit" className="h-8 w-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-colors">
-                            <Edit className="h-3.5 w-3.5" />
+                        <a href={`/blog/${post.slug}`} target="_blank" rel="noopener noreferrer">
+                          <button title="View live" className="h-8 w-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-gray-700 hover:bg-gray-100 transition-colors">
+                            <Eye className="h-3.5 w-3.5" />
                           </button>
-                        </Link>
-                        <button
-                          onClick={() => deletePost(post)}
-                          title="Delete"
-                          className="h-8 w-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors"
-                        >
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </button>
+                        </a>
+                        {post.source === 'db' && (
+                          <>
+                            <button
+                              onClick={() => togglePublish(post)}
+                              title={post.published ? "Unpublish" : "Publish"}
+                              className="h-8 w-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-colors"
+                            >
+                              {post.published ? <EyeOff className="h-3.5 w-3.5" /> : <Eye className="h-3.5 w-3.5" />}
+                            </button>
+                            <Link href={`/admin/blog/${post.id}/edit`}>
+                              <button title="Edit" className="h-8 w-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-blue-600 hover:bg-blue-50 transition-colors">
+                                <Edit className="h-3.5 w-3.5" />
+                              </button>
+                            </Link>
+                            <button
+                              onClick={() => deletePost(post)}
+                              title="Delete"
+                              className="h-8 w-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors"
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </button>
+                          </>
+                        )}
                       </div>
                     </td>
                   </tr>
