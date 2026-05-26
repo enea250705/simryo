@@ -162,7 +162,7 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  const isAdminApiPath = pathname.startsWith('/api/admin')
+  const isAdminApiPath = pathname.startsWith('/api/admin') && !pathname.startsWith('/api/admin/login')
   if (isAdminApiPath) {
     if (!verifyAdminToken(request)) {
       return new NextResponse(JSON.stringify({ error: 'Unauthorized' }), {

@@ -16,10 +16,7 @@ export default function EditBlogPost() {
       headers: { Authorization: `Bearer ${token}` }
     })
       .then(async r => {
-        if (r.status === 401) {
-          router.push('/admin/login')
-          return
-        }
+        if (r.status === 401) { router.push("/admin/login"); return }
         const d = await r.json()
         if (d.success) setPost(d.post)
       })
