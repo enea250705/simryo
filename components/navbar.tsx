@@ -7,7 +7,6 @@ import { usePathname } from "next/navigation"
 import { useAuth } from "@/lib/serverless-auth"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
 import { 
   NavigationMenu,
   NavigationMenuContent,
@@ -31,9 +30,7 @@ import {
   CreditCard,
   Gift,
   Sparkles,
-  User,
   Mail,
-  LogIn
 } from "lucide-react"
 import { toast } from "sonner"
 import { cn } from "@/lib/utils"
@@ -332,29 +329,6 @@ export function Navbar() {
               ) : null}
             </Link>
 
-            {/* Auth: login/register or account link */}
-            {!session ? (
-              <>
-                <Link href="/login">
-                  <Button variant="ghost" className="text-gray-700 hover:text-blue-600 font-medium">
-                    <LogIn className="h-4 w-4 mr-1.5" />
-                    Login
-                  </Button>
-                </Link>
-                <Link href="/signup">
-                  <Button variant="outline" className="border-gray-300 text-gray-700 hover:border-blue-600 hover:text-blue-600 font-medium">
-                    Register
-                  </Button>
-                </Link>
-              </>
-            ) : (
-              <Link href="/profile">
-                <Button variant="ghost" className="text-gray-700 hover:text-blue-600 font-medium">
-                  <User className="h-4 w-4 mr-1.5" />
-                  Account
-                </Button>
-              </Link>
-            )}
 
             {/* Buy Now Button */}
             <Link href="/plans">
@@ -466,7 +440,6 @@ export function Navbar() {
                   { href: "/support", label: "Support" },
                   { href: "/faq", label: "FAQ" },
                   { href: "/contact", label: "Contact" },
-                  ...(session ? [{ href: "/profile", label: "My Account" }] : []),
                 ].map(({ href, label }) => (
                   <Link
                     key={href}
@@ -485,24 +458,6 @@ export function Navbar() {
               </nav>
 
               <div className="px-4 pb-6 pt-2 border-t border-gray-100">
-                {!session && (
-                  <>
-                    <div className="grid grid-cols-2 gap-2 mb-4">
-                      <Link href="/login" onClick={() => setIsOpen(false)}>
-                        <Button variant="outline" className="w-full border-gray-300 text-gray-700 font-medium">
-                          <LogIn className="h-4 w-4 mr-1.5" />
-                          Login
-                        </Button>
-                      </Link>
-                      <Link href="/signup" onClick={() => setIsOpen(false)}>
-                        <Button variant="outline" className="w-full border-gray-300 text-gray-700 font-medium">
-                          Register
-                        </Button>
-                      </Link>
-                    </div>
-                    <Separator className="mb-4" />
-                  </>
-                )}
                 <Link href="/plans" onClick={() => setIsOpen(false)}>
                   <Button className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 text-base font-semibold rounded-xl">
                     Browse Plans

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Separator } from "@/components/ui/separator"
-import { CheckCircle, Mail, Download, Home, Copy, ExternalLink, UserPlus, Clock } from "lucide-react"
+import { CheckCircle, Mail, Download, Home, Copy, ExternalLink, Clock } from "lucide-react"
 import Link from "next/link"
 import { toast } from "sonner"
 
@@ -105,23 +105,6 @@ export default function ConfirmationPage() {
           </div>
         </div>
 
-        {/* Create account — guests only */}
-        {isGuest && (
-          <div className="border border-gray-200 rounded-xl p-5 mb-8">
-            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
-              <div>
-                <div className="text-sm font-semibold text-gray-900 mb-1">Create a free account</div>
-                <div className="text-sm text-gray-500">Track your eSIM, view order history, and download QR codes anytime.</div>
-              </div>
-              <Link href={signupUrl} className="shrink-0">
-                <button className="inline-flex items-center gap-2 bg-gray-900 hover:bg-gray-800 text-white px-4 py-2.5 rounded-xl text-sm font-semibold transition-colors whitespace-nowrap">
-                  <UserPlus className="h-4 w-4" />
-                  Create account
-                </button>
-              </Link>
-            </div>
-          </div>
-        )}
 
         {/* Order items */}
         <div className="space-y-5">
@@ -245,14 +228,6 @@ export default function ConfirmationPage() {
             <Download className="h-4 w-4" />
             Print this page
           </button>
-          {isGuest && (
-            <Link href={signupUrl}>
-              <button className="inline-flex items-center justify-center gap-2 bg-gray-900 hover:bg-gray-800 text-white px-5 py-2.5 rounded-xl text-sm font-semibold transition-colors w-full sm:w-auto">
-                <UserPlus className="h-4 w-4" />
-                Create account
-              </button>
-            </Link>
-          )}
         </div>
 
       </div>
