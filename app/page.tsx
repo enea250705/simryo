@@ -337,12 +337,11 @@ export default function HomePage() {
             </div>
 
             <h1 id="hero-heading" className="text-4xl sm:text-5xl lg:text-7xl font-bold tracking-tight text-gray-900 mb-6">
-              Travel Data Made
-              <span className="block text-blue-600">Simple</span>
+              Instant eSIM Data Plans with QR Code Activation
             </h1>
 
             <p className="text-xl text-gray-500 mb-8 max-w-2xl mx-auto leading-relaxed">
-              eSIM plans for 190+ countries. Instant activation, no contracts, no roaming fees.
+              Buy eSIM online for Europe and global travel, activate instantly with QR code, and avoid roaming charges with prepaid travel data plans.
             </p>
 
             {/* Quick Country Search */}

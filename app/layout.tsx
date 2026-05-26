@@ -37,8 +37,8 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   metadataBase: new URL('https://simryo.com'),
   title: {
-    default: 'SIMRYO - Global eSIM Marketplace | Instant Mobile Data Plans Worldwide',
-    template: '%s | SIMRYO - Global eSIM Marketplace'
+    default: 'eSIM Europe & Global Data Plans | Instant QR Code Activation',
+    template: '%s | SIMRYO'
   },
   description: 'Stay connected worldwide with SIMRYO\'s premium eSIM data plans. Instant activation, no contracts, coverage in 190+ countries. Get 15% off your first purchase with code WELCOME15.',
   keywords: [
@@ -82,7 +82,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     siteName: 'SIMRYO',
-    title: 'SIMRYO - Global eSIM Marketplace | Instant Mobile Data Plans Worldwide',
+    title: 'eSIM Europe & Global Data Plans | Instant QR Code Activation',
     description: 'Stay connected worldwide with SIMRYO\'s premium eSIM data plans. Instant activation, no contracts, coverage in 190+ countries.',
     url: 'https://simryo.com',
     images: [
@@ -108,7 +108,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     site: '@simryo',
     creator: '@simryo',
-    title: 'SIMRYO - Global eSIM Marketplace',
+    title: 'eSIM Europe & Global Data Plans | Instant QR Code Activation',
     description: 'Stay connected worldwide with premium eSIM data plans. Instant activation, 190+ countries coverage.',
     images: ['/twitter-image.jpg'],
   },

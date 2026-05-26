@@ -1,14 +1,13 @@
 "use client"
 
-const mobileMessage = "🔥 30% off all plans this week only"
+const mobileMessage = "Buy eSIM online with instant QR code activation"
 
 const desktopMessages = [
-  "🔥 30% off all plans this week only",
-  "✈️ Get connected before you land",
-  "🌍 Works in 190+ countries",
-  "📱 No contracts. No roaming bills.",
-  "⚡ Discount applied automatically at checkout",
-  "🛜 4G and 5G speeds wherever you go",
+  "Buy eSIM online for Europe travel",
+  "QR code eSIM activation in seconds",
+  "Travel data plan for 190+ countries",
+  "Avoid roaming charges with prepaid eSIM",
+  "International eSIM with instant mobile data",
 ]
 
 const track = [...desktopMessages, ...desktopMessages]
