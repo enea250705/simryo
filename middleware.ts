@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { verifyAdminToken } from '@/lib/admin-auth'
 
 // Rate limiting store (in production, use Redis)
 const rateLimitStore = new Map<string, { count: number; resetTime: number }>()
@@ -162,16 +161,10 @@ export async function middleware(request: NextRequest) {
     }
   }
 
-  const isAdminApiPath = pathname.startsWith('/api/admin') && !pathname.startsWith('/api/admin/login')
-  if (isAdminApiPath) {
-    if (!verifyAdminToken(request)) {
-      return new NextResponse(JSON.stringify({ error: 'Unauthorized' }), {
-        status: 401,
-        headers: { 'Content-Type': 'application/json' }
-      })
-    }
-  }
-  
+  // Admin API auth is handled inside each route handler (Node.js runtime).
+  // Do NOT check verifyAdminToken here — middleware runs in Edge Runtime where
+  // jsonwebtoken (Node.js crypto) is unavailable, causing jwt.verify to always throw.
+
   // Block suspicious requests
   const suspiciousPatterns = [
     /\/wp-admin/,
